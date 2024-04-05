@@ -33,7 +33,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_type = models.IntegerField(choices=CATEGORY_USER) 
     address = models.CharField(max_length=256, null=True, blank=True)
-    phone_regex = RegexValidator(regex=r'^[6-9]\d{9}$', message="Please enter valid mobile number.")
+    phone_regex = RegexValidator(regex=r'^[0-9]\d{9}$', message="Please enter valid mobile number.")
     mobile = models.CharField(validators=[phone_regex], max_length=10, blank=True)
     blood_group = models.IntegerField(choices=BLOOD_GROUP_CHOICE, default=1)
     gender = models.IntegerField(choices=GENDER_CHOICE, default=1)
