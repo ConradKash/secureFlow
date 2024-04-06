@@ -72,3 +72,6 @@ class Medical_Record(models.Model):
 
     def __str__(self):
         return self.user
+
+class Prescription(models.Model):
+    user = models.CharField(max_length=256, null=False, blank=False)

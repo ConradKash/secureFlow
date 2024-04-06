@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'secureFlow.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'd5tahocoqrko0h',
-#         'USER': 'sphqqauoptvnls',
-#         'PASSWORD': 'b0e7dd98a4315df211e74246968aadad80162392851bc655047ee73bc4c312e5',
-#         'HOST': 'ec2-52-5-247-46.compute-1.amazonaws.com',
-#         'PORT': 5432,
+#         'NAME': 'lvhmtfjilsmznovmvgsdrjpr',
+#         'USER': 'iulhkuubvsztdpnk',
+#         'PASSWORD': '=hg78pn8_HhisMwo5VFEJJ>k3+N#<e%3',
+#         'HOST': '102.134.147.233.app.cranecloud.io',
+#         'PORT': 32761,
 #     }
 # }
 DATABASES = {
