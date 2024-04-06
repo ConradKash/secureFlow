@@ -30,7 +30,7 @@ def doctor_appointments(request):
             if request.method == 'POST':
                 get_date = request.POST.get('date')
                 doctor_name = request.user.first_name +' '+request.user.last_name
-                app_list = Appointment.objects.filter(doctor_name=doctor_name, app_date=get_date).all()
+                app_list = Appointment.objects.filter(app_date=get_date).all()
                 return render(request, 'secureFlowMain/doctor/appointment_list.html', {'app_list': app_list, 'show_date': get_date})
             else:
                 show_date = date.today().strftime("%Y-%m-%d")
