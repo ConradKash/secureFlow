@@ -19,7 +19,7 @@ def receptionist_dashboard(request):
         if request.session['user_type'] == 'Receptionist':
             today = date.today()
             data = Appointment.objects.filter(app_date=today)
-            return render(request, 'hospital/receptionist/dashboard.html', {'data': data})
+            return render(request, 'secureFlowMain/receptionist/dashboard.html', {'data': data})
         else:
             return redirect('/')
     else:
@@ -40,13 +40,13 @@ def receptionist_appointments(request):
                 else:
                     doctor = Profile.objects.filter(user_type='Doctor')
                     app_list = Appointment.objects.filter(doctor_name=doctor_name, app_date=get_date).all()
-                return render(request, 'hospital/receptionist/appointment_list.html', {'app_list': app_list, 'show_date': get_date, 'doctor': doctor})
+                return render(request, 'secureFlowMain/receptionist/appointment_list.html', {'app_list': app_list, 'show_date': get_date, 'doctor': doctor})
 
             else:
                 show_date = date.today().strftime("%Y-%m-%d")
                 doctor = Profile.objects.filter(user_type='Doctor')
                 app_list = Appointment.objects.filter(app_date=date.today()).all()
-                return render(request, 'hospital/receptionist/appointment_list.html', {'app_list': app_list, 'show_date': show_date, 'doctor': doctor})
+                return render(request, 'secureFlowMain/receptionist/appointment_list.html', {'app_list': app_list, 'show_date': show_date, 'doctor': doctor})
         else:
             return redirect('/')
     else:
@@ -85,17 +85,17 @@ def receptionist_patients(request):
                         emp = Profile.objects.filter(user_type='Patient')
 
                     doctors = Profile.objects.filter(user_type='Doctor')    
-                    return render(request, 'hospital/receptionist/patient_list.html', {'emp': emp, 'doctor': doctors})
+                    return render(request, 'secureFlowMain/receptionist/patient_list.html', {'emp': emp, 'doctor': doctors})
 
 
                 else:
                     emp = Profile.objects.filter(user_type='Patient')
                     doctors = Profile.objects.filter(user_type='Doctor')
-                    return render(request, 'hospital/receptionist/patient_list.html', {'emp': emp, 'doctor': doctors})    
+                    return render(request, 'secureFlowMain/receptionist/patient_list.html', {'emp': emp, 'doctor': doctors})    
             else:
                 emp = Profile.objects.filter(user_type='Patient')
                 doctors = Profile.objects.filter(user_type='Doctor')
-                return render(request, 'hospital/receptionist/patient_list.html', {'emp': emp, 'doctor': doctors})
+                return render(request, 'secureFlowMain/receptionist/patient_list.html', {'emp': emp, 'doctor': doctors})
         else:
             return redirect('/')
     else:
@@ -108,7 +108,7 @@ def receptionist_view_record(request, user_info):
             # records = Medical_Record.objects.values('user', 'date').filter(user=user_info, doctor_name=doctorname)
             records = Medical_Record.objects.values('user', 'date').filter(user=user_info).annotate(Count('id')).order_by()
             # records = Medical_Record.objects.raw('SELECT COUNT (*), date from hospital_medical_record GROUP BY date')
-            return render(request, 'hospital/receptionist/viewrecord.html', {'patient_data': patient_data, 'records': records})
+            return render(request, 'secureFlowMain/receptionist/viewrecord.html', {'patient_data': patient_data, 'records': records})
         else:
             return redirect('/')
     else:
@@ -132,7 +132,7 @@ def receptionist_view_prescription(request, user_info, date):
                 'user_data' : user_detail,
             }
             
-            pdf = render_to_pdf('hospital/receptionist/showrecords.html', data)
+            pdf = render_to_pdf('secureFlowMain/receptionist/showrecords.html', data)
             return HttpResponse(pdf, content_type='application/pdf')
         else:
             return redirect('/')
@@ -174,7 +174,7 @@ def new_patient(request):
                 messages.success(request, f'User <strong>{first_name} {last_name}</strong> is successfully created.')
                 return redirect('/receptionist/new_patient/')
             else:
-                return render(request, 'hospital/receptionist/new_patient.html')
+                return render(request, 'secureFlowMain/receptionist/new_patient.html')
 
         else:
             return redirect('/')
@@ -254,10 +254,10 @@ def receptionist_profile(request):
                     messages.success(request, 'Account information successfully updated.')
                     return redirect('/receptionist/profile/')
                 else:
-                    return render(request, 'hospital/receptionist/profile.html', {'profile_form': profile_form, 'add_profile_form': add_profile_form })
+                    return render(request, 'secureFlowMain/receptionist/profile.html', {'profile_form': profile_form, 'add_profile_form': add_profile_form })
             
             else:
-                return render(request, 'hospital/receptionist/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
+                return render(request, 'secureFlowMain/receptionist/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
         else:
             return redirect('/')
     else:
@@ -275,11 +275,11 @@ def receptionist_password(request):
                     return redirect('/receptionist/passwordchange/')
                 
                 else:
-                    return render(request, 'hospital/receptionist/passwordchange.html', {'form': form})        
+                    return render(request, 'secureFlowMain/receptionist/passwordchange.html', {'form': form})        
             
             else:
                 form = ChangePasswordForm(user = request.user)
-                return render(request, 'hospital/receptionist/passwordchange.html', {'form': form})
+                return render(request, 'secureFlowMain/receptionist/passwordchange.html', {'form': form})
         else:
             return redirect('/')
     else:

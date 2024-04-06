@@ -63,10 +63,10 @@ def home(request):
                     return redirect('/')
 
         else:
-            return render(request, 'hospital/home/index.html', {'login_form': login_form})
+            return render(request, 'secureFlowMain/home/index.html', {'login_form': login_form})
     else:
         login_form = LoginForm()
-        return render(request, 'hospital/home/index.html', {'login_form': login_form})
+        return render(request, 'secureFlowMain/home/index.html', {'login_form': login_form})
 
 
 def register(request):
@@ -84,14 +84,14 @@ def register(request):
             return redirect('/registration/')
         
         else:
-            return render(request, 'hospital/home/registration.html', {'register': register})
+            return render(request, 'secureFlowMain/home/registration.html', {'register': register})
 
     else:
         register = NewUserForm()
-        return render(request, 'hospital/home/registration.html', {'register': register})
+        return render(request, 'secureFlowMain/home/registration.html', {'register': register})
 
 def about(request):
-    return render(request, 'hospital/home/about.html')
+    return render(request, 'secureFlowMain/home/about.html')
 
 def contact(request):
-    return render(request, 'hospital/home/contact.html')
+    return render(request, 'secureFlowMain/home/contact.html')
