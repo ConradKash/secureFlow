@@ -17,7 +17,7 @@ def doctor_dashboard(request):
         if request.session['user_type'] == 'Doctor':
             doctor_name = request.user.first_name +' '+request.user.last_name
             appointment_data = Appointment.objects.filter(doctor_name=doctor_name, app_date=date.today())
-            return render(request, 'hospital/doctor/dashboard.html', {'appointment_data': appointment_data})
+            return render(request, 'secureFlowMain/doctor/dashboard.html', {'appointment_data': appointment_data})
         else:
             return redirect('/')
 
@@ -31,13 +31,13 @@ def doctor_appointments(request):
                 get_date = request.POST.get('date')
                 doctor_name = request.user.first_name +' '+request.user.last_name
                 app_list = Appointment.objects.filter(doctor_name=doctor_name, app_date=get_date).all()
-                return render(request, 'hospital/doctor/appointment_list.html', {'app_list': app_list, 'show_date': get_date})
+                return render(request, 'secureFlowMain/doctor/appointment_list.html', {'app_list': app_list, 'show_date': get_date})
             else:
                 show_date = date.today().strftime("%Y-%m-%d")
 
                 doctor_name = request.user.first_name +' '+request.user.last_name
                 app_list = Appointment.objects.filter(doctor_name=doctor_name, app_date=date.today()).all()
-                return render(request, 'hospital/doctor/appointment_list.html', {'app_list': app_list, 'show_date': show_date})
+                return render(request, 'secureFlowMain/doctor/appointment_list.html', {'app_list': app_list, 'show_date': show_date})
 
         else:
             return redirect('/')    
@@ -50,7 +50,7 @@ def doctor_patients(request):
         if request.session['user_type'] == 'Doctor':
             doctor_name = request.user.first_name +' '+request.user.last_name
             patient_list = Appointment.objects.filter(doctor_name=doctor_name).values('full_name','mobile', 'user').annotate(Count('id')).order_by().filter(id__count__gt=1)
-            return render(request, 'hospital/doctor/patient_list.html', {'patient_list': patient_list})
+            return render(request, 'secureFlowMain/doctor/patient_list.html', {'patient_list': patient_list})
         else:
             return redirect('/')
     else:
@@ -91,10 +91,10 @@ def doctor_profile(request):
                     messages.success(request, 'Account information successfully updated.')
                     return redirect('/doctor/profile/')
                 else:
-                    return render(request, 'hospital/doctor/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
+                    return render(request, 'secureFlowMain/doctor/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
             
             else:
-                return render(request, 'hospital/doctor/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
+                return render(request, 'secureFlowMain/doctor/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
         else:
             return redirect('/')
     else:
@@ -112,11 +112,11 @@ def doctor_password(request):
                     return redirect('/doctor/passwordchange/')
                 
                 else:
-                    return render(request, 'hospital/doctor/passwordchange.html', {'form': form})        
+                    return render(request, 'secureFlowMain/doctor/passwordchange.html', {'form': form})        
             
             else:
                 form = ChangePasswordForm(user = request.user)
-                return render(request, 'hospital/doctor/passwordchange.html', {'form': form})
+                return render(request, 'secureFlowMain/doctor/passwordchange.html', {'form': form})
         else:
             return redirect('/')
     else:
@@ -154,7 +154,7 @@ def doctor_prescription(request, id):
             
             else:
                 data = Appointment.objects.filter(pk=id)
-                return render(request, 'hospital/doctor/prescription.html', {'data': data})
+                return render(request, 'secureFlowMain/doctor/prescription.html', {'data': data})
         else:
             return redirect('/')
     else:
@@ -169,7 +169,7 @@ def view_record(request, user_info):
             # records = Medical_Record.objects.values('user', 'date').filter(user=user_info, doctor_name=doctorname)
             records = Medical_Record.objects.values('user', 'date').filter(user=user_info, doctor_name=doctorname).annotate(Count('id')).order_by()
             # records = Medical_Record.objects.raw('SELECT COUNT (*), date from hospital_medical_record GROUP BY date')
-            return render(request, 'hospital/doctor/viewrecord.html', {'patient_data': patient_data, 'records': records})
+            return render(request, 'secureFlowMain/doctor/viewrecord.html', {'patient_data': patient_data, 'records': records})
         else:
             return redirect('/')
     else:
@@ -188,10 +188,10 @@ def view_prescription(request, user_info, date):
                 'records': records,
                 'user_data' : user_detail,
                 'doc_name' : doc_name,
-                'name' : 'Nishikant Sonkusare'
+                'name' : 'Kakuru Conrad'
             }
             
-            pdf = render_to_pdf('hospital/doctor/showrecords.html', data)
+            pdf = render_to_pdf('secureFlowMain/doctor/showrecords.html', data)
             return HttpResponse(pdf, content_type='application/pdf')
         else:
             return redirect('/')

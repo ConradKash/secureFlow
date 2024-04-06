@@ -17,7 +17,7 @@ def patient_dashboard(request):
         appointment_data = Appointment.objects.filter(user=request.user).order_by('-app_date')
         prescription_data = Medical_Record.objects.values('user','doctor_name', 'date').filter(user=request.user).annotate(Count('id')).order_by()
         print(prescription_data)
-        return render(request, 'hospital/patient/dashboard.html', {'appointment_data': appointment_data, 'prescription_data': prescription_data})
+        return render(request, 'secureFlowMain/patient/dashboard.html', {'appointment_data': appointment_data, 'prescription_data': prescription_data})
     
     else:
         return redirect('/')
@@ -54,10 +54,10 @@ def patient_profile(request):
                 messages.success(request, 'Account information successfully updated.')
                 return redirect('/patient/profile/')
             else:
-                return render(request, 'hospital/patient/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
+                return render(request, 'secureFlowMain/patient/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
         
         else:
-            return render(request, 'hospital/patient/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
+            return render(request, 'secureFlowMain/patient/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
     else:
         return redirect('/')
 
@@ -102,12 +102,12 @@ def patient_appointment(request):
             
             else:
                 doctor_list = Profile.objects.filter(user_type= 'Doctor').all()
-                return render(request, 'hospital/patient/appointment.html', {'appointment_form': appointment_form, 'doctor_list': doctor_list})
+                return render(request, 'secureFlowMain/patient/appointment.html', {'appointment_form': appointment_form, 'doctor_list': doctor_list})
 
         else:
             appointment_form = AppointmentForm()
             doctor_list = Profile.objects.filter(user_type= 'Doctor').all() 
-            return render(request, 'hospital/patient/appointment.html', {'appointment_form': appointment_form, 'doctor_list': doctor_list})
+            return render(request, 'secureFlowMain/patient/appointment.html', {'appointment_form': appointment_form, 'doctor_list': doctor_list})
     else:
         return redirect('/')
 
@@ -122,11 +122,11 @@ def patient_password(request):
                 return redirect('/patient/passwordchange/')
             
             else:
-                return render(request, 'hospital/patient/passwordchange.html', {'form': form})        
+                return render(request, 'secureFlowMain/patient/passwordchange.html', {'form': form})        
         
         else:
             form = ChangePasswordForm(user = request.user)
-            return render(request, 'hospital/patient/passwordchange.html', {'form': form})
+            return render(request, 'secureFlowMain/patient/passwordchange.html', {'form': form})
     
     else:
         return redirect('/')
@@ -144,7 +144,7 @@ def view_prescription(request, user_info, doctor_name, date):
             'doc_name' : doctor_name,
         }
         
-        pdf = render_to_pdf('hospital/doctor/showrecords.html', data)
+        pdf = render_to_pdf('secureFlowMain/doctor/showrecords.html', data)
         return HttpResponse(pdf, content_type='application/pdf')
     else:
         return redirect('/')

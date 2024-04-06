@@ -24,7 +24,7 @@ def admin_dashboard(request):
                 'pending_user' : pending_user,
                 'doctor_list' : doctor_list,
             }
-            return render(request, 'hospital/admin/dashboard.html', context)
+            return render(request, 'secureFlowMain/admin/dashboard.html', context)
         else:
             return redirect('/')
     else:
@@ -49,15 +49,15 @@ def admin_employee(request):
                     if search_by == 'All':
                         emp = Profile.objects.filter(user_type__in= ('Doctor','Receptionist'))
 
-                    return render(request, 'hospital/admin/employee_list.html', {'emp': emp})
+                    return render(request, 'secureFlowMain/admin/employee_list.html', {'emp': emp})
 
 
                 else:
                     emp = Profile.objects.filter(user_type__in= ('Doctor','Receptionist'))
-                    return render(request, 'hospital/admin/employee_list.html', {'emp': emp})    
+                    return render(request, 'secureFlowMain/admin/employee_list.html', {'emp': emp})    
             else:
                 emp = Profile.objects.filter(user_type__in= ('Doctor','Receptionist'))
-                return render(request, 'hospital/admin/employee_list.html', {'emp': emp})
+                return render(request, 'secureFlowMain/admin/employee_list.html', {'emp': emp})
         else:
             return redirect('/')
     else:
@@ -78,13 +78,13 @@ def admin_appointments(request):
                 else:
                     doctor = Profile.objects.filter(user_type='Doctor')
                     app_list = Appointment.objects.filter(doctor_name=doctor_name, app_date=get_date).all()
-                return render(request, 'hospital/admin/appointment_list.html', {'app_list': app_list, 'show_date': get_date, 'doctor': doctor})
+                return render(request, 'secureFlowMain/admin/appointment_list.html', {'app_list': app_list, 'show_date': get_date, 'doctor': doctor})
 
             else:
                 show_date = date.today().strftime("%Y-%m-%d")
                 doctor = Profile.objects.filter(user_type='Doctor')
                 app_list = Appointment.objects.filter(app_date=date.today()).all()
-                return render(request, 'hospital/admin/appointment_list.html', {'app_list': app_list, 'show_date': show_date, 'doctor': doctor})
+                return render(request, 'secureFlowMain/admin/appointment_list.html', {'app_list': app_list, 'show_date': show_date, 'doctor': doctor})
         else:
             return redirect('/')
     else:
@@ -122,15 +122,15 @@ def admin_patients(request):
                     if search_by == 'All':
                         emp = Profile.objects.filter(user_type='Patient')
 
-                    return render(request, 'hospital/admin/patient_list.html', {'emp': emp})
+                    return render(request, 'secureFlowMain/admin/patient_list.html', {'emp': emp})
 
 
                 else:
                     emp = Profile.objects.filter(user_type='Patient')
-                    return render(request, 'hospital/admin/patient_list.html', {'emp': emp})    
+                    return render(request, 'secureFlowMain/admin/patient_list.html', {'emp': emp})    
             else:
                 emp = Profile.objects.filter(user_type='Patient')
-                return render(request, 'hospital/admin/patient_list.html', {'emp': emp})
+                return render(request, 'secureFlowMain/admin/patient_list.html', {'emp': emp})
         else:
             return redirect('/')
     else:
@@ -140,7 +140,7 @@ def admin_pending_users(request):
     if request.user.is_authenticated:
         if request.session["user_type"] == True:
             user_data = Profile.objects.filter(is_approved=False).filter(user_type__in= ('Doctor','Receptionist'))
-            return render(request, 'hospital/admin/pending_user.html', {'user_data': user_data})
+            return render(request, 'secureFlowMain/admin/pending_user.html', {'user_data': user_data})
         else:
             return redirect('/')
     else:
@@ -191,10 +191,10 @@ def admin_profile(request):
                     messages.success(request, 'Account information successfully updated.')
                     return redirect('/admin/profile/')
                 else:
-                    return render(request, 'hospital/admin/profile.html', {'profile_form': profile_form, 'add_profile_form': add_profile_form })
+                    return render(request, 'secureFlowMain/admin/profile.html', {'profile_form': profile_form, 'add_profile_form': add_profile_form })
             
             else:
-                return render(request, 'hospital/admin/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
+                return render(request, 'secureFlowMain/admin/profile.html',{'profile_form': profile_form, 'add_profile_form': add_profile_form })
         else:
             return redirect('/')
     else:
@@ -212,11 +212,11 @@ def admin_password(request):
                     return redirect('/admin/passwordchange/')
                 
                 else:
-                    return render(request, 'hospital/admin/passwordchange.html', {'form': form})        
+                    return render(request, 'secureFlowMain/admin/passwordchange.html', {'form': form})        
             
             else:
                 form = ChangePasswordForm(user = request.user)
-                return render(request, 'hospital/admin/passwordchange.html', {'form': form})
+                return render(request, 'secureFlowMain/admin/passwordchange.html', {'form': form})
         else:
             return redirect('/')
     else:
