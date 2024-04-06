@@ -21,17 +21,11 @@ GENDER_CHOICE = (
     (2,_("Female")),
 )
 
-CATEGORY_USER = (
-    (1, _("Admin")),
-    (2,_("Doctor")),
-    (3, _("Patient")),
-    (4,_("Receptionist")),
-    (5,_("Pharmacy")),
-)
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    user_type = models.IntegerField(choices=CATEGORY_USER) 
+    user_type = models.CharField(max_length=15, null=True,blank=False)
     address = models.CharField(max_length=256, null=True, blank=True)
     phone_regex = RegexValidator(regex=r'^[0-9]\d{9}$', message="Please enter valid mobile number.")
     mobile = models.CharField(validators=[phone_regex], max_length=10, blank=True)
