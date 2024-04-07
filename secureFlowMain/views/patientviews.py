@@ -73,6 +73,7 @@ def patient_appointment(request):
                 doctor = request.POST['doctor']
                 doctor_name = doctor.split('|')[0]
                 department_name = doctor.split('|')[1]
+                doctor_id = doctor.split('|')[2]
                 user = request.user
                 full_name = request.user.first_name +' '+request.user.last_name
                 mobile = user.profile.mobile
@@ -88,7 +89,7 @@ def patient_appointment(request):
                         
                         check_data = Appointment.objects.filter(user=user, app_date=note_date).count()
                         if check_data == 0:
-                            data = Appointment(user=user, full_name=full_name, mobile=mobile, app_date=note_date, doctor_name=doctor_name, department=department_name, appointment_no=app_no)
+                            data = Appointment(user=user, full_name=full_name, mobile=mobile, app_date=note_date, doctor_name=doctor_name, department=department_name, appointment_no=app_no, doctor_id=doctor_id)
                             data.save()
                             messages.success(request, f'Appointment is successfully created on date {note_date} and <strong>Appointment no. is {app_no}</strong>.')
                         

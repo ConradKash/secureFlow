@@ -139,7 +139,7 @@ class AppointmentForm(forms.Form):
 
         appointment_date = self.cleaned_data.get('app_date')
 
-        if appointment_date < date.today() + timedelta(days=1):
+        if appointment_date < date.today() + timedelta(days=0):
             self.add_error('app_date', 'Please select valid date for appointment.')
         
         if appointment_date > date.today() + timedelta(days=15):

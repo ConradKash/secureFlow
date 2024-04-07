@@ -68,23 +68,22 @@ def admin_appointments(request):
         if request.session["user_type"] == True:
             if request.method == 'POST':
                 get_date = request.POST.get('date')
-                doctor_name = request.POST.get('doctor_name')
+                doctor_id = request.POST.get('doctor_id')
+                messages.success(request, f'Appointment successfull confirm for <strong>"{doctor_id}"</strong>.')
 
-                if doctor_name == 'All':
-                    show_date = date.today().strftime("%Y-%m-%d")
+                if doctor_id == 'All':
                     doctor = Profile.objects.filter(user_type='Doctor')
                     app_list = Appointment.objects.filter(app_date=get_date).all()    
 
                 else:
                     doctor = Profile.objects.filter(user_type='Doctor')
-                    app_list = Appointment.objects.filter(doctor_name=doctor_name, app_date=get_date).all()
+                    app_list = Appointment.objects.filter(doctor_id='7').all()
                 return render(request, 'secureFlowMain/admin/appointment_list.html', {'app_list': app_list, 'show_date': get_date, 'doctor': doctor})
 
             else:
-                show_date = date.today().strftime("%Y-%m-%d")
-                doctor = Profile.objects.filter(user_type='Doctor')
+                doctor = Profile.objects.filter(user_type='Doctor').all()
                 app_list = Appointment.objects.filter(app_date=date.today()).all()
-                return render(request, 'secureFlowMain/admin/appointment_list.html', {'app_list': app_list, 'show_date': show_date, 'doctor': doctor})
+                return render(request, 'secureFlowMain/admin/appointment_list.html', {'app_list': app_list, 'doctor': doctor})
         else:
             return redirect('/')
     else:

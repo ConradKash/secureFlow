@@ -45,6 +45,7 @@ class Appointment(models.Model):
     full_name = models.CharField(max_length=256, null=False, blank=False, default='')
     mobile = models.CharField(max_length=10, null=False, blank=False, default='')
     app_date = models.DateField(null=False, blank=False)
+    doctor_id = models.CharField(max_length=256, null=False, blank=False)
     book_date = models.DateField(null=False, blank=False, auto_now=True)
     doctor_name = models.CharField(max_length=256, null=False, blank=False)
     department = models.CharField(max_length=100, null=False, blank=False)
