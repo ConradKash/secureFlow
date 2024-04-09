@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from secureFlowMain.models import Profile, Appointment, Hospital
+from secureFlowMain.models import Profile, Appointment, Hospital, Pharmacy
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth import authenticate
@@ -52,23 +52,17 @@ class NewUserForm(ModelForm):
 class NewHospitalForm(ModelForm):
     class Meta:
         model = Hospital
-
+        
         fields = ['hospital_name', 'address', 'email', 'license_number', 'contact_number', 'established_date', 'certification_expiry_date']
 
         widgets = {
-            'hospital_name': forms.TextInput(attrs={'placeholder':'Hospital Name', 'class': 'form-control', 'autocomplete': 'off'}), 
-            'address': forms.TextInput(attrs={'placeholder':'Hospital Address', 'class': 'form-control', 'autocomplete': 'off'}), 
+            'hospital_name': forms.TextInput(attrs={'placeholder':'Hospital Name', 'class': 'form-control', 'autocomplete': 'off'}),
+            'address': forms.TextInput(attrs={'placeholder':'Address', 'class': 'form-control', 'autocomplete': 'off'}), 
             'email': forms.EmailInput(attrs={'placeholder':'Email Address', 'class': 'form-control', 'autocomplete': 'off'}), 
             'license_number': forms.TextInput(attrs={'placeholder':'License Number', 'class': 'form-control', 'autocomplete': 'off'}), 
             'contact_number': forms.TextInput(attrs={'placeholder':'Contact', 'class': 'form-control', 'autocomplete': 'off'}),
             'established_date': forms.DateField(widget=forms.TextInput(attrs={'placeholder':'MM/DD/YYYY', 'class': 'form-control', 'id': 'datepicker1', 'autocomplete': 'off'})),
-            'certification_expiry_date': forms.TextInput(attrs={'placeholder':'First Name', 'class': 'form-control', 'autocomplete': 'off'}),
-            
-            'first_name': forms.TextInput(attrs={'placeholder':'First Name', 'class': 'form-control', 'autocomplete': 'off'}),
-            'last_name' : forms.TextInput(attrs={'placeholder':'Last Name', 'class': 'form-control', 'autocomplete': 'off'}),
-            'email' : forms.EmailInput(attrs={'placeholder':'Email Address', 'class': 'form-control', 'autocomplete': 'off'}),
-            'username' : forms.TextInput(attrs={'placeholder':'Username', 'class': 'form-control', 'autocomplete': 'off'}),
-            'password' : forms.PasswordInput(attrs={'placeholder':'Password', 'class': 'form-control', 'autocomplete': 'off'}),
+            'certification_expiry_date': forms.DateField(widget=forms.TextInput(attrs={'placeholder':'MM/DD/YYYY', 'class': 'form-control', 'id': 'datepicker1', 'autocomplete': 'off'})),
         }
 
 
@@ -86,6 +80,52 @@ class NewHospitalForm(ModelForm):
 
         if not hospital_name:
             self.add_error('hospital_name', 'Please enter a hospital name.')
+        if not address:
+            self.add_error('address', 'Please enter a hospital address.')
+        if not email:
+            self.add_error('email', 'Please enter an email address.')
+        if not license_number:
+            self.add_error('license_number', 'Please enter a license number.')
+        if not contact_number:
+            self.add_error('contact_number', 'Please enter a contact number.')
+        if not established_date:
+            self.add_error('established_date', 'Please enter an established date.')
+        if not certification_expiry_date:
+            self.add_error('certification_expiry_date', 'Please enter a certification expiry date.')
+
+        return self.cleaned_data
+    
+class NewPharmacyForm(ModelForm):
+    class Meta:
+        model = Pharmacy
+
+        fields = ['pharmacy_name', 'address', 'email', 'license_number', 'contact_number', 'established_date', 'certification_expiry_date']
+
+        widgets = {
+            'pharmacy_name': forms.TextInput(attrs={'placeholder':'Pharmacy Name', 'class': 'form-control', 'autocomplete': 'off'}), 
+            'address': forms.TextInput(attrs={'placeholder':'Address', 'class': 'form-control', 'autocomplete': 'off'}), 
+            'email': forms.EmailInput(attrs={'placeholder':'Email Address', 'class': 'form-control', 'autocomplete': 'off'}), 
+            'license_number': forms.TextInput(attrs={'placeholder':'License Number', 'class': 'form-control', 'autocomplete': 'off'}), 
+            'contact_number': forms.TextInput(attrs={'placeholder':'Contact', 'class': 'form-control', 'autocomplete': 'off'}),
+            'established_date': forms.DateField(widget=forms.TextInput(attrs={'placeholder':'MM/DD/YYYY', 'class': 'form-control', 'id': 'datepicker1', 'autocomplete': 'off'})),
+            'certification_expiry_date': forms.DateField(widget=forms.TextInput(attrs={'placeholder':'MM/DD/YYYY', 'class': 'form-control', 'id': 'datepicker1', 'autocomplete': 'off'})),
+        }
+
+
+    def clean(self):
+        super(NewHospitalForm, self).clean()
+        pharmacy_name = self.cleaned_data.get('pharmacy_name')
+        address = self.cleaned_data.get('address')
+        email = self.cleaned_data.get('email')
+        license_number = self.cleaned_data.get('license_number', None)
+        contact_number = self.cleaned_data.get('contact_number', None)
+        established_date = self.cleaned_data.get('established_date')
+        certification_expiry_date = self.cleaned_data.get('certification_expiry_date')
+
+
+
+        if not pharmacy_name:
+            self.add_error('pharmacy_name', 'Please enter a hospital name.')
         if not address:
             self.add_error('address', 'Please enter a hospital address.')
         if not email:

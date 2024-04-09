@@ -60,12 +60,12 @@ class Hospital(models.Model):
 
 class Pharmacy(models.Model):
     pharmacy_id = CustomPrimaryKeyField(prefix='pharmacy_')
-    name = models.CharField(max_length=15, null=True,blank=False)
+    pharmacy_name = models.CharField(max_length=15, null=True,blank=False)
     address = models.CharField(max_length=256, null=True, blank=True)
+    email = models.CharField(max_length=256, null=True, blank=True)
     license_number = models.CharField(max_length=50)
     contact_number = RegexValidator(regex=r'^[0-9]\d{9}$', message="Please enter valid mobile number.")
     employee_count = models.PositiveIntegerField()
-    location = models.CharField(max_length=100)
     established_date = models.DateField()
     certification_expiry_date = models.DateField()
     is_certified = models.BooleanField(default=False)
