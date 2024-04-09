@@ -48,12 +48,12 @@ class CustomPrimaryKeyField(models.CharField):
 
 class Hospital(models.Model):
     hospital_id = CustomPrimaryKeyField(prefix='hospital_')
-    name = models.CharField(max_length=15, null=True,blank=False)
+    hospital_name = models.CharField(max_length=15, null=True,blank=False)
     address = models.CharField(max_length=256, null=True, blank=True)
+    email = models.CharField(max_length=256, null=True, blank=True)
     license_number = models.CharField(max_length=50)
     contact_number = RegexValidator(regex=r'^[0-9]\d{9}$', message="Please enter valid mobile number.")
     employee_count = models.PositiveIntegerField()
-    location = models.CharField(max_length=100)
     established_date = models.DateField()
     certification_expiry_date = models.DateField()
     is_certified = models.BooleanField(default=False)
@@ -167,6 +167,8 @@ class Appointment(models.Model):
     app_date = models.DateField(null=False, blank=False)
     doctor_id = models.CharField(max_length=256, null=False, blank=False)
     book_date = models.DateField(null=False, blank=False, auto_now=True)
+    patient = models.ForeignKey(ProfilePatient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(ProfileDoctor, on_delete=models.CASCADE)
     doctor_name = models.CharField(max_length=256, null=False, blank=False)
     department = models.CharField(max_length=100, null=False, blank=False)
     fees = models.PositiveIntegerField(null=False, blank=False, default=500)
