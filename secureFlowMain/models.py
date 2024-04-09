@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext as _
+from django.core.validators import MinValueValidator
 # Create your models here.
 
 BLOOD_GROUP_CHOICE = (
@@ -72,6 +73,17 @@ class Pharmacy(models.Model):
     def __str__(self):
         return self.name
 
+class MedicineInventory(models.Model):
+    drug_id = CustomPrimaryKeyField(prefix='drug_')
+    pharmacy = models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.name} ({self.pharmacy.name})"
+    
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_type = models.CharField(max_length=15, null=True,blank=False)
@@ -128,7 +140,7 @@ class ProfileDoctor(models.Model):
         return self.user.username
     
 class ProfileReception(models.Model):
-    doctor_id = CustomPrimaryKeyField(prefix='d_')
+    doctor_id = CustomPrimaryKeyField(prefix='reception_')
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     hospotal_id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     user_type = models.CharField(max_length=15, null=True,blank=False)
@@ -148,6 +160,7 @@ class ProfileReception(models.Model):
 
 class Appointment(models.Model):
     # id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    appointment_id = CustomPrimaryKeyField(prefix='appointment_')
     user = models.CharField(max_length=256, null=False, blank=False)
     full_name = models.CharField(max_length=256, null=False, blank=False, default='')
     mobile = models.CharField(max_length=10, null=False, blank=False, default='')
@@ -164,16 +177,31 @@ class Appointment(models.Model):
     def __str__(self):
         return self.user
 
+class Prescription(models.Model):
+    prescription_id = CustomPrimaryKeyField(prefix='prescription_')
+    pharmacy = models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
+    patient = models.ForeignKey(ProfilePatient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(ProfileDoctor, on_delete=models.CASCADE)
+    drugs = models.ManyToManyField(MedicineInventory, through='PrescribedDrug')
+    total_length = models.PositiveIntegerField(help_text="Total length of prescription in days")
+
+    def __str__(self):
+        return f"Prescription for {self.pharmacy.name}"
+
+class PrescribedDrug(models.Model):
+    prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
+    drug = models.ForeignKey(MedicineInventory, on_delete=models.CASCADE)
+    dosage = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.drug.name} ({self.prescription.pharmacy.name})"
+    
 class Medical_Record(models.Model):
+    medical_record_id = CustomPrimaryKeyField(prefix='md_')
+    prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
     user = models.CharField(max_length=256, null=False, blank=False)
     doctor_name = models.CharField(max_length=256, null=False, blank=False)
     department = models.CharField(max_length=100, null=False, blank=False)
     date = models.DateField()
     prescription = models.CharField(max_length=1024, null=False, blank=False)
     days = models.PositiveIntegerField(default=3)
-
-    def __str__(self):
-        return self.user
-
-class Prescription(models.Model):
-    user = models.CharField(max_length=256, null=False, blank=False)
