@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from secureFlowMain.models import Profile, Appointment, Hospital, Pharmacy
+from secureFlowMain.models import Profile, Appointment, Hospital, Pharmacy,MedicineInventory
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth import authenticate
@@ -92,6 +92,38 @@ class NewHospitalForm(ModelForm):
             self.add_error('established_date', 'Please enter an established date.')
         if not certification_expiry_date:
             self.add_error('certification_expiry_date', 'Please enter a certification expiry date.')
+
+        return self.cleaned_data
+    
+class NewMedicineInventory(ModelForm):
+    class Meta:
+        model = MedicineInventory
+        
+        fields = ['pharmacy', 'name', 'description', 'quantity', 'price']
+        
+        widgets = {
+            'pharmacy': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'placeholder':'Name', 'class': 'form-control', 'autocomplete': 'off'}),
+            'description': forms.Textarea(attrs={'placeholder':'Description', 'class': 'form-control', 'autocomplete': 'off'}),
+            'quantity': forms.NumberInput(attrs={'placeholder':'Quantity', 'class': 'form-control', 'autocomplete': 'off'}),
+            'price': forms.NumberInput(attrs={'placeholder':'Price', 'class': 'form-control', 'autocomplete': 'off'}),
+        }
+
+    def clean(self):
+        super(NewMedicineInventory, self).clean()
+        name = self.cleaned_data.get('name')
+        description = self.cleaned_data.get('description')
+        quantity = self.cleaned_data.get('quantity')
+        price = self.cleaned_data.get('price')
+        
+        if not description:
+            self.add_error('description', 'Please enter a description.')
+        if not name:
+            self.add_error('name', 'Please enter a name.')
+        if quantity is None:
+            self.add_error('quantity', 'Please enter a valid quantity.')
+        if price is None:
+            self.add_error('price', 'Please enter a valid price.')
 
         return self.cleaned_data
     
