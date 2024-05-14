@@ -13,7 +13,13 @@ class AdminSigupForm(forms.ModelForm):
         'password': forms.PasswordInput()
         }
 
+class HospitalForm(forms.ModelForm):
+    class Meta:
+        model=models.Hospital
+        fields=['name', 'address', 'contact', 'email', 'logo', 'is_approved']
 
+        
+        
 #for student related form
 class DoctorUserForm(forms.ModelForm):
     class Meta:
@@ -27,6 +33,10 @@ class DoctorForm(forms.ModelForm):
         model=models.Doctor
         fields=['address','mobile','department','status','profile_pic']
 
+class ReceptionistForm(forms.ModelForm):
+    class Meta:
+        model=models.Receptionist
+        fields=['address','mobile','status','profile_pic']
 
 
 #for teacher related form

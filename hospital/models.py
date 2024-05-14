@@ -12,7 +12,7 @@ departments=[('Cardiologist','Cardiologist'),
 ]
 
 
-class Hopital(models.Model):
+class Hospital(models.Model):
     name=models.CharField(max_length=100)
     address=models.CharField(max_length=100)
     contact=models.CharField(max_length=20)
@@ -26,7 +26,7 @@ class Doctor(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     profile_pic= models.ImageField(upload_to='profile_pic/DoctorProfilePic/',null=True,blank=True)
     address = models.CharField(max_length=40)
-    hospital = models.ForeignKey(Hopital,on_delete=models.CASCADE)
+    hospital = models.ForeignKey(Hospital,on_delete=models.CASCADE)
     mobile = models.CharField(max_length=20,null=True)
     department= models.CharField(max_length=50,choices=departments,default='Cardiologist')
     status=models.BooleanField(default=False)
@@ -44,7 +44,7 @@ class Receptionist(models.Model):
     profile_pic= models.ImageField(upload_to='profile_pic/ReceptionistProfilePic/',null=True,blank=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=True)
-    hospital = models.ForeignKey(Hopital,on_delete=models.CASCADE)
+    hospital = models.ForeignKey(Hospital,on_delete=models.CASCADE)
     status=models.BooleanField(default=False)
     @property
     def get_name(self):
