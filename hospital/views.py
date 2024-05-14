@@ -331,12 +331,12 @@ def update_patient_view(request,pk):
 #------------------FOR ADDING HOSPITAL BY ADMIN----------------------
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
-def admin_add_patient_view(request):
+def admin_add_hospital_view(request):
     hospitalForm=forms.HospitalForm()
     mydict={'hospitalForm':hospitalForm}
     if request.method=='POST':
         hospitalForm=forms.hospitalForm(request.POST)
-    return render(request,'hospital/admin_add_patient.html',context=mydict)
+    return render(request,'hospital/admin_add_hospital.html',context=mydict)
 
 
 #------------------FOR ADDING PATIENT BY ADMIN----------------------
