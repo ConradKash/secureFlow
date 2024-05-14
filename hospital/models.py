@@ -73,6 +73,26 @@ class Patient(models.Model):
     def __str__(self):
         return self.user.first_name+" ("+self.symptoms+")"
 
+class Pharmacy(models.Model):
+    name=models.CharField(max_length=100)
+    address=models.CharField(max_length=100)
+    contact=models.CharField(max_length=20)
+    email=models.EmailField(max_length=50)
+    logo=models.ImageField(upload_to='profile_pic/PharmacyLogo/',null=True,blank=True)
+    is_approved=models.BooleanField(default=False)
+    def __str__(self):
+        return self.name
+
+class Prescription(models.Model):
+    patientId=models.PositiveIntegerField(null=True)
+    patientName=models.CharField(max_length=40)
+    doctorId=models.PositiveIntegerField(null=True)
+    doctorName=models.CharField(max_length=40)
+    pharmacyId=models.PositiveIntegerField(null=True)
+    pharmacyName=models.CharField(max_length=40)
+    medicineName=models.CharField(max_length=40)
+    description=models.TextField(max_length=500)
+    status=models.BooleanField(default=False)
 
 class Appointment(models.Model):
     patientId=models.PositiveIntegerField(null=True)
@@ -82,7 +102,6 @@ class Appointment(models.Model):
     appointmentDate=models.DateField(auto_now=True)
     description=models.TextField(max_length=500)
     status=models.BooleanField(default=False)
-
 
 
 class PatientDischargeDetails(models.Model):
