@@ -18,7 +18,10 @@ class HospitalForm(forms.ModelForm):
         model=models.Hospital
         fields=['name', 'address', 'contact', 'email', 'logo', 'is_approved']
 
-        
+class PharmacyForm(forms.ModelForm):
+    class Meta:
+        model=models.Pharmacy
+        fields=['name', 'address', 'contact', 'email', 'logo', 'is_approved']      
         
 #for student related form
 class DoctorUserForm(forms.ModelForm):
