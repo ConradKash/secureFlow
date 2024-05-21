@@ -16,7 +16,7 @@ class AdminSigupForm(forms.ModelForm):
 class HospitalForm(forms.ModelForm):
     class Meta:
         model=models.Hospital
-        fields=['name', 'address', 'contact', 'email', 'logo', 'is_approved']
+        fields=['name', 'address', 'contact', 'email', 'logo']
 
 class PharmacyForm(forms.ModelForm):
     class Meta:

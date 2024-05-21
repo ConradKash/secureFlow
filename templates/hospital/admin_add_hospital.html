@@ -54,25 +54,25 @@
   <div class="container register-form">
     <div class="form">
       <div class="note">
-        <p>Admit Patient To Hospital</p>
+        <p>Admit Hospital</p>
       </div>
       <div class="form-content">
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
+              {% render_field hospitalForm.name class="form-control" placeholder="Hospital name" %}
             </div>
             <div class="form-group">
-              {% render_field userForm.username class="form-control" placeholder="Username" %}
+              {% render_field hospitalForm.address class="form-control" placeholder="Address" %}
             </div>
             <div class="form-group">
-              {% render_field patientForm.address class="form-control" placeholder="Address" %}
+              {% render_field hospitalForm.contact class="form-control" placeholder="Contact" %}
             </div>
             <div class="form-group">
-              {% render_field patientForm.symptoms class="form-control" placeholder="Symptoms" %}
+              {% render_field hospitalForm.email class="form-control" placeholder="Email" %}
             </div>
             <div class="form-group">
-              {% render_field patientForm.profile_pic required="required" class="form-control" placeholder="Profile Picture" %}
+              {% render_field hospitalForm.logo required="required" class="form-control" placeholder="Profile Picture" %}
             </div>
           </div>
         </div>

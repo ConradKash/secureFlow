@@ -335,7 +335,17 @@ def admin_add_hospital_view(request):
     hospitalForm=forms.HospitalForm()
     mydict={'hospitalForm':hospitalForm}
     if request.method=='POST':
-        hospitalForm=forms.hospitalForm(request.POST)
+        hospitalForm = forms.HospitalForm(request.POST)
+        if hospitalForm.is_valid():
+            hospital =hospitalForm.save(commit=False)
+            hospital.name=request.POST.get('name')
+            hospital.address=request.POST.get('address')
+            hospital.contact=request.POST.get('contact')
+            hospital.email=request.POST.get('email')
+            hospital.logo=request.POST.get('logo')
+            hospital.is_approved=True
+            hospital.save()
+        return HttpResponseRedirect('admin-add-hospital')
     return render(request,'hospital/admin_add_hospital.html',context=mydict)
 
 
