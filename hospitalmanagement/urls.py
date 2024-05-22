@@ -58,6 +58,9 @@ urlpatterns = [
 
  #---------FOR ADMIN - HOSPITAL RELATED URLS-------------------------------------
     path('admin-add-hospital', views.admin_add_hospital_view,name='admin-add-hospital'),
+    path('admin-view-hospital', views.admin_view_hospital_view,name='admin-view-hospital'),
+    path('delete-hospital-from-hospital/<int:pk>', views.delete_hospital_from_hospital_view,name='delete-hospital-from-hospital'),
+    path('update-hospital/<int:pk>', views.update_hospital_view,name='update-hospital'),
 ]
 
  #---------FOR DOCTOR RELATED URLS-------------------------------------

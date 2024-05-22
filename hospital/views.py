@@ -348,6 +348,34 @@ def admin_add_hospital_view(request):
         return HttpResponseRedirect('admin-add-hospital')
     return render(request,'hospital/admin_add_hospital.html',context=mydict)
 
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_view_hospital_view(request):
+    hospital=models.Hospital.objects.all().filter(is_approved=True)
+    return render(request,'hospital/admin_view_hospital.html',{'hospital':hospital})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def update_hospital_view(request,pk):
+    hospital=models.Hospital.objects.get(id=pk)    
+    hospitalForm=forms.HospitalForm(request.FILES, instance=hospital)
+    mydict={'hospitalForm':hospitalForm}
+    if request.method=='POST':
+        hospitalForm=forms.HospitalForm(request.POST,request.FILES,instance=hospital)
+        if hospitalForm.is_valid():
+            hospital=hospitalForm.save(commit=False)
+            hospital.status=True
+            hospital.save()
+            return redirect('admin-view-hospital')
+    return render(request,'hospital/admin_update_hospital.html',context=mydict)
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def delete_hospital_from_hospital_view(request, pk):
+    hospital=models.Hospital.objects.get(id=pk)
+    hospital.delete()
+    return redirect('admin-view-hospital')
+
 
 #------------------FOR ADDING PATIENT BY ADMIN----------------------
 @login_required(login_url='adminlogin')
