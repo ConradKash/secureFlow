@@ -32,11 +32,13 @@ class DoctorUserForm(forms.ModelForm):
         'password': forms.PasswordInput()
         }
 class DoctorForm(forms.ModelForm):
+    hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Doctor
         fields=['address','mobile','department','status','profile_pic']
 
 class ReceptionistForm(forms.ModelForm):
+    hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Receptionist
         fields=['address','mobile','status','profile_pic']
@@ -64,6 +66,7 @@ class PatientForm(forms.ModelForm):
 class AppointmentForm(forms.ModelForm):
     doctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Doctor Name and Department", to_field_name="user_id")
     patientId=forms.ModelChoiceField(queryset=models.Patient.objects.all().filter(status=True),empty_label="Patient Name and Symptoms", to_field_name="user_id")
+    hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Appointment
         fields=['description','status']
@@ -71,6 +74,7 @@ class AppointmentForm(forms.ModelForm):
 
 class PatientAppointmentForm(forms.ModelForm):
     doctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Doctor Name and Department", to_field_name="user_id")
+    hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Appointment
         fields=['description','status']
