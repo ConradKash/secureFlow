@@ -43,6 +43,14 @@ urlpatterns = [
     path('reject-doctor/<int:pk>', views.reject_doctor_view,name='reject-doctor'),
     path('admin-view-doctor-specialisation',views.admin_view_doctor_specialisation_view,name='admin-view-doctor-specialisation'),
 
+    path('admin-receptionist', views.admin_receptionist_view,name='admin-receptionist'),
+    path('admin-view-receptionist', views.admin_view_receptionist_view,name='admin-view-receptionist'),
+    path('delete-receptionist-from-hospital/<int:pk>', views.delete_receptionist_from_hospital_view,name='delete-receptionist-from-hospital'),
+    path('update-receptionist/<int:pk>', views.update_receptionist_view,name='update-receptionist'),
+    path('admin-add-receptionist', views.admin_add_receptionist_view,name='admin-add-receptionist'),
+    path('admin-approve-receptionist', views.admin_approve_receptionist_view,name='admin-approve-receptionist'),
+    path('approve-receptionist/<int:pk>', views.approve_receptionist_view,name='approve-receptionist'),
+    path('reject-receptionist/<int:pk>', views.reject_receptionist_view,name='reject-receptionist'),
 
     path('admin-patient', views.admin_patient_view,name='admin-patient'),
     path('admin-view-patient', views.admin_view_patient_view,name='admin-view-patient'),
