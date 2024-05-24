@@ -45,7 +45,6 @@ class Receptionist(models.Model):
     profile_pic= models.ImageField(upload_to='profile_pic/ReceptionistProfilePic/',null=True,blank=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=True)
-    hospital = models.ForeignKey(Hospital,on_delete=models.CASCADE)
     status=models.BooleanField(default=False)
     @property
     def get_name(self):

@@ -37,11 +37,20 @@ class DoctorForm(forms.ModelForm):
         model=models.Doctor
         fields=['address','mobile','department','status','profile_pic']
 
+class ReceptionistUserForm(forms.ModelForm):
+    class Meta:
+        model=User
+        fields=['first_name','last_name','username','password']
+        widgets = {
+        'password': forms.PasswordInput()
+        }
 class ReceptionistForm(forms.ModelForm):
     hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Receptionist
         fields=['address','mobile','status','profile_pic']
+
+
 
 
 #for teacher related form
@@ -69,7 +78,7 @@ class AppointmentForm(forms.ModelForm):
     hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Appointment
-        fields=['description','status']
+        fields=['description','status', 'hospitalname']
 
 
 class PatientAppointmentForm(forms.ModelForm):

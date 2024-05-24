@@ -28,6 +28,12 @@ def doctorclick_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request,'hospital/doctorclick.html')
 
+#for showing signup/login button for doctor(by sumit)
+def receptionistclick_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'hospital/receptionistclick.html')
+
 
 #for showing signup/login button for patient(by sumit)
 def patientclick_view(request):
@@ -231,6 +237,7 @@ def admin_add_doctor_view(request):
 
             doctor=doctorForm.save(commit=False)
             doctor.user=user
+            doctor.hospitalId=request.POST.get('hospitalId')
             doctor.status=True
             doctor.save()
 
@@ -470,63 +477,121 @@ def reject_patient_view(request,pk):
     patient.delete()
     return redirect('admin-approve-patient')
 
-# #------------------FOR APPROVING RECEPTIONIST BY ADMIN----------------------
-# @login_required(login_url='adminlogin')
-# @user_passes_test(is_admin)
-# def admin_approve_patient_view(request):
-#     #those whose approval are needed
-#     receptionists=models.Receptionist.objects.all().filter(status=False)
-#     return render(request,'hospital/admin_approve_receptionist.html',{'receptionists':receptionists})
+# ------------------FOR APPROVING RECEPTIONIST BY ADMIN----------------------
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def receptionist_doctor_view(request):
+    return render(request,'hospital/receptionist_doctor.html')
 
 
 
-# @login_required(login_url='adminlogin')
-# @user_passes_test(is_admin)
-# def approve_patient_view(request,pk):
-#     patient=models.Receptionist.objects.get(id=pk)
-#     patient.status=True
-#     patient.save()
-#     return redirect(reverse('admin-approve-receptionists'))
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def receptionist_view_doctor_view(request):
+    doctors=models.Doctor.objects.all().filter(status=True)
+    return render(request,'hospital/receptionist_view_doctor.html',{'doctors':doctors})
 
 
 
-# @login_required(login_url='adminlogin')
-# @user_passes_test(is_admin)
-# def reject_patient_view(request,pk):
-#     patient=models.Receptionist.objects.get(id=pk)
-#     user=models.User.objects.get(id=patient.user_id)
-#     user.delete()
-#     patient.delete()
-#     return redirect('admin-approve-receptionists')
-
-# #------------------FOR APPROVING HOSPITALS BY ADMIN----------------------
-# @login_required(login_url='adminlogin')
-# @user_passes_test(is_admin)
-# def admin_approve_patient_view(request):
-#     #those whose approval are needed
-#     patients=models.Patient.objects.all().filter(status=False)
-#     return render(request,'hospital/admin_approve_patient.html',{'patients':patients})
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def delete_doctor_from_hospital_view(request,pk):
+    doctor=models.Doctor.objects.get(id=pk)
+    user=models.User.objects.get(id=doctor.user_id)
+    user.delete()
+    doctor.delete()
+    return redirect('receptionist-view-doctor')
 
 
 
-# @login_required(login_url='adminlogin')
-# @user_passes_test(is_admin)
-# def approve_patient_view(request,pk):
-#     patient=models.Patient.objects.get(id=pk)
-#     patient.status=True
-#     patient.save()
-#     return redirect(reverse('admin-approve-patient'))
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def update_doctor_view(request,pk):
+    doctor=models.Doctor.objects.get(id=pk)
+    user=models.User.objects.get(id=doctor.user_id)
+
+    userForm=forms.DoctorUserForm(instance=user)
+    doctorForm=forms.DoctorForm(request.FILES,instance=doctor)
+    mydict={'userForm':userForm,'doctorForm':doctorForm}
+    if request.method=='POST':
+        userForm=forms.DoctorUserForm(request.POST,instance=user)
+        doctorForm=forms.DoctorForm(request.POST,request.FILES,instance=doctor)
+        if userForm.is_valid() and doctorForm.is_valid():
+            user=userForm.save()
+            user.set_password(user.password)
+            user.save()
+            doctor=doctorForm.save(commit=False)
+            doctor.status=True
+            doctor.save()
+            return redirect('receptionist-view-doctor')
+    return render(request,'hospital/receptionist_update_doctor.html',context=mydict)
 
 
 
-# @login_required(login_url='adminlogin')
-# @user_passes_test(is_admin)
-# def reject_patient_view(request,pk):
-#     patient=models.Patient.objects.get(id=pk)
-#     user=models.User.objects.get(id=patient.user_id)
-#     user.delete()
-#     patient.delete()
-#     return redirect('admin-approve-patient')
+
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def receptionist_add_doctor_view(request):
+    userForm=forms.DoctorUserForm()
+    doctorForm=forms.DoctorForm()
+    mydict={'userForm':userForm,'doctorForm':doctorForm}
+    if request.method=='POST':
+        userForm=forms.DoctorUserForm(request.POST)
+        doctorForm=forms.DoctorForm(request.POST, request.FILES)
+        if userForm.is_valid() and doctorForm.is_valid():
+            user=userForm.save()
+            user.set_password(user.password)
+            user.save()
+
+            doctor=doctorForm.save(commit=False)
+            doctor.user=user
+            doctor.hospitalId=request.POST.get('hospitalId')
+            doctor.status=True
+            doctor.save()
+
+            my_doctor_group = Group.objects.get_or_create(name='DOCTOR')
+            my_doctor_group[0].user_set.add(user)
+
+        return HttpResponseRedirect('receptionist-view-doctor')
+    return render(request,'hospital/receptionist_add_doctor.html',context=mydict)
+
+
+
+
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def receptionist_approve_doctor_view(request):
+    #those whose approval are needed
+    doctors=models.Doctor.objects.all().filter(status=False)
+    return render(request,'hospital/receptionist_approve_doctor.html',{'doctors':doctors})
+
+
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def approve_doctor_view(request,pk):
+    doctor=models.Doctor.objects.get(id=pk)
+    doctor.status=True
+    doctor.save()
+    return redirect(reverse('receptionist-approve-doctor'))
+
+
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def reject_doctor_view(request,pk):
+    doctor=models.Doctor.objects.get(id=pk)
+    user=models.User.objects.get(id=doctor.user_id)
+    user.delete()
+    doctor.delete()
+    return redirect('receptionist-approve-doctor')
+
+
+
+@login_required(login_url='receptionistlogin')
+@user_passes_test(is_receptionist)
+def receptionist_view_doctor_specialisation_view(request):
+    doctors=models.Doctor.objects.all().filter(status=True)
+    return render(request,'hospital/receptionist_view_doctor_specialisation.html',{'doctors':doctors})
+
 
 #--------------------- FOR DISCHARGING PATIENTS BY ADMIN START-------------------------
 @login_required(login_url='adminlogin')
