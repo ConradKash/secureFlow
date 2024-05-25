@@ -560,7 +560,7 @@ def update_receptionist_view(request,pk):
 @user_passes_test(is_admin)
 def admin_add_receptionist_view(request):
     userForm=forms.ReceptionistUserForm()
-    receptionistrForm=forms.ReceptionistForm
+    receptionistForm=forms.ReceptionistForm
     mydict={'userForm':userForm,'receptionistForm':receptionistForm}
     if request.method=='POST':
         userForm=forms.ReceptionistUserForm(request.POST)
