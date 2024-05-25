@@ -46,16 +46,28 @@ def patientclick_view(request):
 
 def admin_signup_view(request):
     form=forms.AdminSigupForm()
+    adminForm = forms.AdminForm()
+    mydict={'form':form,'adminForm':adminForm}
     if request.method=='POST':
         form=forms.AdminSigupForm(request.POST)
         if form.is_valid():
             user=form.save()
             user.set_password(user.password)
             user.save()
+            
+            admin=adminForm.save(commit=False)
+            admin.user=user
+            admin.mobile=request.POST.get('mobile')
+            admin.mobile=request.POST.get('address')
+            admin.profile_pic=request.POST.get('profile_pic')
+            admin.hospitalId=request.POST.get('hospitalId')
+            admin.status=False #  TODO: Change this to False so that they are authenticated by the superadmin.
+            admin=admin.save()
+            
             my_admin_group = Group.objects.get_or_create(name='ADMIN')
             my_admin_group[0].user_set.add(user)
             return HttpResponseRedirect('adminlogin')
-    return render(request,'hospital/adminsignup.html',{'form':form})
+    return render(request,'hospital/adminsignup.html',context=mydict)
 
 
 
@@ -514,8 +526,8 @@ def admin_receptionist_view(request):
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
-def admin_view_receptionist_view(request, pk):
-    receptionists=models.Receptionist.objects.all().filter(status=True, )
+def admin_view_receptionist_view(request):
+    receptionists=models.Receptionist.objects.all().filter(status=True)
     return render(request,'hospital/admin_view_receptionist.html',{'receptionists':receptionists})
 
 

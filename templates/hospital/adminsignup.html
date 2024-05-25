@@ -79,6 +79,12 @@
               <div class="form-group">
                 {% render_field form.username class="form-control" placeholder="Username" %}
               </div>
+              <div class="form-group">
+                {% render_field adminForm.mobile class="form-control"  placeholder="Contact" %}
+              </div>
+              <div class="form-group">
+                {% render_field adminForm.profile_pic required="required" class="form-control" placeholder="Profile Picture" %}
+              </div>
 
             </div>
             <div class="col-md-6">
@@ -87,6 +93,9 @@
               </div>
               <div class="form-group">
                 {% render_field form.password class="form-control" placeholder="Password" %}
+              </div>
+              <div class="form-group">
+                {% render_field adminForm.hospitalId class="form-control" placeholder="Doctor" %}
               </div>
 
             </div>
