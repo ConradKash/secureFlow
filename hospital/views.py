@@ -554,13 +554,11 @@ def update_receptionist_view(request,pk):
     return render(request,'hospital/admin_update_receptionist.html',context=mydict)
 
 
-
-
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_add_receptionist_view(request):
     userForm=forms.ReceptionistUserForm()
-    receptionistForm=forms.ReceptionistForm
+    receptionistForm=forms.ReceptionistForm()
     mydict={'userForm':userForm,'receptionistForm':receptionistForm}
     if request.method=='POST':
         userForm=forms.ReceptionistUserForm(request.POST)
@@ -569,7 +567,7 @@ def admin_add_receptionist_view(request):
             user=userForm.save()
             user.set_password(user.password)
             user.save()
-
+            
             receptionist=receptionistForm.save(commit=False)
             receptionist.user=user
             receptionist.hospitalId=request.POST.get('hospitalId')

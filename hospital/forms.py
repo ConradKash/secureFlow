@@ -45,6 +45,7 @@ class ReceptionistUserForm(forms.ModelForm):
         'password': forms.PasswordInput()
         }
 class ReceptionistForm(forms.ModelForm):
+    
     hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Receptionist
