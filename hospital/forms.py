@@ -75,13 +75,13 @@ class PatientForm(forms.ModelForm):
     #to_field_name this will fetch corresponding value  user_id present in Doctor model and return it
     class Meta:
         model=models.Patient
-        fields=['address','mobile','status','profile_pic']
+        fields=['address','mobile','profile_pic']
 
 
 
 class AppointmentForm(forms.ModelForm):
     doctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Doctor Name and Department", to_field_name="user_id")
-    patientId=forms.ModelChoiceField(queryset=models.Patient.objects.all().filter(status=True),empty_label="Patient Name and Symptoms", to_field_name="user_id")
+    patientId=forms.ModelChoiceField(queryset=models.Patient.objects.all() ,empty_label="Patient Name and Symptoms", to_field_name="user_id")
     hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Appointment

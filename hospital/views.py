@@ -146,19 +146,8 @@ def afterlogin_view(request):
         else:
             return render(request,'hospital/receptionist_wait_for_approval.html')
     elif is_patient(request.user):
-        accountapproval=models.Patient.objects.all().filter(user_id=request.user.id,status=True)
-        if accountapproval:
-            return redirect('patient-dashboard')
-        else:
-            return render(request,'hospital/patient_wait_for_approval.html')
-
-
-
-
-
-
-
-
+        return redirect('patient-dashboard')
+    
 #---------------------------------------------------------------------------------
 #------------------------ ADMIN RELATED VIEWS START ------------------------------
 #---------------------------------------------------------------------------------

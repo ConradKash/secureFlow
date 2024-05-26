@@ -87,8 +87,7 @@ class Patient(models.Model):
     profile_pic= models.ImageField(upload_to='profile_pic/PatientProfilePic/',null=True,blank=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=False)
-    admitDate=models.DateField(null=False)
-    status=models.BooleanField(default=False)
+    
     @property
     def get_name(self):
         return self.user.first_name+" "+self.user.last_name
@@ -97,6 +96,22 @@ class Patient(models.Model):
         return self.user.id
     def __str__(self):
         return self.user.first_name
+
+class PatientDetails(models.Model):
+    patient= models.OneToOneField('Patient',on_delete=models.CASCADE)
+    visitDate=models.DateField(auto_now=True)
+    height=models.FloatField(null=True)
+    weight=models.FloatField(null=True)
+    blood_pressure=models.CharField(max_length=10, null=True)
+    cholesterol=models.FloatField(null=True)
+    blood_sugar=models.FloatField(null=True)
+    heart_rate=models.FloatField(null=True)
+    temperature=models.FloatField(null=True)
+    symptoms=models.TextField(max_length=500)
+    diagnosis=models.TextField(max_length=500)
+    treatment=models.TextField(max_length=500)
+    def __str__(self):
+        return self.patient.user.first_name
 
 class Pharmacy(models.Model):
     name=models.CharField(max_length=100)
@@ -124,7 +139,10 @@ class Appointment(models.Model):
     patientName=models.CharField(max_length=40,null=True)
     doctorName=models.CharField(max_length=40,null=True)
     appointmentDate=models.DateField(auto_now=True)
-    description=models.TextField(max_length=500)
+    description=models.TextField(max_length=500)    
+    symptoms=models.TextField(max_length=500)
+    diagnosis=models.TextField(max_length=500)
+    treatment=models.TextField(max_length=500)
     status=models.PositiveIntegerField(choices=appointment_status ,default=1)
 
 
