@@ -76,9 +76,7 @@ class Patient(models.Model):
     profile_pic= models.ImageField(upload_to='profile_pic/PatientProfilePic/',null=True,blank=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=False)
-    symptoms = models.CharField(max_length=100,null=False)
-    assignedDoctorId = models.PositiveIntegerField(null=True)
-    admitDate=models.DateField(auto_now=True)
+    admitDate=models.DateField(null=False)
     status=models.BooleanField(default=False)
     @property
     def get_name(self):
@@ -87,7 +85,7 @@ class Patient(models.Model):
     def get_id(self):
         return self.user.id
     def __str__(self):
-        return self.user.first_name+" ("+self.symptoms+")"
+        return self.user.first_name
 
 class Pharmacy(models.Model):
     name=models.CharField(max_length=100)
@@ -100,10 +98,7 @@ class Pharmacy(models.Model):
         return self.name
 
 class Prescription(models.Model):
-    patientId=models.PositiveIntegerField(null=True)
-    patientName=models.CharField(max_length=40)
-    doctorId=models.PositiveIntegerField(null=True)
-    doctorName=models.CharField(max_length=40)
+    appointment=models.OneToOneField('Appointment',on_delete=models.CASCADE)
     pharmacyId=models.PositiveIntegerField(null=True)
     pharmacyName=models.CharField(max_length=40)
     medicineName=models.CharField(max_length=40)
@@ -124,17 +119,12 @@ class Appointment(models.Model):
 
 class PatientDischargeDetails(models.Model):
     patientId=models.PositiveIntegerField(null=True)
+    appointmentId=models.PositiveIntegerField(null=True)
     patientName=models.CharField(max_length=40)
-    assignedDoctorName=models.CharField(max_length=40)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=True)
-    symptoms = models.CharField(max_length=100,null=True)
-
     admitDate=models.DateField(null=False)
     releaseDate=models.DateField(null=False)
-    daySpent=models.PositiveIntegerField(null=False)
-
-    roomCharge=models.PositiveIntegerField(null=False)
     medicineCost=models.PositiveIntegerField(null=False)
     doctorFee=models.PositiveIntegerField(null=False)
     OtherCharge=models.PositiveIntegerField(null=False)
