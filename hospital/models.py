@@ -4,11 +4,22 @@ from django.contrib.auth.models import User
 
 
 departments=[('Cardiologist','Cardiologist'),
-('Dermatologists','Dermatologists'),
-('Emergency Medicine Specialists','Emergency Medicine Specialists'),
-('Allergists/Immunologists','Allergists/Immunologists'),
-('Anesthesiologists','Anesthesiologists'),
-('Colon and Rectal Surgeons','Colon and Rectal Surgeons')
+             ('Cardiologist','Cardiologist'),
+            ('Dermatologists','Dermatologists'),
+            ('Emergency Medicine Specialists','Emergency Medicine Specialists'),
+            ('Allergists/Immunologists','Allergists/Immunologists'),
+            ('Anesthesiologists','Anesthesiologists'),
+        ('Colon and Rectal Surgeons','Colon and Rectal Surgeons')
+]
+appointment_status = [
+    (1 , 'Scheduled'), 
+    (2 , 'Registered'),
+    (3 , 'Checked in'),
+    (4 , 'Issued'),
+    (5 , 'Ready'),
+    (6 , 'Dispensed'),
+    (7 , 'Medication Active'),
+    (8 , 'Completed')
 ]
 
 
@@ -114,7 +125,7 @@ class Appointment(models.Model):
     doctorName=models.CharField(max_length=40,null=True)
     appointmentDate=models.DateField(auto_now=True)
     description=models.TextField(max_length=500)
-    status=models.BooleanField(default=False)
+    status=models.PositiveIntegerField(choices=appointment_status ,default=1)
 
 
 class PatientDischargeDetails(models.Model):
