@@ -41,23 +41,41 @@ def patientclick_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request,'hospital/patientclick.html')
 
-
-
+# def admin_signup_view(request):
+#     form=forms.AdminSigupForm()
+#     if request.method=='POST':
+#         form=forms.AdminSigupForm(request.POST)
+#         if form.is_valid():
+#             user=form.save()
+#             user.set_password(user.password)
+#             user.save()
+#             my_admin_group = Group.objects.get_or_create(name='ADMIN')
+#             my_admin_group[0].user_set.add(user)
+#             return HttpResponseRedirect('adminlogin')
+#     return render(request,'hospital/adminsignup.html',{'form':form})
 
 def admin_signup_view(request):
-    form=forms.AdminSigupForm()
+    userForm=forms.AdminUserForm()
+    adminForm=forms.AdminForm()
+    mydict={'userForm':userForm,'adminForm':adminForm}
     if request.method=='POST':
-        form=forms.AdminSigupForm(request.POST)
-        if form.is_valid():
-            user=form.save()
+        userForm=forms.AdminUserForm(request.POST)
+        adminForm=forms.AdminForm(request.POST, request.FILES)
+        if userForm.is_valid() and adminForm.is_valid():
+            user=userForm.save()
             user.set_password(user.password)
             user.save()
+            
+            admin=adminForm.save(commit=False)
+            admin.user=user
+            admin.hospitalId=request.POST.get('hospitalId')
+            admin.status=True
+            admin.save()
+
             my_admin_group = Group.objects.get_or_create(name='ADMIN')
             my_admin_group[0].user_set.add(user)
-            return HttpResponseRedirect('adminlogin')
-    return render(request,'hospital/adminsignup.html',{'form':form})
-
-
+        return HttpResponseRedirect('adminlogin')
+    return render(request,'hospital/adminsignup.html',context=mydict)
 
 
 def doctor_signup_view(request):
