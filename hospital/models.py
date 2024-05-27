@@ -97,7 +97,8 @@ class Patient(models.Model):
         return self.user.first_name
 
 class PatientDetails(models.Model):
-    patient= models.PositiveIntegerField(null=True)
+    patientID=models.PositiveIntegerField(null=True)
+    appointmentId=models.PositiveIntegerField(null=True)
     visitDate=models.DateField(auto_now=True)
     height=models.FloatField(null=True)
     weight=models.FloatField(null=True)
@@ -133,7 +134,7 @@ class PharmacyMedicine(models.Model):
         return self.medicineName
 
 class Prescription(models.Model):
-    appointment=models.OneToOneField('Appointment',on_delete=models.CASCADE)
+    appointmentId=models.PositiveIntegerField(null=True)
     pharmacyId=models.PositiveIntegerField(null=True)
     pharmacyName=models.CharField(max_length=40)
     medicineName=models.CharField(max_length=40)
@@ -146,23 +147,19 @@ class Appointment(models.Model):
     patientId=models.PositiveIntegerField(null=True)
     doctorId=models.PositiveIntegerField(null=True)
     hospitalId=models.PositiveIntegerField(null=True)
-    hospitalName=models.CharField(max_length=40,null=True)
-    patientName=models.CharField(max_length=40,null=True)
-    doctorName=models.CharField(max_length=40,null=True)
     appointmentDate=models.DateField(null=False)
-    description=models.TextField(max_length=500)    
-    symptoms=models.TextField(max_length=500)
-    diagnosis=models.TextField(max_length=500)
-    treatment=models.TextField(max_length=500)
+    description=models.TextField(max_length=500, null=False)
     status=models.CharField(max_length=20, choices=appointment_status ,default='Scheduled')
     def __str__(self):
-        return self.patientName + ' - ' + self.doctorName + ' - ' + str(self.appointmentDate)
+        return str(self.appointmentDate)
 
 
 class PatientDischargeDetails(models.Model):
     patientId=models.PositiveIntegerField(null=True)
-    appointmentId=models.PositiveIntegerField(null=True)
-    patientName=models.CharField(max_length=40)
+    appointmentId=models.PositiveIntegerField(null=True)    
+    symptoms=models.TextField(max_length=500, null=False)
+    diagnosis=models.TextField(max_length=500, null=False)
+    treatment=models.TextField(max_length=500, null=False)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=True)
     admitDate=models.DateField(null=False)
