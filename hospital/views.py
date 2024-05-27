@@ -159,10 +159,10 @@ def admin_dashboard_view(request):
     patients=models.Patient.objects.all().order_by('-id')
     #for three cards
     doctorcount=models.Doctor.objects.all().filter(status=True).count()
-    pendingdoctorcount=models.Doctor.objects.all().filter(status=False).count()
+    pendingdoctorcount=models.Doctor.objects.all().count()
 
-    patientcount=models.Patient.objects.all().filter(status=True).count()
-    pendingpatientcount=models.Patient.objects.all().filter(status=False).count()
+    patientcount=models.Patient.objects.all().count()
+    pendingpatientcount=models.Patient.objects.all().count()
 
     appointmentcount=models.Appointment.objects.all().filter(status=True).count()
     pendingappointmentcount=models.Appointment.objects.all().filter(status=False).count()
@@ -306,7 +306,7 @@ def admin_patient_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_view_patient_view(request):
-    patients=models.Patient.objects.all().filter(status=True)
+    patients=models.Patient.objects.all()
     return render(request,'hospital/admin_view_patient.html',{'patients':patients})
 
 
@@ -338,13 +338,13 @@ def update_patient_view(request,pk):
             user=userForm.save()
             user.set_password(user.password)
             user.save()
+            
             patient=patientForm.save(commit=False)
-            patient.status=True
             patient.save()
             return redirect('admin-view-patient')
     return render(request,'hospital/admin_update_patient.html',context=mydict)
 
-#------------------FOR ADDING HOSPITAL BY ADMIN----------------------
+#------------------FOR HOSPITAL BY ADMIN----------------------
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
@@ -398,6 +398,59 @@ def delete_hospital_from_hospital_view(request, pk):
     hospital.delete()
     return redirect('admin-view-hospital')
 
+#------------------FOR HOSPITAL BY ADMIN----------------------
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_pharmacy_view(request):
+    return render(request,'hospital/admin_pharmacy.html')
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_add_pharmacy_view(request):
+    pharmacyForm=forms.PharmacyForm()
+    mydict={'pharmacyForm':pharmacyForm}
+    if request.method=='POST':
+        pharmacyForm = forms.PharmacyForm(request.POST)
+        if pharmacyForm.is_valid():
+            pharmacy =pharmacyForm.save(commit=False)
+            pharmacy.name=request.POST.get('name')
+            pharmacy.address=request.POST.get('address')
+            pharmacy.contact=request.POST.get('contact')
+            pharmacy.email=request.POST.get('email')
+            pharmacy.logo=request.POST.get('logo')
+            pharmacy.is_approved=True
+            pharmacy.save()
+        return HttpResponseRedirect('admin-add-pharmacy')
+    return render(request,'hospital/admin_add_pharmacy.html',context=mydict)
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_view_pharmacy_view(request):
+    pharmacy=models.Pharmacy.objects.all().filter(is_approved=True)
+    return render(request,'hospital/admin_view_pharmacy.html',{'pharmacy':pharmacy})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def update_pharmacy_view(request,pk):
+    pharmacy=models.Pharmacy.objects.get(id=pk) 
+    pharmacyForm=forms.PharmacyForm(request.FILES, instance=pharmacy)
+    mydict={'pharmacyForm':pharmacyForm}
+    if request.method=='POST':
+        pharmacyForm=forms.PharmacyForm(request.POST,request.FILES,instance=pharmacy)
+        if pharmacyForm.is_valid():
+            pharmacy=pharmacyForm.save(commit=False)
+            pharmacy.status=True
+            pharmacy.save()
+            return redirect('admin-view-pharmacy')
+    return render(request,'hospital/admin_update_pharmacy.html',context=mydict)
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def delete_pharmacy_from_hospital_view(request, pk):
+    pharmacy=models.Pharmacy.objects.get(id=pk)
+    pharmacy.delete()
+    return redirect('admin-view-pharmacy')
 
 #------------------FOR ADDING PATIENT BY ADMIN----------------------
 @login_required(login_url='adminlogin')
@@ -416,7 +469,6 @@ def admin_add_patient_view(request):
 
             patient=patientForm.save(commit=False)
             patient.user=user
-            patient.status=True
             patient.save()
 
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
@@ -425,65 +477,6 @@ def admin_add_patient_view(request):
         return HttpResponseRedirect('admin-view-patient')
     return render(request,'hospital/admin_add_patient.html',context=mydict)
 
-
-
-#------------------FOR APPROVING PATIENT BY ADMIN----------------------
-@login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
-def admin_approve_patient_view(request):
-    #those whose approval are needed
-    patients=models.Patient.objects.all().filter(status=False)
-    return render(request,'hospital/admin_approve_patient.html',{'patients':patients})
-
-
-
-@login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
-def approve_patient_view(request,pk):
-    patient=models.Patient.objects.get(id=pk)
-    patient.status=True
-    patient.save()
-    return redirect(reverse('admin-approve-patient'))
-
-
-
-@login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
-def reject_patient_view(request,pk):
-    patient=models.Patient.objects.get(id=pk)
-    user=models.User.objects.get(id=patient.user_id)
-    user.delete()
-    patient.delete()
-    return redirect('admin-approve-patient')
-
-#------------------FOR APPROVING PATIENT BY ADMIN----------------------
-@login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
-def admin_approve_patient_view(request):
-    #those whose approval are needed
-    patients=models.Patient.objects.all().filter(status=False)
-    return render(request,'hospital/admin_approve_patient.html',{'patients':patients})
-
-
-
-@login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
-def approve_patient_view(request,pk):
-    patient=models.Patient.objects.get(id=pk)
-    patient.status=True
-    patient.save()
-    return redirect(reverse('admin-approve-patient'))
-
-
-
-@login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
-def reject_patient_view(request,pk):
-    patient=models.Patient.objects.get(id=pk)
-    user=models.User.objects.get(id=patient.user_id)
-    user.delete()
-    patient.delete()
-    return redirect('admin-approve-patient')
 
 # ------------------FOR APPROVING RECEPTIONIST BY ADMIN----------------------
 
@@ -592,64 +585,6 @@ def reject_receptionist_view(request,pk):
     return redirect('admin-approve-receptionist')
 
 
-#--------------------- FOR DISCHARGING PATIENTS BY ADMIN START-------------------------
-@login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
-def admin_discharge_patient_view(request):
-    patients=models.Patient.objects.all().filter(status=True)
-    return render(request,'hospital/admin_discharge_patient.html',{'patients':patients})
-
-
-
-@login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
-def discharge_patient_view(request,pk):
-    patient=models.Patient.objects.get(id=pk)
-    days=(date.today()-patient.admitDate) #2 days, 0:00:00
-    assignedDoctor=models.User.objects.all().filter(id=patient.assignedDoctorId)
-    d=days.days # only how many day that is 2
-    patientDict={
-        'patientId':pk,
-        'name':patient.get_name,
-        'mobile':patient.mobile,
-        'address':patient.address,
-        'symptoms':patient.symptoms,
-        'admitDate':patient.admitDate,
-        'todayDate':date.today(),
-        'day':d,
-        'assignedDoctorName':assignedDoctor[0].first_name,
-    }
-    if request.method == 'POST':
-        feeDict ={
-            'roomCharge':int(request.POST['roomCharge'])*int(d),
-            'doctorFee':request.POST['doctorFee'],
-            'medicineCost' : request.POST['medicineCost'],
-            'OtherCharge' : request.POST['OtherCharge'],
-            'total':(int(request.POST['roomCharge'])*int(d))+int(request.POST['doctorFee'])+int(request.POST['medicineCost'])+int(request.POST['OtherCharge'])
-        }
-        patientDict.update(feeDict)
-        #for updating to database patientDischargeDetails (pDD)
-        pDD=models.PatientDischargeDetails()
-        pDD.patientId=pk
-        pDD.patientName=patient.get_name
-        # pDD.assignedDoctorName=assignedDoctor[0].first_name
-        pDD.address=patient.address
-        pDD.mobile=patient.mobile
-        pDD.symptoms=patient.symptoms
-        pDD.admitDate=patient.admitDate
-        pDD.releaseDate=date.today()
-        pDD.daySpent=int(d)
-        pDD.medicineCost=int(request.POST['medicineCost'])
-        pDD.roomCharge=int(request.POST['roomCharge'])*int(d)
-        pDD.doctorFee=int(request.POST['doctorFee'])
-        pDD.OtherCharge=int(request.POST['OtherCharge'])
-        pDD.total=(int(request.POST['roomCharge'])*int(d))+int(request.POST['doctorFee'])+int(request.POST['medicineCost'])+int(request.POST['OtherCharge'])
-        pDD.save()
-        return render(request,'hospital/patient_final_bill.html',context=patientDict)
-    return render(request,'hospital/patient_generate_bill.html',context=patientDict)
-
-
-
 #--------------for discharge patient bill (pdf) download and printing
 import io
 from xhtml2pdf import pisa
@@ -721,7 +656,7 @@ def admin_add_appointment_view(request):
             appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
             appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name      
             appointment.hospitalName=models.Hospital.objects.get(id=request.POST.get('hospitalId')).name
-            appointment.status=True
+            appointment.appointmentDate=request.POST.get('appointmentDate')
             appointment.save()
         return HttpResponseRedirect('admin-view-appointment')
     return render(request,'hospital/admin_add_appointment.html',context=mydict)

@@ -57,10 +57,6 @@ class ReceptionistForm(forms.ModelForm):
     class Meta:
         model=models.Receptionist
         fields=['address','mobile','status','profile_pic']
-
-
-
-
 #for teacher related form
 class PatientUserForm(forms.ModelForm):
     class Meta:
@@ -81,11 +77,11 @@ class PatientForm(forms.ModelForm):
 
 class AppointmentForm(forms.ModelForm):
     doctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Doctor Name and Department", to_field_name="user_id")
-    patientId=forms.ModelChoiceField(queryset=models.Patient.objects.all() ,empty_label="Patient Name and Symptoms", to_field_name="user_id")
+    patientId=forms.ModelChoiceField(queryset=models.Patient.objects.all(), empty_label="Patient Name and Symptoms", to_field_name="user_id")
     hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Appointment
-        fields=['description','status', 'hospitalname']
+        fields=['description','status', 'hospitalName', 'patientName', 'doctorName', 'appointmentDate']
 
 
 class PatientAppointmentForm(forms.ModelForm):
@@ -93,7 +89,7 @@ class PatientAppointmentForm(forms.ModelForm):
     hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
         model=models.Appointment
-        fields=['description','status', 'hospitalname']
+        fields=['description','status', 'hospitalName']
 
 
 #for contact us page

@@ -12,14 +12,14 @@ departments=[('Cardiologist','Cardiologist'),
         ('Colon and Rectal Surgeons','Colon and Rectal Surgeons')
 ]
 appointment_status = [
-    (1 , 'Scheduled'), 
-    (2 , 'Registered'),
-    (3 , 'Checked in'),
-    (4 , 'Issued'),
-    (5 , 'Ready'),
-    (6 , 'Dispensed'),
-    (7 , 'Medication Active'),
-    (8 , 'Completed')
+    ('Scheduled' , 'Scheduled'), 
+    ('Registered' , 'Registered'),
+    ('Checked in' , 'Checked in'),
+    ('Issued' , 'Issued'),
+    ('Ready' , 'Ready'),
+    ('Dispensed' , 'Dispensed'),
+    ('Medication Active' , 'Medication Active'),
+    ('Complete' , 'Completed')
 ]
 
 
@@ -87,7 +87,6 @@ class Patient(models.Model):
     profile_pic= models.ImageField(upload_to='profile_pic/PatientProfilePic/',null=True,blank=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=False)
-    
     @property
     def get_name(self):
         return self.user.first_name+" "+self.user.last_name
@@ -98,7 +97,7 @@ class Patient(models.Model):
         return self.user.first_name
 
 class PatientDetails(models.Model):
-    patient= models.OneToOneField('Patient',on_delete=models.CASCADE)
+    patient= models.PositiveIntegerField(null=True)
     visitDate=models.DateField(auto_now=True)
     height=models.FloatField(null=True)
     weight=models.FloatField(null=True)
@@ -122,6 +121,16 @@ class Pharmacy(models.Model):
     is_approved=models.BooleanField(default=False)
     def __str__(self):
         return self.name
+    
+class PharmacyMedicine(models.Model):
+    pharmacyId=models.ForeignKey('Pharmacy',on_delete=models.CASCADE)
+    medicineName=models.CharField(max_length=40)
+    description=models.TextField(max_length=500)
+    price=models.PositiveIntegerField(null=False)
+    stock=models.PositiveIntegerField(null=False)
+    status=models.BooleanField(default=False)
+    def __str__(self):
+        return self.medicineName
 
 class Prescription(models.Model):
     appointment=models.OneToOneField('Appointment',on_delete=models.CASCADE)
@@ -130,20 +139,24 @@ class Prescription(models.Model):
     medicineName=models.CharField(max_length=40)
     description=models.TextField(max_length=500)
     status=models.BooleanField(default=False)
+    def __str__(self):
+        return self.appointment.patientName + ' - ' + self.medicineName
 
 class Appointment(models.Model):
     patientId=models.PositiveIntegerField(null=True)
     doctorId=models.PositiveIntegerField(null=True)
     hospitalId=models.PositiveIntegerField(null=True)
-    hospitalname=models.CharField(max_length=40,null=True)
+    hospitalName=models.CharField(max_length=40,null=True)
     patientName=models.CharField(max_length=40,null=True)
     doctorName=models.CharField(max_length=40,null=True)
-    appointmentDate=models.DateField(auto_now=True)
+    appointmentDate=models.DateField(null=False)
     description=models.TextField(max_length=500)    
     symptoms=models.TextField(max_length=500)
     diagnosis=models.TextField(max_length=500)
     treatment=models.TextField(max_length=500)
-    status=models.PositiveIntegerField(choices=appointment_status ,default=1)
+    status=models.CharField(max_length=20, choices=appointment_status ,default='Scheduled')
+    def __str__(self):
+        return self.patientName + ' - ' + self.doctorName + ' - ' + str(self.appointmentDate)
 
 
 class PatientDischargeDetails(models.Model):
@@ -158,6 +171,8 @@ class PatientDischargeDetails(models.Model):
     doctorFee=models.PositiveIntegerField(null=False)
     OtherCharge=models.PositiveIntegerField(null=False)
     total=models.PositiveIntegerField(null=False)
+    def __str__(self):
+        return self.patientName
 
 
 

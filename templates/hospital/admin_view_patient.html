@@ -19,6 +19,16 @@
     .row {
       margin: 100px;
     }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: #0062cc;
+      color: #fff;
+    }
   </style>
 </head>
 
@@ -50,8 +60,9 @@
         <td><a class="btn btn-danger btn-xs" href="{% url 'delete-patient-from-hospital' p.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
       {% endfor %}
-    </table>
+    </table>    
   </div>
+  <a href='{% url 'admin-add-patient' %}'>Add Patient</a>
 </div>
 
 
