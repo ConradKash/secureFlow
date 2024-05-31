@@ -150,7 +150,7 @@ class Appointment(models.Model):
     description=models.TextField(max_length=500, null=False)
     status=models.CharField(max_length=20, choices=appointment_status ,default='Scheduled')
     def __str__(self):
-        return str(self.appointmentDate)
+        return str(self.description)
 
 
 class PatientDischargeDetails(models.Model):
