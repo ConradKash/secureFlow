@@ -645,18 +645,18 @@ def admin_view_appointment_view(request):
 @user_passes_test(is_admin)
 def admin_add_appointment_view(request):
     appointmentForm=forms.AppointmentForm()
-    mydict={'appointmentForm':appointmentForm}
+    mydict={'appointmentForm':appointmentForm,}
     if request.method=='POST':
         appointmentForm=forms.AppointmentForm(request.POST)
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
             appointment.doctorId=request.POST.get('doctorId')
             appointment.patientId=request.POST.get('patientId')
-            appointment.hospitalId=request.POST.get('hospitalId')
-            appointment.status='Scheduled'
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            appointment.status=True
             appointment.save()
-                        
-        return HttpResponseRedirect('admin-add-appointment')
+        return HttpResponseRedirect('admin-view-appointment')
     return render(request,'hospital/admin_add_appointment.html',context=mydict)
 
 

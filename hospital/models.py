@@ -146,11 +146,11 @@ class Prescription(models.Model):
 class Appointment(models.Model):
     patientId=models.PositiveIntegerField(null=True)
     doctorId=models.PositiveIntegerField(null=True)
-    hospitalId=models.PositiveIntegerField(null=True)
-    description=models.TextField(max_length=500, null=True)
-    status=models.CharField(max_length=20, choices=appointment_status ,default='Scheduled')
-    def __str__(self):
-        return str(self.appointmentDate)
+    patientName=models.CharField(max_length=40,null=True)
+    doctorName=models.CharField(max_length=40,null=True)
+    appointmentDate=models.DateField(auto_now=True)
+    description=models.TextField(max_length=500)
+    status=models.BooleanField(default=False)
 
 
 class PatientDischargeDetails(models.Model):
