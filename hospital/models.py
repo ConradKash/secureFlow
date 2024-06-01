@@ -147,8 +147,7 @@ class Appointment(models.Model):
     patientId=models.PositiveIntegerField(null=True)
     doctorId=models.PositiveIntegerField(null=True)
     hospitalId=models.PositiveIntegerField(null=True)
-    appointmentDate=models.DateField(null=False)
-    description=models.TextField(max_length=500, null=False)
+    description=models.TextField(max_length=500, null=True)
     status=models.CharField(max_length=20, choices=appointment_status ,default='Scheduled')
     def __str__(self):
         return str(self.appointmentDate)
@@ -157,9 +156,9 @@ class Appointment(models.Model):
 class PatientDischargeDetails(models.Model):
     patientId=models.PositiveIntegerField(null=True)
     appointmentId=models.PositiveIntegerField(null=True)    
-    symptoms=models.TextField(max_length=500, null=False)
-    diagnosis=models.TextField(max_length=500, null=False)
-    treatment=models.TextField(max_length=500, null=False)
+    symptoms=models.TextField(max_length=500, null=True)
+    diagnosis=models.TextField(max_length=500, null=True)
+    treatment=models.TextField(max_length=500, null=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=True)
     admitDate=models.DateField(null=False)
