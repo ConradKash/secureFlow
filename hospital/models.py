@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 
 
 departments=[('Cardiologist','Cardiologist'),
-             ('Cardiologist','Cardiologist'),
             ('Dermatologists','Dermatologists'),
             ('Emergency Medicine Specialists','Emergency Medicine Specialists'),
             ('Allergists/Immunologists','Allergists/Immunologists'),
