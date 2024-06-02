@@ -650,9 +650,11 @@ def admin_add_appointment_view(request):
         appointmentForm=forms.AppointmentForm(request.POST)
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
-            appointment.doctorId=request.POST.get('doctorId')
+            # appointment.doctorId=request.POST.get('doctorId')
+            appointment.hospitalId=request.POST.get('hospitalId')
             appointment.patientId=request.POST.get('patientId')
-            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            # appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.hospitalName=models.Hospital.objects.get(id=request.POST.get('hospitalId')).name
             appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
             appointment.status=True
             appointment.save()

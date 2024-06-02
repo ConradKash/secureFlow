@@ -143,8 +143,10 @@ class Prescription(models.Model):
         return self.appointment.patientName + ' - ' + self.medicineName
 
 class Appointment(models.Model):
+    hospitalId=models.PositiveIntegerField(null=True)
     patientId=models.PositiveIntegerField(null=True)
     doctorId=models.PositiveIntegerField(null=True)
+    hospitalName=models.CharField(max_length=40,null=True)
     patientName=models.CharField(max_length=40,null=True)
     doctorName=models.CharField(max_length=40,null=True)
     appointmentDate=models.DateField(auto_now=True)
