@@ -14,6 +14,12 @@ class AdminUserForm(forms.ModelForm):
         }
 
 class AdminForm(forms.ModelForm):
+    hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
+    class Meta:
+        model=models.Admin
+        fields=['address','mobile','status','profile_pic']
+
+class AdminForm(forms.ModelForm):
     
     hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
     class Meta:
