@@ -29,6 +29,7 @@
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
+          <th>Hospital Name</th>
           <th>Doctor Name</th>
           <th>Patient Name</th>
           <th>Description</th>
@@ -37,6 +38,7 @@
       </thead>
       {% for a in appointments %}
       <tr>
+        <td> {{a.hospitalName}}</td>
         <td> {{a.doctorName}}</td>
         <td>{{a.patientName}}</td>
         <td>{{a.description}}</td>
