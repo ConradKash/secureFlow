@@ -149,7 +149,8 @@ class Appointment(models.Model):
     hospitalName=models.CharField(max_length=40,null=True)
     patientName=models.CharField(max_length=40,null=True)
     doctorName=models.CharField(max_length=40,null=True)
-    appointmentDate=models.DateField(auto_now=True)
+    datestamp=models.DateTimeField(auto_now=True)
+    appointmentDate=models.DateField(null=True, blank=True)
     description=models.TextField(max_length=500)
     status=models.BooleanField(default=False)
 
