@@ -153,6 +153,8 @@ class Appointment(models.Model):
     appointmentDate=models.DateField(null=True, blank=True)
     description=models.TextField(max_length=500)
     status=models.BooleanField(default=False)
+    def __str__(self):
+        return self.patientName + '-' + self.hospitalName + '-' + self.appointmentDate
 
 
 class PatientDischargeDetails(models.Model):
