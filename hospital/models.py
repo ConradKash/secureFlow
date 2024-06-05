@@ -95,23 +95,6 @@ class Patient(models.Model):
     def __str__(self):
         return self.user.first_name
 
-class PatientDetails(models.Model):
-    patientID=models.PositiveIntegerField(null=True)
-    appointmentId=models.PositiveIntegerField(null=True)
-    visitDate=models.DateField(auto_now=True)
-    height=models.FloatField(null=True)
-    weight=models.FloatField(null=True)
-    blood_pressure=models.CharField(max_length=10, null=True)
-    cholesterol=models.FloatField(null=True)
-    blood_sugar=models.FloatField(null=True)
-    heart_rate=models.FloatField(null=True)
-    temperature=models.FloatField(null=True)
-    symptoms=models.TextField(max_length=500)
-    diagnosis=models.TextField(max_length=500)
-    treatment=models.TextField(max_length=500)
-    def __str__(self):
-        return self.patient.user.first_name
-
 class Pharmacy(models.Model):
     name=models.CharField(max_length=100)
     address=models.CharField(max_length=100)
@@ -122,7 +105,7 @@ class Pharmacy(models.Model):
     def __str__(self):
         return self.name
     
-class PharmacyMedicine(models.Model):
+class PharmacyInventory(models.Model):
     pharmacyId=models.ForeignKey('Pharmacy',on_delete=models.CASCADE)
     medicineName=models.CharField(max_length=40)
     description=models.TextField(max_length=500)
@@ -132,15 +115,21 @@ class PharmacyMedicine(models.Model):
     def __str__(self):
         return self.medicineName
 
-class Prescription(models.Model):
-    appointmentId=models.PositiveIntegerField(null=True)
+class AdminPharmacy(models.Model):
+    user=models.OneToOneField(User,on_delete=models.CASCADE)    
     pharmacyId=models.PositiveIntegerField(null=True)
-    pharmacyName=models.CharField(max_length=40)
-    medicineName=models.CharField(max_length=40)
-    description=models.TextField(max_length=500)
+    profile_pic= models.ImageField(upload_to='profile_pic/AdminPharmacyProfilePic/',null=True,blank=True)
+    address = models.CharField(max_length=40)
+    mobile = models.CharField(max_length=20,null=True)
     status=models.BooleanField(default=False)
+    @property
+    def get_name(self):
+        return self.user.first_name+" "+self.user.last_name
+    @property
+    def get_id(self):
+        return self.user.id
     def __str__(self):
-        return self.appointment.patientName + ' - ' + self.medicineName
+        return self.user.first_name
 
 class Appointment(models.Model):
     hospitalId=models.PositiveIntegerField(null=True)
@@ -156,23 +145,38 @@ class Appointment(models.Model):
     def __str__(self):
         return self.patientName + '-' + self.hospitalName + '-' + self.appointmentDate
 
-
-class PatientDischargeDetails(models.Model):
-    patientId=models.PositiveIntegerField(null=True)
-    appointmentId=models.PositiveIntegerField(null=True)    
-    symptoms=models.TextField(max_length=500, null=True)
-    diagnosis=models.TextField(max_length=500, null=True)
-    treatment=models.TextField(max_length=500, null=True)
-    address = models.CharField(max_length=40)
-    mobile = models.CharField(max_length=20,null=True)
-    admitDate=models.DateField(null=False)
-    releaseDate=models.DateField(null=False)
-    medicineCost=models.PositiveIntegerField(null=False)
-    doctorFee=models.PositiveIntegerField(null=False)
-    OtherCharge=models.PositiveIntegerField(null=False)
-    total=models.PositiveIntegerField(null=False)
+class PatientDetails(models.Model):
+    patientID=models.PositiveIntegerField(null=True)
+    appointmentId=models.PositiveIntegerField(null=True)
+    visitDate=models.DateField(auto_now=True)
+    height=models.FloatField(null=True)
+    weight=models.FloatField(null=True)
+    blood_pressure=models.CharField(max_length=10, null=True)
+    cholesterol=models.FloatField(null=True)
+    blood_sugar=models.FloatField(null=True)
+    heart_rate=models.FloatField(null=True)
+    temperature=models.FloatField(null=True)
+    symptoms=models.TextField(max_length=500)
+    diagnosis=models.TextField(max_length=500)
+    treatment=models.TextField(max_length=500)
     def __str__(self):
-        return self.patientName
+        return self.appointmentId
+    
+class Prescription(models.Model):
+    appointmentId=models.PositiveIntegerField(null=True)
+    pharmacyId=models.PositiveIntegerField(null=True)
+    pharmacyName=models.CharField(max_length=40)
+    medicineName=models.CharField(max_length=40)
+    description=models.TextField(max_length=500)
+    status=models.BooleanField(default=False)
+    def __str__(self):
+        return self.pharmacyName + ' - ' + self.medicineName
+    
+class Feedback(models.Model):
+    userId=models.PositiveIntegerField(null=True)
+    message=models.TextField(max_length=500, null=True)
+    def __str__(self):
+        return self.message
 
 
 
