@@ -21,6 +21,10 @@ def adminclick_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request,'hospital/adminclick.html')
 
+def admin_pharmacyclick_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'hospital/admin_pharmacyclick.html')
 
 #for showing signup/login button for doctor(by sumit)
 def doctorclick_view(request):
@@ -64,6 +68,28 @@ def admin_signup_view(request):
         return HttpResponseRedirect('adminlogin')
     return render(request,'hospital/adminsignup.html',context=mydict)
 
+def admin_pharmacy_signup_view(request):
+    userForm=forms.AdminUserForm()
+    adminForm=forms.AdminPharmacyForm()
+    mydict={'userForm':userForm,'adminForm':adminForm}
+    if request.method=='POST':
+        userForm=forms.AdminUserForm(request.POST)
+        adminForm=forms.AdminPharmacyForm(request.POST, request.FILES)
+        if userForm.is_valid() and adminForm.is_valid():
+            user=userForm.save()
+            user.set_password(user.password)
+            user.save()
+            
+            admin=adminForm.save(commit=False)
+            admin.user=user
+            admin.hospitalId=request.POST.get('pharmacyId')
+            admin.status=False
+            admin.save()
+
+            my_admin_group = Group.objects.get_or_create(name='ADMINPHARMACY')
+            my_admin_group[0].user_set.add(user)
+        return HttpResponseRedirect('adminPharmacylogin')
+    return render(request,'hospital/admin_pharmacysignup.html',context=mydict)
 
 def doctor_signup_view(request):
     userForm=forms.DoctorUserForm()
@@ -102,7 +128,6 @@ def patient_signup_view(request):
             user.save()
             patient=patientForm.save(commit=False)
             patient.user=user
-            patient.assignedDoctorId=request.POST.get('assignedDoctorId')
             patient=patient.save()
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
             my_patient_group[0].user_set.add(user)
@@ -117,6 +142,8 @@ def patient_signup_view(request):
 #-----------for checking user is doctor , patient or admin(by sumit)
 def is_admin(user):
     return user.groups.filter(name='ADMIN').exists()
+def is_admin_pharmacy(user):
+    return user.groups.filter(name='ADMINPHARMACY').exists()
 def is_doctor(user):
     return user.groups.filter(name='DOCTOR').exists()
 def is_receptionist(user):
@@ -129,6 +156,12 @@ def is_patient(user):
 def afterlogin_view(request):
     if is_admin(request.user):
         accountapproval=models.Admin.objects.all().filter(user_id=request.user.id,status=True)
+        if accountapproval:
+            return redirect('admin-dashboard')
+        else:
+            return render(request,'hospital/admin_wait_for_approval.html')
+    elif is_admin_pharmacy(request.user):
+        accountapproval=models.AdminPharmacy.objects.all().filter(user_id=request.user.id,status=True)
         if accountapproval:
             return redirect('admin-dashboard')
         else:

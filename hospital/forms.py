@@ -20,11 +20,11 @@ class AdminForm(forms.ModelForm):
         model=models.Admin
         fields=['address','mobile','status','profile_pic']
 
-class AdminForm(forms.ModelForm):
+class AdminPharmacyForm(forms.ModelForm):
     
-    hospitalId=forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True),empty_label="Hospital Name", to_field_name="id")
+    PharmacyId=forms.ModelChoiceField(queryset=models.Pharmacy.objects.all().filter(is_approved=True),empty_label="Pharmacy Name", to_field_name="id")
     class Meta:
-        model=models.Admin
+        model=models.AdminPharmacy
         fields=['address','mobile','status','profile_pic']
 
 class HospitalForm(forms.ModelForm):
