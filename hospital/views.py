@@ -82,7 +82,7 @@ def admin_pharmacy_signup_view(request):
             
             admin=adminForm.save(commit=False)
             admin.user=user
-            admin.hospitalId=request.POST.get('pharmacyId')
+            admin.pharmacyId=request.POST.get('pharmacyId')
             admin.status=False
             admin.save()
 

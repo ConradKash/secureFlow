@@ -69,7 +69,6 @@
         <div class="note">
           <p>Add New Pharmacy Admin To Hospital</p>
         </div>
-
         <div class="form-content">
           <div class="row">
             <div class="col-md-6">
@@ -84,8 +83,7 @@
               </div>
               <div class="form-group">
                 {% render_field adminForm.pharmacyId class="form-control" placeholder="Doctor" %}
-              </div>
-  
+              </div>  
             </div>
             <div class="col-md-6">
               <div class="form-group">
@@ -101,6 +99,7 @@
                 {% render_field adminForm.profile_pic required="required" class="form-control" placeholder="Profile Picture" %}
               </div>
             </div>
+          </div>
           <button type="submit" class="btnSubmit">Submit</button>
           <div class="text-center">Already have an account? <a href="adminlogin">Login here</a></div>
         </div>

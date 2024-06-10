@@ -22,7 +22,7 @@ class AdminForm(forms.ModelForm):
 
 class AdminPharmacyForm(forms.ModelForm):
     
-    PharmacyId=forms.ModelChoiceField(queryset=models.Pharmacy.objects.all().filter(is_approved=True),empty_label="Pharmacy Name", to_field_name="id")
+    pharmacyId=forms.ModelChoiceField(queryset=models.Pharmacy.objects.all().filter(is_approved=True),empty_label="Pharmacy Name", to_field_name="id")
     class Meta:
         model=models.AdminPharmacy
         fields=['address','mobile','status','profile_pic']
