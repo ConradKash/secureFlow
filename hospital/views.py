@@ -706,16 +706,16 @@ def reject_appointment_view(request,pk):
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
     #for three cards
-    patientcount=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id).count()
+    patientcount=models.Pharmacy.objects.all().count()
     appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
-    patientdischarged=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
+    patientdischarged=models.Prescription.objects.all().distinct().filter(doctorId=request.user.id).count()
 
     #for  table in doctor dashboard
     appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).order_by('-id')
     patientid=[]
     for a in appointments:
         patientid.append(a.patientId)
-    patients=models.Patient.objects.all().filter(status=True,user_id__in=patientid).order_by('-id')
+    patients=models.Patient.objects.all().filter(user_id__in=patientid).order_by('-id')
     appointments=zip(appointments,patients)
     mydict={
     'patientcount':patientcount,

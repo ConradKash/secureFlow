@@ -143,7 +143,7 @@ class Appointment(models.Model):
     description=models.TextField(max_length=500)
     status=models.BooleanField(default=False)
     def __str__(self):
-        return self.patientName + '-' + self.hospitalName + '-' + self.appointmentDate
+        return self.patientName
 
 class PatientDetails(models.Model):
     patientID=models.PositiveIntegerField(null=True)
@@ -165,6 +165,10 @@ class PatientDetails(models.Model):
 class Prescription(models.Model):
     appointmentId=models.PositiveIntegerField(null=True)
     pharmacyId=models.PositiveIntegerField(null=True)
+    doctorId=models.PositiveIntegerField(null=True)
+    doctorName=models.CharField(max_length=40,null=True)
+    patientId=models.PositiveIntegerField(null=True)
+    patientName=models.CharField(max_length=40,null=True)
     pharmacyName=models.CharField(max_length=40)
     medicineName=models.CharField(max_length=40)
     description=models.TextField(max_length=500)
