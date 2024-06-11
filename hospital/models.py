@@ -143,7 +143,7 @@ class Appointment(models.Model):
     description=models.TextField(max_length=500)
     status=models.BooleanField(default=False)
     def __str__(self):
-        return self.patientName
+        return self.description
 
 class PatientDetails(models.Model):
     patientID=models.PositiveIntegerField(null=True)

@@ -642,10 +642,10 @@ def admin_add_appointment_view(request):
         appointmentForm=forms.AppointmentForm(request.POST)
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
-            # appointment.doctorId=request.POST.get('doctorId')
+            appointment.doctorId=request.POST.get('doctorId')
             appointment.hospitalId=request.POST.get('hospitalId')
             appointment.patientId=request.POST.get('patientId')
-            # appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
             appointment.hospitalName=models.Hospital.objects.get(id=request.POST.get('hospitalId')).name
             appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
             appointment.status=True
@@ -659,7 +659,7 @@ def admin_add_appointment_view(request):
 @user_passes_test(is_admin)
 def admin_approve_appointment_view(request):
     #those whose approval are needed
-    appointments=models.Appointment.objects.all().filter(status=False)
+    appointments=models.Appointment.objects.all()
     return render(request,'hospital/admin_approve_appointment.html',{'appointments':appointments})
 
 
@@ -668,9 +668,18 @@ def admin_approve_appointment_view(request):
 @user_passes_test(is_admin)
 def approve_appointment_view(request,pk):
     appointment=models.Appointment.objects.get(id=pk)
-    appointment.status=True
-    appointment.save()
-    return redirect(reverse('admin-approve-appointment'))
+    appointmentForm=forms.AppointmentDoctorForm(instance=appointment)
+    mydict={'appointmentForm':appointmentForm,}
+    if request.method=='POST':
+        appointmentForm=forms.AppointmentDoctorForm(request.POST, instance=appointment)
+        if appointmentForm.is_valid():
+            appointment=appointmentForm.save(commit=False)
+            appointment.doctorId=request.POST.get('doctorId')
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.save()
+            appointments=models.Appointment.objects.all()
+        return render(request,'hospital/admin_approve_appointment.html',{'appointments':appointments})
+    return render(request,'hospital/admin_update_appointment.html',context=mydict)
 
 
 
@@ -742,7 +751,7 @@ def doctor_patient_view(request):
 @user_passes_test(is_doctor)
 def doctor_view_patient_view(request):
     # patients=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id)
-    patients=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id)
+    patients=models.Patient.objects.all()
     doctor=models.Doctor.objects.get(user_id=request.user.id) #for profile picture of doctor in sidebar
     return render(request,'hospital/doctor_view_patient.html',{'patients':patients,'doctor':doctor})
 
@@ -758,7 +767,7 @@ def doctor_appointment_view(request):
 @user_passes_test(is_doctor)
 def doctor_view_appointment_view(request):
     doctor=models.Doctor.objects.get(user_id=request.user.id) #for profile picture of doctor in sidebar
-    appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id)
+    appointments=models.Appointment.objects.all().filter(doctorId=request.user.id)
     patientid=[]
     for a in appointments:
         patientid.append(a.patientId)
