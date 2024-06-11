@@ -163,7 +163,7 @@ def afterlogin_view(request):
     elif is_admin_pharmacy(request.user):
         accountapproval=models.AdminPharmacy.objects.all().filter(user_id=request.user.id,status=True)
         if accountapproval:
-            return redirect('admin-dashboard')
+            return redirect('admin-pharmacy-dashboard')
         else:
             return render(request,'hospital/admin_wait_for_approval.html')
     elif is_doctor(request.user):
@@ -960,5 +960,32 @@ def contactus_view(request):
 #---------------------------------------------------------------------------------
 
 
+#---------------------------------------------------------------------------------
+#------------------------ PHARMACY ADMIN RELATED VIEWS START ------------------------------
+#---------------------------------------------------------------------------------
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_pharmacy_dashboard_view(request):
+    #for both table in admin dashboard
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
+    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
+    #for three cards
+    pharmacyInvetorycount=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).count()
 
+    prescriptionscount=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).count()
+
+    pendingadmin_pharmacycount=models.AdminPharmacy.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=False).count()
+    mydict={
+    'pharmacyInvetory':pharmacyInvetory,
+    'prescriptions':prescriptions,
+    'pharmacyInvetorycount':pharmacyInvetorycount,
+    'prescriptionscount':prescriptionscount,
+    'pendingadmin_pharmacycount':pendingadmin_pharmacycount,
+    }
+    return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
+
+#---------------------------------------------------------------------------------
+#------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
+#---------------------------------------------------------------------------------
 

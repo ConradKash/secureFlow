@@ -108,4 +108,8 @@ urlpatterns +=[
 
 ]
 
+urlpatterns +=[
+    path('admin-pharmacy-dashboard', views.admin_pharmacy_dashboard_view,name='admin-pharmacy-dashboard'),
+]
+
 
