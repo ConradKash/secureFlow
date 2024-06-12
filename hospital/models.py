@@ -155,14 +155,22 @@ class Appointment(models.Model):
         return self.description
 
 class PatientDetailsAdmin(models.Model):
+    patientId=models.PositiveIntegerField(null=True)
+    appointmentId=models.PositiveIntegerField(null=True)
+    doctorId=models.PositiveIntegerField(null=True)
     visitDate=models.DateField(auto_now=True)
     height=models.FloatField(null=True)
-    temperature=models.FloatField(null=True)
-    sypmtoms = models.CharField(max_length=40)
-    diagnosis = models.CharField(max_length=20,null=True)
+    weight=models.FloatField(null=True)
+    temperature=models.FloatField(null=True)  
+    medical_history=models.TextField(max_length=200, null=True)
+    currentMedication= models.TextField(max_length=200, null=True)
+    currentSymptoms=models.TextField(max_length=200, null=True)
+    allergies=models.CharField(max_length=200, null=True)
+    medicalConcerns=models.TextField(max_length=200, null=True)
+    diagnosis=models.TextField(max_length=500, null=True)
     treatment=models.CharField(max_length=50,choices=treatment_plan,default='SelectTreatmentPlan')
     def __str__(self):
-        return self.symptoms
+        return self.currentSymptoms
 
 class PatientDetails(models.Model):
     patientID=models.PositiveIntegerField(null=True)

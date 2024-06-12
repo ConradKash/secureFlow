@@ -36,9 +36,14 @@
       <thead>
         <tr>
           <th>Height</th>
+          <th>Weight</th>
           <th>Temperature</th>
-          <th>Symptoms</th>
-          <th>Diagnostics</th>
+          <th>Medical History</th>
+          <th>Current Medication</th>
+          <th>Current Symptoms</th>
+          <th>Allergies</th>
+          <th>Medical Concerns</th>
+          <th>Diagnosis</th>
           <th>Treatment</th>
           <th>Action</th>
         </tr>
@@ -46,8 +51,13 @@
       {% for p in patientDetails %}
       <tr>
         <td>{{p.height}}</td>
+        <td>{{p.height}}</td>
         <td>{{p.temperature}}</td>
-        <td>{{p.sypmtoms}}</td>
+        <td>{{p.medical_history}}</td>
+        <td>{{p.currentMedication}}</td>
+        <td>{{p.currentSymptoms}}</td>
+        <td>{{p.allergies}}</td>
+        <td>{{p.medicalConcerns}}</td>
         <td>{{p.diagnosis}}</td>
         <td>{{p.treatment}}</td>        
         <td><a class="btn btn-danger btn-xs" href="{% url 'delete-appointment' p.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>

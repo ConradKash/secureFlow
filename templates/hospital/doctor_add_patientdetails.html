@@ -40,6 +40,7 @@
     .menu {
       top: 50px;
     }
+
   </style>
 
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -60,25 +61,49 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              {% render_field patientDetailsAdminForm.height class="form-control" placeholder="Address" %}
+              {% render_field patientDetailsAdminForm.patientId class="form-control" placeholder="Patient Name" %}
             </div>
             <div class="form-group">
-              {% render_field patientDetailsAdminForm.temperature class="form-control" placeholder="Doctor" %}
+              {% render_field patientDetailsAdminForm.appointmentId class="form-control" placeholder="Appointment" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailsAdminForm.doctorId class="form-control" placeholder="Doctor Name" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailsAdminForm.height class="form-control" placeholder="Height" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailsAdminForm.weight class="form-control" placeholder="Weight" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailsAdminForm.temperature class="form-control" placeholder="Temperature" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailsAdminForm.medical_history class="form-control" placeholder="Medical History" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailsAdminForm.currentMedication class="form-control" placeholder="Current Medication" %}
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              {% render_field patientDetailsAdminForm.diagnosis class="form-control" placeholder="diagnosis" %}
+              {% render_field patientDetailsAdminForm.allergies class="form-control"  placeholder="Allergies" %}
             </div>
             <div class="form-group">
-              {% render_field patientDetailsAdminForm.sypmtoms class="form-control" placeholder="symptoms" %}
+              {% render_field patientDetailsAdminForm.treatment class="form-control" placeholder="Treatment" %}
             </div>
             <div class="form-group">
-              {% render_field patientDetailsAdminForm.treatment class="form-control"  placeholder="treatment" %}
+              {% render_field patientDetailsAdminForm.currentSymptoms class="form-control" placeholder="Current Symptoms" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailsAdminForm.medicalConcerns class="form-control" placeholder="Medical Concerns" %}
+            </div>
+            <div class="form-group text">
+              {% render_field patientDetailsAdminForm.diagnosis class="form-control" placeholder="Diagnosis" %}
             </div>
           </div>
         </div>
-        <button type="submit" class="btnSubmit">Register</button>
+        <button type="submit" class="btnSubmit">Save</button>
       </div>
     </div>
   </div>
