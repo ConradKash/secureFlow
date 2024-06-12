@@ -105,13 +105,17 @@ class AppointmentDoctorForm(forms.ModelForm):
         }
 
 class PatientAppointmentForm(forms.ModelForm):
-    doctorId = forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(
-        status=True), empty_label="Doctor Name and Department", to_field_name="user_id")
+    doctorId = forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True), empty_label="Doctor Name and Department", to_field_name="user_id")
 
     class Meta:
         model = models.Appointment
         fields = ['description', 'status']
 
+class PatientDetailsForm(forms.ModelForm):
+    patientId = forms.ModelChoiceField(queryset=models.Patient.objects.all(), empty_label="Patient Name and Symptoms", to_field_name="user_id")
+    class Meta:
+        model = models.PatientDetails
+        fields = ['height', 'weight', 'blood_pressure', 'cholesterol', 'blood_sugar', 'heart_rate', 'temperature', 'symptoms','diagnosis', 'treatment']
 
 #for contact us page
 class ContactusForm(forms.Form):

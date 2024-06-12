@@ -160,7 +160,7 @@ class PatientDetails(models.Model):
     diagnosis=models.TextField(max_length=500)
     treatment=models.TextField(max_length=500)
     def __str__(self):
-        return self.appointmentId
+        return self.symptoms
     
 class Prescription(models.Model):
     appointmentId=models.PositiveIntegerField(null=True)

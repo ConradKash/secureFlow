@@ -19,6 +19,11 @@
     .row {
       margin: 100px;
     }
+    .table{
+      margin-top: 20px;
+      solid: 1px #ced4da;
+      
+    }
   </style>
 </head>
 
@@ -36,6 +41,8 @@
           <th>Contact</th>
           <th>Address</th>
           <th>Appointment Date</th>
+          <th>Action</th>
+          <th>Delete</th>
         </tr>
       </thead>
       {% for a,p in appointments %}
@@ -46,6 +53,8 @@
         <td>{{p.mobile}}</td>
         <td>{{p.address}}</td>
         <td>{{a.appointmentDate}}</td>
+        <td>{{a.status}}</td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-appointment' a.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
       {% endfor %}
     </table>
