@@ -1149,7 +1149,8 @@ def admin_add_pharmacy_inventory_view(request):
 @user_passes_test(is_admin_pharmacy)
 def approve_prescription_view(request,pk):
     prescription=models.Prescription.objects.get(id=pk)
-    prescription.status
+    prescription.status=True
+    prescription.save()
     return redirect('admin-pharmacy-prescription')
 #---------------------------------------------------------------------------------
 #------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
