@@ -1096,6 +1096,61 @@ def admin_pharmacy_dashboard_view(request):
     }
     return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
 
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_pharmacy_presciption(request):
+    #for both table in admin dashboard
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
+
+    mydict={
+    'prescriptions':prescriptions,
+    }
+    return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
+
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_pharmacy_inventory_view(request):
+    #for both table in admin dashboard
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
+
+    mydict={
+    'pharmacyInvetory':pharmacyInvetory
+    }
+    return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
+
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_add_pharmacy_inventory_view(request):
+    pharmacyInventoryForm=forms.PharmacyInventoryForm()
+    mydict={'pharmacyInventoryForm':pharmacyInventoryForm}
+    if request.method=='POST':
+        pharmacyInventoryForm=forms.PharmacyInventoryForm(request.POST)
+        if pharmacyInventoryForm.is_valid():
+            pharmacyInventoryForm=pharmacyInventoryForm.save(commit=False)
+            pharmacyInventoryForm.status=True
+            # appointment.doctorId=request.POST.get('doctorId')
+            pharmacyInventoryForm.pharmacyId=request.POST.get('pharmacyId')
+            # appointment.patientId=request.POST.get('patientId')
+            # appointment.appointmentId=request.POST.get('appointmentId')
+            # appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            # appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
+            # appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            # appointment.medicineName=request.POST.get('medicineName')
+            # appointment.dosageInstruction=request.POST.get('dosageInstruction')
+            # appointment.sideEffects=request.POST.get('sideEffects')
+            # appointment.status=False
+            pharmacyInventoryForm.save()
+        return HttpResponseRedirect('doctor-view-patient-detail')
+    return render(request,'hospital/doctor_add_prescription.html',context=mydict)
+
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def approve_prescription_view(request,pk):
+    prescription=models.Prescription.objects.get(id=pk)
+    prescription.status
+    return redirect('admin-pharmacy-prescription')
 #---------------------------------------------------------------------------------
 #------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------

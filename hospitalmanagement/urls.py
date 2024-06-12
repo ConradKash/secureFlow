@@ -115,6 +115,9 @@ urlpatterns +=[
 
 urlpatterns +=[
     path('admin-pharmacy-dashboard', views.admin_pharmacy_dashboard_view,name='admin-pharmacy-dashboard'),
+    path('admin-pharmacy-prescription', views.admin_pharmacy_dashboard_view,name='admin-pharmacy-prescription'),
+    path('admin-pharmacy-inventory_view', views.admin_pharmacy_inventory_view,name='admin-pharmacy-inventory_view'),
+    path('admin-pharmacy-invetory-add', views.admin_add_pharmacy_inventory_view,name='admin-pharmacy-invetory-add'),
 ]
 
 

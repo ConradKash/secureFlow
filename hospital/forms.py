@@ -150,6 +150,12 @@ class PrescriptionForm(forms.ModelForm):
                   'sideEffects',
                   'status']
 
+class PharmacyInventoryForm(forms.ModelForm):
+    pharmacyId = forms.ModelChoiceField(queryset=models.Pharmacy.objects.all().filter(is_approved=True), empty_label="Pharmacy Name", to_field_name="id")
+    class Meta:
+        model = models.PharmacyInventory
+        fields = ['medicineName', 'description', 'price', 'stock', 'status']
+
 #for contact us page
 class ContactusForm(forms.Form):
     Name = forms.CharField(max_length=30)

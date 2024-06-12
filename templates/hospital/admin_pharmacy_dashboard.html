@@ -1,4 +1,4 @@
-{% extends 'hospital/admin_base.html' %}
+{% extends 'hospital/adminPharmacy_base.html' %}
 {% load static %}
 {% block content %}
 {% comment %} {%include 'hospital/admin_dashboard_cards.html'%} {% endcomment %}
@@ -45,14 +45,17 @@
           <tr>
             <th>Medicine Name</th>
             <th>Description</th>
-            <th>Appointment</th>
+            <th>Patient Name</th>
+            <th>Doctors Name</th>
+            <th>Status</th>
           </tr>
         </thead>
         {% for p in prescriptions %}
         <tr>
-          <td> {{p.medicineNam}}</td>
-          <td>{{p.description}}</td>
-          <td>{{p.appointmentId}}</td>
+          <td> {{p.medicineName}}</td>
+          <td>{{p.dosageInstruction}}</td>
+          <td>{{p.patientName}}</td>
+          <td>{{p.doctorName}}</td>
           {%if p.status%}
           <td> <span class="label label-primary">Admitted</span></td>
           {% else %}
