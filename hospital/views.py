@@ -21,6 +21,10 @@ def adminclick_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request,'hospital/adminclick.html')
 
+def admin_pharmacyclick_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('afterlogin')
+    return render(request,'hospital/admin_pharmacyclick.html')
 
 #for showing signup/login button for doctor(by sumit)
 def doctorclick_view(request):
@@ -64,6 +68,28 @@ def admin_signup_view(request):
         return HttpResponseRedirect('adminlogin')
     return render(request,'hospital/adminsignup.html',context=mydict)
 
+def admin_pharmacy_signup_view(request):
+    userForm=forms.AdminUserForm()
+    adminForm=forms.AdminPharmacyForm()
+    mydict={'userForm':userForm,'adminForm':adminForm}
+    if request.method=='POST':
+        userForm=forms.AdminUserForm(request.POST)
+        adminForm=forms.AdminPharmacyForm(request.POST, request.FILES)
+        if userForm.is_valid() and adminForm.is_valid():
+            user=userForm.save()
+            user.set_password(user.password)
+            user.save()
+            
+            admin=adminForm.save(commit=False)
+            admin.user=user
+            admin.pharmacyId=request.POST.get('pharmacyId')
+            admin.status=False
+            admin.save()
+
+            my_admin_group = Group.objects.get_or_create(name='ADMINPHARMACY')
+            my_admin_group[0].user_set.add(user)
+        return HttpResponseRedirect('adminPharmacylogin')
+    return render(request,'hospital/admin_pharmacysignup.html',context=mydict)
 
 def doctor_signup_view(request):
     userForm=forms.DoctorUserForm()
@@ -102,7 +128,6 @@ def patient_signup_view(request):
             user.save()
             patient=patientForm.save(commit=False)
             patient.user=user
-            patient.assignedDoctorId=request.POST.get('assignedDoctorId')
             patient=patient.save()
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
             my_patient_group[0].user_set.add(user)
@@ -117,6 +142,8 @@ def patient_signup_view(request):
 #-----------for checking user is doctor , patient or admin(by sumit)
 def is_admin(user):
     return user.groups.filter(name='ADMIN').exists()
+def is_admin_pharmacy(user):
+    return user.groups.filter(name='ADMINPHARMACY').exists()
 def is_doctor(user):
     return user.groups.filter(name='DOCTOR').exists()
 def is_receptionist(user):
@@ -131,6 +158,12 @@ def afterlogin_view(request):
         accountapproval=models.Admin.objects.all().filter(user_id=request.user.id,status=True)
         if accountapproval:
             return redirect('admin-dashboard')
+        else:
+            return render(request,'hospital/admin_wait_for_approval.html')
+    elif is_admin_pharmacy(request.user):
+        accountapproval=models.AdminPharmacy.objects.all().filter(user_id=request.user.id,status=True)
+        if accountapproval:
+            return redirect('admin-pharmacy-dashboard')
         else:
             return render(request,'hospital/admin_wait_for_approval.html')
     elif is_doctor(request.user):
@@ -426,6 +459,33 @@ def admin_add_pharmacy_view(request):
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
+def admin_add_patientDetail_view(request):
+    patientDetailsAdminForm=forms.PatientDetailsAdminForm()
+    mydict={'patientDetailsAdminForm':patientDetailsAdminForm}
+    if request.method=='POST':
+        patientDetailsAdminForm = forms.PatientDetailsAdminForm(request.POST)
+        if patientDetailsAdminForm.is_valid():
+            patientDetailsAdmin =patientDetailsAdminForm.save(commit=False)
+            patientDetailsAdmin.patientId=request.POST.get('patientId')
+            patientDetailsAdmin.appointmentId=request.POST.get('appointmentId')
+            patientDetailsAdmin.doctorId=request.POST.get('doctorId')
+            patientDetailsAdmin.height=request.POST.get('height')
+            patientDetailsAdmin.weight=request.POST.get('weight')
+            patientDetailsAdmin.temperature=request.POST.get('temperature')
+            patientDetailsAdmin.medical_history=request.POST.get('medical_history')
+            patientDetailsAdmin.currentMedication=request.POST.get('currentMedication')
+            patientDetailsAdmin.currentSymptoms=request.POST.get('currentSymptoms')
+            patientDetailsAdmin.allergies=request.POST.get('allergies')
+            patientDetailsAdmin.medicalConcerns=request.POST.get('medicalConcerns')
+            patientDetailsAdmin.diagnosis=request.POST.get('diagnosis')
+            patientDetailsAdmin.treatment=request.POST.get('treatment')
+            patientDetailsAdmin.save()
+        return HttpResponseRedirect('admin-view-doctor')
+    return render(request,'hospital/admin_add_patient_details.html',context=mydict)
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
 def admin_view_pharmacy_view(request):
     pharmacy=models.Pharmacy.objects.all().filter(is_approved=True)
     return render(request,'hospital/admin_view_pharmacy.html',{'pharmacy':pharmacy})
@@ -584,47 +644,6 @@ def reject_receptionist_view(request,pk):
     receptionist.delete()
     return redirect('admin-approve-receptionist')
 
-
-#--------------for discharge patient bill (pdf) download and printing
-import io
-from xhtml2pdf import pisa
-from django.template.loader import get_template
-from django.template import Context
-from django.http import HttpResponse
-
-
-def render_to_pdf(template_src, context_dict):
-    template = get_template(template_src)
-    html  = template.render(context_dict)
-    result = io.BytesIO()
-    pdf = pisa.pisaDocument(io.BytesIO(html.encode("ISO-8859-1")), result)
-    if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type='application/pdf')
-    return
-
-
-
-def download_pdf_view(request,pk):
-    dischargeDetails=models.PatientDischargeDetails.objects.all().filter(patientId=pk).order_by('-id')[:1]
-    dict={
-        'patientName':dischargeDetails[0].patientName,
-        # 'assignedDoctorName':dischargeDetails[0].assignedDoctorName,
-        'address':dischargeDetails[0].address,
-        'mobile':dischargeDetails[0].mobile,
-        'symptoms':dischargeDetails[0].symptoms,
-        'admitDate':dischargeDetails[0].admitDate,
-        'releaseDate':dischargeDetails[0].releaseDate,
-        'daySpent':dischargeDetails[0].daySpent,
-        'medicineCost':dischargeDetails[0].medicineCost,
-        'roomCharge':dischargeDetails[0].roomCharge,
-        'doctorFee':dischargeDetails[0].doctorFee,
-        'OtherCharge':dischargeDetails[0].OtherCharge,
-        'total':dischargeDetails[0].total,
-    }
-    return render_to_pdf('hospital/download_bill.html',dict)
-
-
-
 #-----------------APPOINTMENT START--------------------------------------------------------------------
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
@@ -650,10 +669,10 @@ def admin_add_appointment_view(request):
         appointmentForm=forms.AppointmentForm(request.POST)
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
-            # appointment.doctorId=request.POST.get('doctorId')
+            appointment.doctorId=request.POST.get('doctorId')
             appointment.hospitalId=request.POST.get('hospitalId')
             appointment.patientId=request.POST.get('patientId')
-            # appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
             appointment.hospitalName=models.Hospital.objects.get(id=request.POST.get('hospitalId')).name
             appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
             appointment.status=True
@@ -667,7 +686,7 @@ def admin_add_appointment_view(request):
 @user_passes_test(is_admin)
 def admin_approve_appointment_view(request):
     #those whose approval are needed
-    appointments=models.Appointment.objects.all().filter(status=False)
+    appointments=models.Appointment.objects.all()
     return render(request,'hospital/admin_approve_appointment.html',{'appointments':appointments})
 
 
@@ -676,9 +695,18 @@ def admin_approve_appointment_view(request):
 @user_passes_test(is_admin)
 def approve_appointment_view(request,pk):
     appointment=models.Appointment.objects.get(id=pk)
-    appointment.status=True
-    appointment.save()
-    return redirect(reverse('admin-approve-appointment'))
+    appointmentForm=forms.AppointmentDoctorForm(instance=appointment)
+    mydict={'appointmentForm':appointmentForm,}
+    if request.method=='POST':
+        appointmentForm=forms.AppointmentDoctorForm(request.POST, instance=appointment)
+        if appointmentForm.is_valid():
+            appointment=appointmentForm.save(commit=False)
+            appointment.doctorId=request.POST.get('doctorId')
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.save()
+            appointments=models.Appointment.objects.all()
+        return render(request,'hospital/admin_approve_appointment.html',{'appointments':appointments})
+    return render(request,'hospital/admin_update_appointment.html',context=mydict)
 
 
 
@@ -714,16 +742,16 @@ def reject_appointment_view(request,pk):
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
     #for three cards
-    patientcount=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id).count()
+    patientcount=models.Pharmacy.objects.all().count()
     appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
-    patientdischarged=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
+    patientdischarged=models.Prescription.objects.all().distinct().filter(doctorId=request.user.id).count()
 
     #for  table in doctor dashboard
     appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).order_by('-id')
     patientid=[]
     for a in appointments:
         patientid.append(a.patientId)
-    patients=models.Patient.objects.all().filter(status=True,user_id__in=patientid).order_by('-id')
+    patients=models.Patient.objects.all().filter(user_id__in=patientid).order_by('-id')
     appointments=zip(appointments,patients)
     mydict={
     'patientcount':patientcount,
@@ -750,21 +778,9 @@ def doctor_patient_view(request):
 @user_passes_test(is_doctor)
 def doctor_view_patient_view(request):
     # patients=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id)
-    patients=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id)
+    patients=models.Patient.objects.all()
     doctor=models.Doctor.objects.get(user_id=request.user.id) #for profile picture of doctor in sidebar
     return render(request,'hospital/doctor_view_patient.html',{'patients':patients,'doctor':doctor})
-
-
-
-@login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
-def doctor_view_discharge_patient_view(request):
-    # dischargedpatients=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name)
-    dischargedpatients=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name)
-    doctor=models.Doctor.objects.get(user_id=request.user.id) #for profile picture of doctor in sidebar
-    return render(request,'hospital/doctor_view_discharge_patient.html',{'dischargedpatients':dischargedpatients,'doctor':doctor})
-
-
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
@@ -778,11 +794,11 @@ def doctor_appointment_view(request):
 @user_passes_test(is_doctor)
 def doctor_view_appointment_view(request):
     doctor=models.Doctor.objects.get(user_id=request.user.id) #for profile picture of doctor in sidebar
-    appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id)
+    appointments=models.Appointment.objects.all().filter(doctorId=request.user.id)
     patientid=[]
     for a in appointments:
         patientid.append(a.patientId)
-    patients=models.Patient.objects.all().filter(status=True,user_id__in=patientid)
+    patients=models.Patient.objects.all().filter(user_id__in=patientid)
     appointments=zip(appointments,patients)
     return render(request,'hospital/doctor_view_appointment.html',{'appointments':appointments,'doctor':doctor})
 
@@ -792,11 +808,11 @@ def doctor_view_appointment_view(request):
 @user_passes_test(is_doctor)
 def doctor_delete_appointment_view(request):
     doctor=models.Doctor.objects.get(user_id=request.user.id) #for profile picture of doctor in sidebar
-    appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id)
+    appointments=models.Appointment.objects.all().filter(doctorId=request.user.id)
     patientid=[]
     for a in appointments:
         patientid.append(a.patientId)
-    patients=models.Patient.objects.all().filter(status=True,user_id__in=patientid)
+    patients=models.Patient.objects.all().filter(user_id__in=patientid)
     appointments=zip(appointments,patients)
     return render(request,'hospital/doctor_delete_appointment.html',{'appointments':appointments,'doctor':doctor})
 
@@ -816,6 +832,81 @@ def delete_appointment_view(request,pk):
     appointments=zip(appointments,patients)
     return render(request,'hospital/doctor_delete_appointment.html',{'appointments':appointments,'doctor':doctor})
 
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_add_patientDetail_view(request):
+    patientDetailsAdminForm=forms.PatientDetailsAdminForm()
+    mydict={'patientDetailsAdminForm':patientDetailsAdminForm}
+    if request.method=='POST':
+        patientDetailsAdminForm = forms.PatientDetailsAdminForm(request.POST)
+        if patientDetailsAdminForm.is_valid():
+            patientDetailsAdmin=patientDetailsAdminForm.save(commit=False)
+            patientDetailsAdmin.patientId=request.POST.get('patientId')
+            patientDetailsAdmin.appointmentId=request.POST.get('appointmentId')
+            patientDetailsAdmin.doctorId=request.POST.get('doctorId')
+            patientDetailsAdmin.height=request.POST.get('height')
+            patientDetailsAdmin.weight=request.POST.get('weight')
+            patientDetailsAdmin.temperature=request.POST.get('temperature')
+            patientDetailsAdmin.medical_history=request.POST.get('medical_history')
+            patientDetailsAdmin.currentMedication=request.POST.get('currentMedication')
+            patientDetailsAdmin.currentSymptoms=request.POST.get('currentSymptoms')
+            patientDetailsAdmin.allergies=request.POST.get('allergies')
+            patientDetailsAdmin.medicalConcerns=request.POST.get('medicalConcerns')
+            patientDetailsAdmin.diagnosis=request.POST.get('diagnosis')
+            patientDetailsAdmin.treatment=request.POST.get('treatment')
+            patientDetailsAdmin.save()
+            if patientDetailsAdmin.treatment=='Prescription':
+                return redirect('doctor-add-prescription')
+            
+        return HttpResponseRedirect('doctor-view-patient-detail')
+    return render(request,'hospital/doctor_add_patientdetails.html',context=mydict)
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_patientDetail_view(request):
+    patientDetails=models.PatientDetailsAdmin.objects.all()
+    # .filter(doctorId=request.user.id)#for profile picture of doctor in sidebar
+    return render(request,'hospital/doctor_view_patient_details.html',{'patientDetails':patientDetails})
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def create_patientdetail_view(request,pk):    
+    appointment=models.Appointment.objects.get(id=pk)    
+    patientDetailForm=forms.PatientDetailsForm()
+    if request.method=='POST':
+        patientDetailForm=forms.PatientDetailsForm(request.POST)
+        if patientDetailForm.is_valid():
+            patientDetail=patientDetailForm.save(commit=False)
+            patientDetail.appointmentId=pk
+            patientDetail.patientId=appointment.patientId
+            patientDetail.doctorId=appointment.doctorId
+            patientDetail.save()
+            return redirect('doctor-view-patient-detail')
+    return render(request,'hospital/doctor_add_patient_details.html',{'patientDetailForm':patientDetailForm})
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_add_prescription_view(request):
+    prescriptionForm=forms.PrescriptionForm()
+    mydict={'prescriptionForm':prescriptionForm,}
+    if request.method=='POST':
+        appointmentForm=forms.PrescriptionForm(request.POST)
+        if appointmentForm.is_valid():
+            appointment=appointmentForm.save(commit=False)
+            appointment.doctorId=request.POST.get('doctorId')
+            appointment.pharmacyId=request.POST.get('pharmacyId')
+            appointment.patientId=request.POST.get('patientId')
+            appointment.appointmentId=request.POST.get('appointmentId')
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
+            appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            appointment.medicineName=request.POST.get('medicineName')
+            appointment.dosageInstruction=request.POST.get('dosageInstruction')
+            appointment.sideEffects=request.POST.get('sideEffects')
+            appointment.status=False
+            appointment.save()
+        return HttpResponseRedirect('doctor-view-patient-detail')
+    return render(request,'hospital/doctor_add_prescription.html',context=mydict)
 
 
 #---------------------------------------------------------------------------------
@@ -946,42 +1037,6 @@ def patient_view_appointment_view(request):
     return render(request,'hospital/patient_view_appointment.html',{'appointments':appointments,'patient':patient})
 
 
-
-@login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
-def patient_discharge_view(request):
-    patient=models.Patient.objects.get(user_id=request.user.id) #for profile picture of patient in sidebar
-    dischargeDetails=models.PatientDischargeDetails.objects.all().filter(patientId=patient.id).order_by('-id')[:1]
-    patientDict=None
-    if dischargeDetails:
-        patientDict ={
-        'is_discharged':True,
-        'patient':patient,
-        'patientId':patient.id,
-        'patientName':patient.get_name,
-        # 'assignedDoctorName':dischargeDetails[0].assignedDoctorName,
-        'address':patient.address,
-        'mobile':patient.mobile,
-        'symptoms':patient.symptoms,
-        'admitDate':patient.admitDate,
-        'releaseDate':dischargeDetails[0].releaseDate,
-        'daySpent':dischargeDetails[0].daySpent,
-        'medicineCost':dischargeDetails[0].medicineCost,
-        'roomCharge':dischargeDetails[0].roomCharge,
-        'doctorFee':dischargeDetails[0].doctorFee,
-        'OtherCharge':dischargeDetails[0].OtherCharge,
-        'total':dischargeDetails[0].total,
-        }
-        print(patientDict)
-    else:
-        patientDict={
-            'is_discharged':False,
-            'patient':patient,
-            'patientId':request.user.id,
-        }
-    return render(request,'hospital/patient_discharge.html',context=patientDict)
-
-
 #------------------------ PATIENT RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------
 
@@ -1016,5 +1071,88 @@ def contactus_view(request):
 #---------------------------------------------------------------------------------
 
 
+#---------------------------------------------------------------------------------
+#------------------------ PHARMACY ADMIN RELATED VIEWS START ------------------------------
+#---------------------------------------------------------------------------------
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_pharmacy_dashboard_view(request):
+    #for both table in admin dashboard
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
+    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
+    #for three cards
+    pharmacyInvetorycount=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).count()
 
+    prescriptionscount=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).count()
+
+    pendingadmin_pharmacycount=models.AdminPharmacy.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=False).count()
+    mydict={
+    'pharmacyInvetory':pharmacyInvetory,
+    'prescriptions':prescriptions,
+    'pharmacyInvetorycount':pharmacyInvetorycount,
+    'prescriptionscount':prescriptionscount,
+    'pendingadmin_pharmacycount':pendingadmin_pharmacycount,
+    }
+    return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
+
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_pharmacy_presciption(request):
+    #for both table in admin dashboard
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
+
+    mydict={
+    'prescriptions':prescriptions,
+    }
+    return render(request,'admin_pharmacy_prescription_view.html',context=mydict)
+
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_pharmacy_inventory_view(request):
+    #for both table in admin dashboard
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
+
+    mydict={
+    'pharmacyInvetory':pharmacyInvetory
+    }
+    return render(request,'hospital/admin_pharmacy_inventory_view.html',context=mydict)
+
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_add_pharmacy_inventory_view(request):
+    pharmacyInventoryForm=forms.PharmacyInventoryForm()
+    mydict={'pharmacyInventoryForm':pharmacyInventoryForm}
+    if request.method=='POST':
+        pharmacyInventoryForm=forms.PharmacyInventoryForm(request.POST)
+        if pharmacyInventoryForm.is_valid():
+            pharmacyInventoryForm=pharmacyInventoryForm.save(commit=False)
+            pharmacyInventoryForm.status=True
+            # appointment.doctorId=request.POST.get('doctorId')
+            pharmacyInventoryForm.pharmacyId=request.POST.get('pharmacyId')
+            # appointment.patientId=request.POST.get('patientId')
+            # appointment.appointmentId=request.POST.get('appointmentId')
+            # appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            # appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
+            # appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            # appointment.medicineName=request.POST.get('medicineName')
+            # appointment.dosageInstruction=request.POST.get('dosageInstruction')
+            # appointment.sideEffects=request.POST.get('sideEffects')
+            # appointment.status=False
+            pharmacyInventoryForm.save()
+        return HttpResponseRedirect('admin-pharmacy-dashboard')
+    return render(request,'hospital/doctor_add_prescription.html',context=mydict)
+
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def approve_prescription_view(request,pk):
+    prescription=models.Prescription.objects.get(id=pk)
+    prescription.status=True
+    prescription.save()
+    return redirect('admin-pharmacy-prescription')
+#---------------------------------------------------------------------------------
+#------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
+#---------------------------------------------------------------------------------
 

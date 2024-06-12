@@ -15,14 +15,17 @@ urlpatterns = [
 
 
     path('adminclick', views.adminclick_view),
+    path('admin_pharmacyclick', views.admin_pharmacyclick_view),
     path('doctorclick', views.doctorclick_view),
     path('patientclick', views.patientclick_view),
 
     path('adminsignup', views.admin_signup_view),
+    path('admin_pharmacysignup', views.admin_pharmacy_signup_view),
     path('doctorsignup', views.doctor_signup_view,name='doctorsignup'),
     path('patientsignup', views.patient_signup_view),
     
     path('adminlogin', LoginView.as_view(template_name='hospital/adminlogin.html')),
+    path('adminPharmacylogin', LoginView.as_view(template_name='hospital/admin_pharmacylogin.html')),
     path('doctorlogin', LoginView.as_view(template_name='hospital/doctorlogin.html')),
     path('patientlogin', LoginView.as_view(template_name='hospital/patientlogin.html')),
 
@@ -57,7 +60,6 @@ urlpatterns = [
     path('delete-patient-from-hospital/<int:pk>', views.delete_patient_from_hospital_view,name='delete-patient-from-hospital'),
     path('update-patient/<int:pk>', views.update_patient_view,name='update-patient'),
     path('admin-add-patient', views.admin_add_patient_view,name='admin-add-patient'),
-    path('download-pdf/<int:pk>', views.download_pdf_view,name='download-pdf'),
     
     path('admin-appointment', views.admin_appointment_view,name='admin-appointment'),
     path('admin-view-appointment', views.admin_view_appointment_view,name='admin-view-appointment'),
@@ -87,12 +89,15 @@ urlpatterns +=[
     path('doctor-dashboard', views.doctor_dashboard_view,name='doctor-dashboard'),
     path('doctor-patient', views.doctor_patient_view,name='doctor-patient'),
     path('doctor-view-patient', views.doctor_view_patient_view,name='doctor-view-patient'),
-    path('doctor-view-discharge-patient',views.doctor_view_discharge_patient_view,name='doctor-view-discharge-patient'),
-
     path('doctor-appointment', views.doctor_appointment_view,name='doctor-appointment'),
     path('doctor-view-appointment', views.doctor_view_appointment_view,name='doctor-view-appointment'),
     path('doctor-delete-appointment',views.doctor_delete_appointment_view,name='doctor-delete-appointment'),
     path('delete-appointment/<int:pk>', views.delete_appointment_view,name='delete-appointment'),
+    path('doctor-view-patient-detail',views.doctor_patientDetail_view,name='doctor-view-patient-detail'),
+    path('create-patient-details/<int:pk>', views.create_patientdetail_view,name='create-patient-details'),
+    path('patient-details', views.admin_add_patientDetail_view,name='patient-details'),
+    path('doctor-patient-details', views.doctor_add_patientDetail_view,name='doctor-patient-details'),
+    path('doctor-add-prescription', views.doctor_add_prescription_view,name='doctor-add-prescription'),
 ]
 
 
@@ -105,8 +110,15 @@ urlpatterns +=[
     path('patient-appointment', views.patient_appointment_view,name='patient-appointment'),
     path('patient-book-appointment', views.patient_book_appointment_view,name='patient-book-appointment'),
     path('patient-view-appointment', views.patient_view_appointment_view,name='patient-view-appointment'),
-    path('patient-discharge', views.patient_discharge_view,name='patient-discharge'),
 
+]
+
+urlpatterns +=[
+    path('admin-pharmacy-dashboard', views.admin_pharmacy_dashboard_view,name='admin-pharmacy-dashboard'),
+    path('admin-pharmacy-prescription', views.admin_pharmacy_presciption,name='admin-pharmacy-prescription'),
+    path('admin-pharmacy-inventory_view', views.admin_pharmacy_inventory_view,name='admin-pharmacy-inventory_view'),
+    path('admin-pharmacy-invetory-add', views.admin_add_pharmacy_inventory_view,name='admin-pharmacy-invetory-add'),
+    path('admin-prescription-prescribe/<int:pk>', views.approve_prescription_view, name='admin-prescription-prescribe')
 ]
 
 
