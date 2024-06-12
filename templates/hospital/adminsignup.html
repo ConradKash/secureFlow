@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>HMS - Django</title>
+  <title>SecureFlow</title>
   <style type="text/css">
     body {
       color: #aa082e;
@@ -69,7 +69,6 @@
         <div class="note">
           <p>Add New Admin To Hospital</p>
         </div>
-
         <div class="form-content">
           <div class="row">
             <div class="col-md-6">
@@ -83,9 +82,8 @@
                 {% render_field adminForm.address class="form-control" placeholder="Address" %}
               </div>
               <div class="form-group">
-                {% render_field adminForm.hospitalId class="form-control" placeholder="Doctor" %}
+                {% render_field adminForm.hospitalId class="form-control" placeholder="Hospital" %}
               </div>
-  
             </div>
             <div class="col-md-6">
               <div class="form-group">
@@ -101,12 +99,12 @@
                 {% render_field adminForm.profile_pic required="required" class="form-control" placeholder="Profile Picture" %}
               </div>
             </div>
+          </div>
           <button type="submit" class="btnSubmit">Submit</button>
           <div class="text-center">Already have an account? <a href="adminlogin">Login here</a></div>
         </div>
       </div>
     </div>
-
   </form>
 
 

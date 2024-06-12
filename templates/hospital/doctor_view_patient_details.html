@@ -1,0 +1,71 @@
+{% extends 'hospital/doctor_base.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+    .table{
+      margin-top: 20px;
+      solid: 1px #ced4da;
+      
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Your Appointments</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Height</th>
+          <th>Weight</th>
+          <th>Temperature</th>
+          <th>Medical History</th>
+          <th>Current Medication</th>
+          <th>Current Symptoms</th>
+          <th>Allergies</th>
+          <th>Medical Concerns</th>
+          <th>Diagnosis</th>
+          <th>Treatment</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      {% for p in patientDetails %}
+      <tr>
+        <td>{{p.height}}</td>
+        <td>{{p.height}}</td>
+        <td>{{p.temperature}}</td>
+        <td>{{p.medical_history}}</td>
+        <td>{{p.currentMedication}}</td>
+        <td>{{p.currentSymptoms}}</td>
+        <td>{{p.allergies}}</td>
+        <td>{{p.medicalConcerns}}</td>
+        <td>{{p.diagnosis}}</td>
+        <td>{{p.treatment}}</td>        
+        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-appointment' p.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+
+{% endblock content %}
