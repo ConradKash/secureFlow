@@ -21,6 +21,15 @@ appointment_status = [
     ('Complete' , 'Completed')
 ]
 
+treatment_plan = [
+    ('SelectTreatmentPlan' , 'Select Treatment Plan'),
+    ('Prescription' , 'Prescription'),
+    ('lifestyleModification' , 'Lifestyle Modification'),
+    ('physicalTherapy' , 'Physical Therapy'),
+    ('others' , 'Others')    
+]
+
+
 
 class Hospital(models.Model):
     name=models.CharField(max_length=100)
@@ -145,14 +154,22 @@ class Appointment(models.Model):
     def __str__(self):
         return self.description
 
+class PatientDetailsAdmin(models.Model):
+    visitDate=models.DateField(auto_now=True)
+    height=models.FloatField(null=True)
+    temperature=models.FloatField(null=True)
+    sypmtoms = models.CharField(max_length=40)
+    diagnosis = models.CharField(max_length=20,null=True)
+    treatment=models.CharField(max_length=50,choices=treatment_plan,default='SelectTreatmentPlan')
+    def __str__(self):
+        return self.symptoms
+
 class PatientDetails(models.Model):
     patientID=models.PositiveIntegerField(null=True)
     appointmentId=models.PositiveIntegerField(null=True)
     visitDate=models.DateField(auto_now=True)
     height=models.FloatField(null=True)
     weight=models.FloatField(null=True)
-    blood_pressure=models.CharField(max_length=10, null=True)
-    cholesterol=models.FloatField(null=True)
     blood_sugar=models.FloatField(null=True)
     heart_rate=models.FloatField(null=True)
     temperature=models.FloatField(null=True)
@@ -160,7 +177,7 @@ class PatientDetails(models.Model):
     diagnosis=models.TextField(max_length=500)
     treatment=models.TextField(max_length=500)
     def __str__(self):
-        return self.symptoms
+        return self.symptoms 
     
 class Prescription(models.Model):
     appointmentId=models.PositiveIntegerField(null=True)
@@ -175,7 +192,8 @@ class Prescription(models.Model):
     status=models.BooleanField(default=False)
     def __str__(self):
         return self.pharmacyName + ' - ' + self.medicineName
-    
+
+
 class Feedback(models.Model):
     userId=models.PositiveIntegerField(null=True)
     message=models.TextField(max_length=500, null=True)

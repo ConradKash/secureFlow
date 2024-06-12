@@ -111,10 +111,23 @@ class PatientAppointmentForm(forms.ModelForm):
         model = models.Appointment
         fields = ['description', 'status']
 
+class PatientDetailsAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.PatientDetailsAdmin
+        fields = [
+            'height',
+            'temperature',
+            'sypmtoms',
+            'diagnosis',
+            'treatment'   
+        ]
+        
+    
+
 class PatientDetailsForm(forms.ModelForm):
     class Meta:
         model = models.PatientDetails
-        fields = ['height', 'weight', 'blood_pressure', 'cholesterol', 'blood_sugar', 'heart_rate', 'temperature', 'symptoms','diagnosis', 'treatment']
+        fields = ['height', 'weight', 'blood_sugar', 'heart_rate', 'temperature', 'symptoms','diagnosis', 'treatment']
 
 class PrescriptionForm(forms.ModelForm):
     doctorId = forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True), empty_label="Doctor Name and Department", to_field_name="user_id")

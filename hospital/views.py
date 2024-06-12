@@ -459,6 +459,25 @@ def admin_add_pharmacy_view(request):
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
+def admin_add_patientDetail_view(request):
+    patientDetailsAdminForm=forms.PatientDetailsAdminForm()
+    mydict={'patientDetailsAdminForm':patientDetailsAdminForm}
+    if request.method=='POST':
+        patientDetailsAdminForm = forms.PatientDetailsAdminForm(request.POST)
+        if patientDetailsAdminForm.is_valid():
+            patientDetailsAdmin =patientDetailsAdminForm.save(commit=False)
+            patientDetailsAdmin.height=request.POST.get('height')
+            patientDetailsAdmin.temperature=request.POST.get('temperature')
+            patientDetailsAdmin.sypmtoms=request.POST.get('sypmtoms')
+            patientDetailsAdmin.diagnosis=request.POST.get('diagnosis')
+            patientDetailsAdmin.treatment=request.POST.get('treatment')
+            patientDetailsAdmin.save()
+        return HttpResponseRedirect('admin-view-doctor')
+    return render(request,'hospital/admin_add_patient_details.html',context=mydict)
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
 def admin_view_pharmacy_view(request):
     pharmacy=models.Pharmacy.objects.all().filter(is_approved=True)
     return render(request,'hospital/admin_view_pharmacy.html',{'pharmacy':pharmacy})
