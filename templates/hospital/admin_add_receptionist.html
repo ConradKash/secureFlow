@@ -54,7 +54,7 @@
   <div class="container register-form">
     <div class="form">
       <div class="note">
-        <p>Add New Doctor To Hospital</p>
+        <p>Add New Receptionist To Hospital</p>
       </div>
       <div class="form-content">
         <div class="row">
@@ -66,10 +66,10 @@
               {% render_field userForm.username class="form-control" placeholder="Username" %}
             </div>
             <div class="form-group">
-              {% render_field doctorForm.department class="form-control" placeholder="Department" %}
+              {% render_field receptionistForm.address class="form-control" placeholder="Address" %}
             </div>
             <div class="form-group">
-              {% render_field doctorForm.address class="form-control" placeholder="Address" %}
+              {% render_field receptionistForm.hospitalId class="form-control" placeholder="Doctor" %}
             </div>
 
           </div>
@@ -81,13 +81,10 @@
               {% render_field userForm.password class="form-control" placeholder="Password" %}
             </div>
             <div class="form-group">
-              {% render_field doctorForm.mobile class="form-control"  placeholder="Contact" %}
+              {% render_field receptionistForm.mobile class="form-control"  placeholder="Contact" %}
             </div>
             <div class="form-group">
-              {% render_field doctorForm.hospitalId class="form-control" placeholder="Doctor" %}
-            </div>
-            <div class="form-group">
-              {% render_field doctorForm.profile_pic required="required" class="form-control" placeholder="Profile Picture" %}
+              {% render_field receptionistForm.profile_pic required="required" class="form-control" placeholder="Profile Picture" %}
             </div>
           </div>
         </div>

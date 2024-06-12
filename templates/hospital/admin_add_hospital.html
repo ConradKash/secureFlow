@@ -1,7 +1,7 @@
-{% extends 'hospital/admin_base.html' %} 
-{% load widget_tweaks %} 
+{% extends 'hospital/admin_base.html' %}
+{% load widget_tweaks %}
 {% block content %}
-  
+
 <head>
   <style media="screen">
     a:link {
@@ -42,44 +42,45 @@
     }
   </style>
 
-  <link
-    href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-    rel="stylesheet"
-    id="bootstrap-css"
-  />
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
-<br /><br />
-<!------ add appointment page by admin(sumit)  ---------->
-<form method="post">
+<br><br><br>
+<!------ signup page for doctor by admin(sumit)  ---------->
+<form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="container register-form">
     <div class="form">
       <div class="note">
-        <p>Book Appointment Details</p>
+        <p>Admit Hospital</p>
       </div>
       <div class="form-content">
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-group">
-              {% render_field appointmentForm.description class="form-control"placeholder="Description" %}
+              {% render_field hospitalForm.name class="form-control" placeholder="Hospital name" %}
             </div>
             <div class="form-group">
-              {% render_field appointmentForm.hospitalId class="form-control" placeholder="doctor" %}
+              {% render_field hospitalForm.address class="form-control" placeholder="Address" %}
             </div>
             <div class="form-group">
-              {% render_field appointmentForm.appointmentDate type='date' class="form-control" placeholder="appointment date" %}
+              {% render_field hospitalForm.contact class="form-control" placeholder="Contact" %}
             </div>
             <div class="form-group">
-              {% render_field appointmentForm.patientId class="form-control" placeholder="patient" %}
+              {% render_field hospitalForm.email class="form-control" placeholder="Email" %}
+            </div>
+            <div class="form-group">
+              {% render_field hospitalForm.logo required="required" class="form-control" placeholder="Profile Picture" %}
             </div>
           </div>
         </div>
-        <button type="submit" class="btnSubmit">Book</button>
+        <button type="submit" class="btnSubmit">Admit</button>
       </div>
     </div>
   </div>
+
 </form>
 
 {% endblock content %}

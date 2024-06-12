@@ -74,23 +74,33 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                {% render_field form.first_name class="form-control" placeholder="First Name" %}
+                {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
               </div>
               <div class="form-group">
-                {% render_field form.username class="form-control" placeholder="Username" %}
+                {% render_field userForm.username class="form-control" placeholder="Username" %}
               </div>
-
+              <div class="form-group">
+                {% render_field adminForm.address class="form-control" placeholder="Address" %}
+              </div>
+              <div class="form-group">
+                {% render_field adminForm.hospitalId class="form-control" placeholder="Doctor" %}
+              </div>
+  
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                {% render_field form.last_name class="form-control" placeholder="Last Name" %}
+                {% render_field userForm.last_name class="form-control" placeholder="Last Name" %}
               </div>
               <div class="form-group">
-                {% render_field form.password class="form-control" placeholder="Password" %}
+                {% render_field userForm.password class="form-control" placeholder="Password" %}
               </div>
-
+              <div class="form-group">
+                {% render_field adminForm.mobile class="form-control"  placeholder="Contact" %}
+              </div>
+              <div class="form-group">
+                {% render_field adminForm.profile_pic required="required" class="form-control" placeholder="Profile Picture" %}
+              </div>
             </div>
-          </div>
           <button type="submit" class="btnSubmit">Submit</button>
           <div class="text-center">Already have an account? <a href="adminlogin">Login here</a></div>
         </div>
