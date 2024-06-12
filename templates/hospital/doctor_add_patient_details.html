@@ -1,0 +1,102 @@
+{% extends 'hospital/admin_base.html' %} 
+{% load widget_tweaks %} 
+{% block content %}
+  
+<head>
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    .note {
+      text-align: center;
+      height: 80px;
+      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+      color: #fff;
+      font-weight: bold;
+      line-height: 80px;
+    }
+
+    .form-content {
+      padding: 5%;
+      border: 1px solid #ced4da;
+      margin-bottom: 2%;
+    }
+
+    .form-control {
+      border-radius: 1.5rem;
+    }
+
+    .btnSubmit {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 1%;
+      width: 20%;
+      cursor: pointer;
+      background: #0062cc;
+      color: #fff;
+    }
+
+    .menu {
+      top: 50px;
+    }
+  </style>
+
+  <link
+    href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+    rel="stylesheet"
+    id="bootstrap-css"
+  />
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<br /><br />
+<!------ add appointment page by admin(sumit)  ---------->
+<form method="post">
+  {% csrf_token %}
+  <div class="container register-form">
+    <div class="form">
+      <div class="note">
+        <p>Enter Patient Details</p>
+      </div>
+      <div class="form-content">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              {% render_field patientDetailForm.height class="form-control" placeholder="Height" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailForm.blood_pressure class="form-control" placeholder="blood_pressure" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailForm.cholesterol class="form-control" placeholder="cholesterol" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailForm.blood_sugar class="form-control" placeholder="blood_sugar" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailForm.treatment class="form-control" placeholder="treatment" %}
+            </div>     
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              {% render_field patientDetailForm.weight class="form-control" placeholder="Weight" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailForm.heart_rate class="form-control" placeholder="heart_rate" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailForm.symptoms class="form-control" placeholder="symptoms" %}
+            </div>
+            <div class="form-group">
+              {% render_field patientDetailForm.diagnosis class="form-control" placeholder="diagnosis" %}
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btnSubmit">Save</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock content %}

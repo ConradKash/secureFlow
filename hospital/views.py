@@ -805,8 +805,27 @@ def delete_appointment_view(request,pk):
     appointments=zip(appointments,patients)
     return render(request,'hospital/doctor_delete_appointment.html',{'appointments':appointments,'doctor':doctor})
 
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_patientDetail_view(request):
+    patientDetails=models.PatientDetails.objects.all().filter(doctorId=request.user.id)#for profile picture of doctor in sidebar
+    return render(request,'hospital/doctor_view_patient_details.html',{'patientDetails':patientDetails})
 
-
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def create_patientdetail_view(request,pk):    
+    appointment=models.Appointment.objects.get(id=pk)    
+    patientDetailForm=forms.PatientDetailsForm()
+    if request.method=='POST':
+        patientDetailForm=forms.PatientDetailsForm(request.POST)
+        if patientDetailForm.is_valid():
+            patientDetail=patientDetailForm.save(commit=False)
+            patientDetail.appointmentId=pk
+            patientDetail.patientId=appointment.patientId
+            patientDetail.doctorId=appointment.doctorId
+            patientDetail.save()
+            return redirect('doctor-view-patient-detail')
+    return render(request,'hospital/doctor_add_patient_details.html',{'patientDetailForm':patientDetailForm})
 #---------------------------------------------------------------------------------
 #------------------------ DOCTOR RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------
