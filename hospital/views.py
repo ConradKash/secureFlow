@@ -1106,7 +1106,7 @@ def admin_pharmacy_presciption(request):
     mydict={
     'prescriptions':prescriptions,
     }
-    return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
+    return render(request,'admin_pharmacy_prescription_view.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
@@ -1118,7 +1118,7 @@ def admin_pharmacy_inventory_view(request):
     mydict={
     'pharmacyInvetory':pharmacyInvetory
     }
-    return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
+    return render(request,'hospital/admin_pharmacy_inventory_view.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
@@ -1142,7 +1142,7 @@ def admin_add_pharmacy_inventory_view(request):
             # appointment.sideEffects=request.POST.get('sideEffects')
             # appointment.status=False
             pharmacyInventoryForm.save()
-        return HttpResponseRedirect('doctor-view-patient-detail')
+        return HttpResponseRedirect('admin-pharmacy-dashboard')
     return render(request,'hospital/doctor_add_prescription.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')

@@ -1,0 +1,42 @@
+{% extends 'hospital/adminPharmacy_base.html' %}
+{% load static %}
+{% block content %}
+{% comment %} {%include 'hospital/admin_dashboard_cards.html'%} {% endcomment %}
+
+<br><br><br>
+<div class="container">
+  <div class="row">
+      <div class="panel-heading" style="text-align:center;">
+        <h6 class="panel-title">Recent Prescriptions</h6>
+      </div>
+      <table class="table table-hover table-striped" id="dev-table">
+        <thead class="thead-dark">
+          <tr>
+            <th>Medicine Name</th>
+            <th>Description</th>
+            <th>Patient Name</th>
+            <th>Doctors Name</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        {% for p in prescriptions %}
+        <tr>
+          <td> {{p.medicineName}}</td>
+          <td>{{p.dosageInstruction}}</td>
+          <td>{{p.patientName}}</td>
+          <td>{{p.doctorName}}</td>
+          {%if p.status%}
+          <td> <span class="label label-primary">Admitted</span></td>
+          {% else %}
+          <td> <span class="label label-success">On Hold</span></td>
+          {% endif %}
+
+        </tr>
+        {% endfor %}
+      </table>
+    <div><a class="btn btn-danger btn-xs" href="{% url 'admin-pharmacy-invetory-add'  %}">Add item</a></div>
+  </div>
+</div>
+
+
+{% endblock content %}
