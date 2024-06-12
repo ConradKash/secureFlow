@@ -3,12 +3,22 @@ from django.contrib.auth.models import User
 
 
 
-departments=[('Cardiologist','Cardiologist'),
-            ('Dermatologists','Dermatologists'),
-            ('Emergency Medicine Specialists','Emergency Medicine Specialists'),
-            ('Allergists/Immunologists','Allergists/Immunologists'),
-            ('Anesthesiologists','Anesthesiologists'),
-            ('Colon and Rectal Surgeons','Colon and Rectal Surgeons')
+departments = [
+    ('Cardiology', 'Cardiology'),
+    ('Dermatology', 'Dermatology'),
+    ('Emergency Medicine', 'Emergency Medicine'),
+    ('Allergy and Immunology', 'Allergy and Immunology'),
+    ('Endocrinology', 'Endocrinology'),
+    ('Gastroenterology', 'Gastroenterology'),
+    ('Hematology', 'Hematology'),
+    ('Infectious Disease', 'Infectious Disease'),
+    ('Nephrology', 'Nephrology'),
+    ('Neurology', 'Neurology'),
+    ('Oncology', 'Oncology'),
+    ('Pediatrics', 'Pediatrics'),
+    ('Psychiatry', 'Psychiatry'),
+    ('Pulmonology', 'Pulmonology'),
+    ('Rheumatology', 'Rheumatology')
 ]
 appointment_status = [
     ('Scheduled' , 'Scheduled'), 
@@ -191,12 +201,13 @@ class Prescription(models.Model):
     appointmentId=models.PositiveIntegerField(null=True)
     pharmacyId=models.PositiveIntegerField(null=True)
     doctorId=models.PositiveIntegerField(null=True)
-    doctorName=models.CharField(max_length=40,null=True)
     patientId=models.PositiveIntegerField(null=True)
+    doctorName=models.CharField(max_length=40,null=True)
     patientName=models.CharField(max_length=40,null=True)
     pharmacyName=models.CharField(max_length=40)
     medicineName=models.CharField(max_length=40)
-    description=models.TextField(max_length=500)
+    dosageInstruction=models.TextField(max_length=500)
+    sideEffects=models.TextField(max_length=500, null=True)
     status=models.BooleanField(default=False)
     def __str__(self):
         return self.pharmacyName + ' - ' + self.medicineName

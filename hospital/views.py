@@ -855,6 +855,9 @@ def doctor_add_patientDetail_view(request):
             patientDetailsAdmin.diagnosis=request.POST.get('diagnosis')
             patientDetailsAdmin.treatment=request.POST.get('treatment')
             patientDetailsAdmin.save()
+            if patientDetailsAdmin.treatment=='Prescription':
+                return redirect('doctor-add-prescription')
+            
         return HttpResponseRedirect('doctor-view-patient-detail')
     return render(request,'hospital/doctor_add_patientdetails.html',context=mydict)
 
@@ -880,6 +883,32 @@ def create_patientdetail_view(request,pk):
             patientDetail.save()
             return redirect('doctor-view-patient-detail')
     return render(request,'hospital/doctor_add_patient_details.html',{'patientDetailForm':patientDetailForm})
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_add_prescription_view(request):
+    prescriptionForm=forms.PrescriptionForm()
+    mydict={'prescriptionForm':prescriptionForm,}
+    if request.method=='POST':
+        appointmentForm=forms.PrescriptionForm(request.POST)
+        if appointmentForm.is_valid():
+            appointment=appointmentForm.save(commit=False)
+            appointment.doctorId=request.POST.get('doctorId')
+            appointment.pharmacyId=request.POST.get('pharmacyId')
+            appointment.patientId=request.POST.get('patientId')
+            appointment.appointmentId=request.POST.get('appointmentId')
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
+            appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            appointment.medicineName=request.POST.get('medicineName')
+            appointment.dosageInstruction=request.POST.get('dosageInstruction')
+            appointment.sideEffects=request.POST.get('sideEffects')
+            appointment.status=False
+            appointment.save()
+        return HttpResponseRedirect('doctor-view-patient-detail')
+    return render(request,'hospital/doctor_add_prescription.html',context=mydict)
+
+
 #---------------------------------------------------------------------------------
 #------------------------ DOCTOR RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------
