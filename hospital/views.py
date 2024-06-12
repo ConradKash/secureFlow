@@ -826,8 +826,27 @@ def delete_appointment_view(request,pk):
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
+def doctor_add_patientDetail_view(request):
+    patientDetailsAdminForm=forms.PatientDetailsAdminForm()
+    mydict={'patientDetailsAdminForm':patientDetailsAdminForm}
+    if request.method=='POST':
+        patientDetailsAdminForm = forms.PatientDetailsAdminForm(request.POST)
+        if patientDetailsAdminForm.is_valid():
+            patientDetailsAdmin =patientDetailsAdminForm.save(commit=False)
+            patientDetailsAdmin.height=request.POST.get('height')
+            patientDetailsAdmin.temperature=request.POST.get('temperature')
+            patientDetailsAdmin.sypmtoms=request.POST.get('sypmtoms')
+            patientDetailsAdmin.diagnosis=request.POST.get('diagnosis')
+            patientDetailsAdmin.treatment=request.POST.get('treatment')
+            patientDetailsAdmin.save()
+        return HttpResponseRedirect('doctor-view-patient-detail')
+    return render(request,'hospital/doctor_add_patientdetails.html',context=mydict)
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
 def doctor_patientDetail_view(request):
-    patientDetails=models.PatientDetails.objects.all().filter(doctorId=request.user.id)#for profile picture of doctor in sidebar
+    patientDetails=models.PatientDetailsAdmin.objects.all()
+    # .filter(doctorId=request.user.id)#for profile picture of doctor in sidebar
     return render(request,'hospital/doctor_view_patient_details.html',{'patientDetails':patientDetails})
 
 @login_required(login_url='doctorlogin')

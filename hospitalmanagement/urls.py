@@ -96,6 +96,7 @@ urlpatterns +=[
     path('doctor-view-patient-detail',views.doctor_patientDetail_view,name='doctor-view-patient-detail'),
     path('create-patient-details/<int:pk>', views.create_patientdetail_view,name='create-patient-details'),
     path('patient-details', views.admin_add_patientDetail_view,name='patient-details'),
+    path('doctor-patient-details', views.doctor_add_patientDetail_view,name='doctor-patient-details'),
 ]
 
 
