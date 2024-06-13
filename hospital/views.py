@@ -927,13 +927,8 @@ def patient_dashboard_view(request):
     patient=models.Patient.objects.get(user_id=request.user.id)
     # doctor=models.Doctor.objects.get(user_id=patient.assignedDoctorId)
     mydict={
-    'patient':patient,
-    # 'doctorName':doctor.get_name,
-    # 'doctorMobile':doctor.mobile,
-    # 'doctorAddress':doctor.address,
-    'symptoms':patient.symptoms,
-    # 'doctorDepartment':doctor.department,
-    'admitDate':patient.admitDate,
+    'symptoms':patient.address,
+    'admitDate':patient.mobile,
     }
     return render(request,'hospital/patient_dashboard.html',context=mydict)
 
