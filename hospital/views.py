@@ -1096,29 +1096,29 @@ def admin_pharmacy_dashboard_view(request):
     }
     return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
 
-@login_required(login_url='admin_pharmacylogin')
-@user_passes_test(is_admin_pharmacy)
-def admin_pharmacy_presciption(request):
-    #for both table in admin dashboard
-    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
-    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
+# @login_required(login_url='admin_pharmacylogin')
+# @user_passes_test(is_admin_pharmacy)
+# def admin_pharmacy_presciption(request):
+#     #for both table in admin dashboard
+#     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+#     prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
 
-    mydict={
-    'prescriptions':prescriptions,
-    }
-    return render(request,'admin_pharmacy_prescription_view.html',context=mydict)
+#     mydict={
+#     'prescriptions':prescriptions,
+#     }
+#     return render(request,'admin_pharmacy_prescription_view.html',context=mydict)
 
-@login_required(login_url='admin_pharmacylogin')
-@user_passes_test(is_admin_pharmacy)
-def admin_pharmacy_inventory_view(request):
-    #for both table in admin dashboard
-    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
-    pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
+# @login_required(login_url='admin_pharmacylogin')
+# @user_passes_test(is_admin_pharmacy)
+# def admin_pharmacy_inventory_view(request):
+#     #for both table in admin dashboard
+#     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+#     pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
 
-    mydict={
-    'pharmacyInvetory':pharmacyInvetory
-    }
-    return render(request,'hospital/admin_pharmacy_inventory_view.html',context=mydict)
+#     mydict={
+#     'pharmacyInvetory':pharmacyInvetory
+#     }
+#     return render(request,'hospital/admin_pharmacy_inventory_view.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
@@ -1151,7 +1151,7 @@ def approve_prescription_view(request,pk):
     prescription=models.Prescription.objects.get(id=pk)
     prescription.status=True
     prescription.save()
-    return redirect('admin-pharmacy-prescription')
+    return redirect(reverse('admin-pharmacy-dashboard'))
 #---------------------------------------------------------------------------------
 #------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------

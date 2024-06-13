@@ -148,7 +148,8 @@ class PrescriptionForm(forms.ModelForm):
         fields = ['medicineName',
                   'dosageInstruction',
                   'sideEffects',
-                  'status']
+                  'status',             
+                  ]
 
 class PharmacyInventoryForm(forms.ModelForm):
     pharmacyId = forms.ModelChoiceField(queryset=models.Pharmacy.objects.all().filter(is_approved=True), empty_label="Pharmacy Name", to_field_name="id")

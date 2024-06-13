@@ -209,6 +209,7 @@ class Prescription(models.Model):
     dosageInstruction=models.TextField(max_length=500)
     sideEffects=models.TextField(max_length=500, null=True)
     status=models.BooleanField(default=False)
+    datestamp=models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.pharmacyName + ' - ' + self.medicineName
 
