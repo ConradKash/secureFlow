@@ -104,13 +104,6 @@ class AppointmentDoctorForm(forms.ModelForm):
             "appointmentDate": AdminDateWidget(),
         }
 
-class PatientAppointmentForm(forms.ModelForm):
-    doctorId = forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True), empty_label="Doctor Name and Department", to_field_name="user_id")
-
-    class Meta:
-        model = models.Appointment
-        fields = ['description', 'status']
-
 class PatientDetailsAdminForm(forms.ModelForm):
     patientId = forms.ModelChoiceField(queryset=models.Patient.objects.all(), empty_label="Patient Name and Symptoms", to_field_name="user_id")
     appointmentId = forms.ModelChoiceField(queryset=models.Appointment.objects.all().filter(status=True), empty_label="Choose a hospital", to_field_name="id")
