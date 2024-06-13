@@ -104,13 +104,6 @@ class AppointmentDoctorForm(forms.ModelForm):
             "appointmentDate": AdminDateWidget(),
         }
 
-class PatientAppointmentForm(forms.ModelForm):
-    doctorId = forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True), empty_label="Doctor Name and Department", to_field_name="user_id")
-
-    class Meta:
-        model = models.Appointment
-        fields = ['description', 'status']
-
 class PatientDetailsAdminForm(forms.ModelForm):
     patientId = forms.ModelChoiceField(queryset=models.Patient.objects.all(), empty_label="Patient Name and Symptoms", to_field_name="user_id")
     appointmentId = forms.ModelChoiceField(queryset=models.Appointment.objects.all().filter(status=True), empty_label="Choose a hospital", to_field_name="id")
@@ -138,7 +131,7 @@ class PatientDetailsForm(forms.ModelForm):
         fields = ['height', 'weight', 'blood_sugar', 'heart_rate', 'temperature', 'symptoms','diagnosis', 'treatment']
 
 class PrescriptionForm(forms.ModelForm):
-    doctorId = forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True), empty_label="Doctor Name and Department", to_field_name="user_id")
+    # doctorId = forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True), empty_label="Doctor Name and Department", to_field_name="user_id")
     patientId = forms.ModelChoiceField(queryset=models.Patient.objects.all(), empty_label="Patient Name and Symptoms", to_field_name="user_id")
     pharmacyId = forms.ModelChoiceField(queryset=models.Pharmacy.objects.all().filter(is_approved=True), empty_label="Pharmacy Name", to_field_name="id")
     appointmentId = forms.ModelChoiceField(queryset=models.Appointment.objects.all().filter(status=True), empty_label="Choose a hospital", to_field_name="id")
@@ -148,7 +141,8 @@ class PrescriptionForm(forms.ModelForm):
         fields = ['medicineName',
                   'dosageInstruction',
                   'sideEffects',
-                  'status']
+                  'status',             
+                  ]
 
 class PharmacyInventoryForm(forms.ModelForm):
     pharmacyId = forms.ModelChoiceField(queryset=models.Pharmacy.objects.all().filter(is_approved=True), empty_label="Pharmacy Name", to_field_name="id")

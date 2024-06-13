@@ -54,7 +54,7 @@
         <td>{{p.address}}</td>
         <td>{{a.appointmentDate}}</td>
         <td>{{a.status}}</td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'create-patient-details' a.id  %}"><span class="glyphicon glyphicon-plus-sign"></span></a></td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'doctor-patient-details' %}"><span class="glyphicon glyphicon-plus-sign"></span></a></td>
         <td><a class="btn btn-danger btn-xs" href="{% url 'delete-appointment' a.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
       {% endfor %}

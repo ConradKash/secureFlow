@@ -34,6 +34,7 @@
         </tr>
         {% endfor %}
       </table>
+      <a class="btn btn-primary" href="{% url 'admin-pharmacy-invetory-add' %}">View All</a>
     </div>
 
     <div class="panel panel-primary col-md-5" style="margin-left:5%;">
@@ -48,6 +49,7 @@
             <th>Patient Name</th>
             <th>Doctors Name</th>
             <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         {% for p in prescriptions %}
@@ -58,8 +60,10 @@
           <td>{{p.doctorName}}</td>
           {%if p.status%}
           <td> <span class="label label-primary">Admitted</span></td>
+          
           {% else %}
           <td> <span class="label label-success">On Hold</span></td>
+          <td><a class="btn btn-danger btn-xs" href="{% url 'admin-prescription-prescribe' p.id  %}"><span class="glyphicon glyphicon-plus-sign"></span></a></td>
           {% endif %}
 
         </tr>

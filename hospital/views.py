@@ -940,7 +940,25 @@ def patient_appointment_view(request):
     patient=models.Patient.objects.get(user_id=request.user.id) #for profile picture of patient in sidebar
     return render(request,'hospital/patient_appointment.html',{'patient':patient})
 
-
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
+def doctor_add_appointment_view(request):
+    appointmentForm=forms.AppointmentForm()
+    mydict={'appointmentForm':appointmentForm,}
+    if request.method=='POST':
+        appointmentForm=forms.AppointmentForm(request.POST)
+        if appointmentForm.is_valid():
+            appointment=appointmentForm.save(commit=False)
+            appointment.doctorId=request.POST.get('doctorId')
+            appointment.hospitalId=request.POST.get('hospitalId')
+            appointment.patientId=request.POST.get('patientId')
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.hospitalName=models.Hospital.objects.get(id=request.POST.get('hospitalId')).name
+            appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            appointment.status=True
+            appointment.save()
+        return HttpResponseRedirect('patient-view-appointment')
+    return render(request,'hospital/patient_book_appointment.html',context=mydict)
 
 @login_required(login_url='patientlogin')
 @user_passes_test(is_patient)
@@ -1091,29 +1109,29 @@ def admin_pharmacy_dashboard_view(request):
     }
     return render(request,'hospital/admin_pharmacy_dashboard.html',context=mydict)
 
-@login_required(login_url='admin_pharmacylogin')
-@user_passes_test(is_admin_pharmacy)
-def admin_pharmacy_presciption(request):
-    #for both table in admin dashboard
-    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
-    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
+# @login_required(login_url='admin_pharmacylogin')
+# @user_passes_test(is_admin_pharmacy)
+# def admin_pharmacy_presciption(request):
+#     #for both table in admin dashboard
+#     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+#     prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
 
-    mydict={
-    'prescriptions':prescriptions,
-    }
-    return render(request,'admin_pharmacy_prescription_view.html',context=mydict)
+#     mydict={
+#     'prescriptions':prescriptions,
+#     }
+#     return render(request,'admin_pharmacy_prescription_view.html',context=mydict)
 
-@login_required(login_url='admin_pharmacylogin')
-@user_passes_test(is_admin_pharmacy)
-def admin_pharmacy_inventory_view(request):
-    #for both table in admin dashboard
-    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
-    pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
+# @login_required(login_url='admin_pharmacylogin')
+# @user_passes_test(is_admin_pharmacy)
+# def admin_pharmacy_inventory_view(request):
+#     #for both table in admin dashboard
+#     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+#     pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
 
-    mydict={
-    'pharmacyInvetory':pharmacyInvetory
-    }
-    return render(request,'hospital/admin_pharmacy_inventory_view.html',context=mydict)
+#     mydict={
+#     'pharmacyInvetory':pharmacyInvetory
+#     }
+#     return render(request,'hospital/admin_pharmacy_inventory_view.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
@@ -1146,7 +1164,7 @@ def approve_prescription_view(request,pk):
     prescription=models.Prescription.objects.get(id=pk)
     prescription.status=True
     prescription.save()
-    return redirect('admin-pharmacy-prescription')
+    return redirect(reverse('admin-pharmacy-dashboard'))
 #---------------------------------------------------------------------------------
 #------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------
