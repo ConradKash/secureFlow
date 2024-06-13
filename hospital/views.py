@@ -187,17 +187,18 @@ def afterlogin_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_dashboard_view(request):
+    admin = models.Admin.objects.get(user_id=request.user.id)
     #for both table in admin dashboard
-    doctors=models.Doctor.objects.all().order_by('-id')
+    doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId).order_by('-id')
     patients=models.Patient.objects.all().order_by('-id')
     #for three cards
-    doctorcount=models.Doctor.objects.all().filter(status=True).count()
+    doctorcount=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=True).count()
     pendingdoctorcount=models.Doctor.objects.all().count()
 
     patientcount=models.Patient.objects.all().count()
     pendingpatientcount=models.Patient.objects.all().count()
 
-    appointmentcount=models.Appointment.objects.all().filter(status=True).count()
+    appointmentcount=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId,status=True).count()
     pendingappointmentcount=models.Appointment.objects.all().filter(status=False).count()
     mydict={
     'doctors':doctors,
@@ -223,7 +224,8 @@ def admin_doctor_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_view_doctor_view(request):
-    doctors=models.Doctor.objects.all().filter(status=True)
+    admin = models.Admin.objects.get(user_id=request.user.id)
+    doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=True)
     return render(request,'hospital/admin_view_doctor.html',{'doctors':doctors})
 
 
