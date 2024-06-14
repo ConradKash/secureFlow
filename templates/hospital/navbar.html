@@ -11,38 +11,77 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
   <style type="text/css">
-    .bs-example {
-      margin: 0px;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      margin-top: 56px;
+    }
 
+    .navbar {
+      background: linear-gradient(45deg, #1d8cf8, #3358f4);
+      padding: 10px 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .navbar-brand {
-      font-size: 20px;
-      font-family: sans-serif;
+      font-size: 26px;
+      font-weight: bold;
+      color: #fff;
+      text-transform: uppercase;
+    }
 
+    .navbar-nav .nav-item .nav-link {
+      color: white;
+      font-size: 18px;
+      font-weight: 500;
+      padding: 10px 20px;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      border-radius: 5px;
+      transform: scale(1.05);
+    }
+
+    .navbar-toggler {
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    .navbar-collapse {
+      justify-content: center;
+    }
+
+    .navbar-nav .nav-item {
+      margin: 0 10px;
+    }
+
+    @media (max-width: 767px) {
+      .navbar-brand {
+        text-align: center;
+        width: 100%;
+      }
+      .navbar-nav {
+        text-align: center;
+      }
     }
   </style>
 </head>
 
 <body>
-
-
-
   <div class="bs-example">
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background:#337AB7;">
-      <a href="/" class="navbar-brand">SECUREFLOW E-PRESCRIPTION SYSTEM</a>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+      <a href="/" class="navbar-brand">SecureFlow E-Prescription System</a>
       <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-        <div class="navbar-nav">
-
-          
-
-
-        </div>
-
+      <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav">
           <a href="/adminclick" class="nav-item nav-link">Admin</a>
           <a href="/doctorclick" class="nav-item nav-link">Doctor</a>
@@ -50,13 +89,9 @@
           <a href="/adminPharmacylogin" class="nav-item nav-link">Pharmacy</a>
           <a href="/contactus" class="nav-item nav-link">Contact Us</a>
         </div>
-
       </div>
     </nav>
   </div>
-
- 
-
 </body>
 
 </html>

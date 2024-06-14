@@ -1,20 +1,15 @@
 {% extends 'hospital/homebase.html' %}
 
-
 {% block content %}
-
-<br>
-<br>
-
-<div class="jumbotron" style="margin-bottom:0px;">
-  <h1 class="display-4" style="text-align:center;">Hello, Doctor</h1>
-  <p class="lead">Welcome to secureFlow E-prescription system.</p>
-  <hr class="my-4">
-
-  <p class="lead">
-    <a class="btn btn-danger btn-lg" href="/doctorsignup" role="button">Apply</a>
-    <a class="btn btn-success btn-lg" href="/doctorlogin" role="button">Login</a>
-  </p>
+<div class="container">
+    <div class="jumbotron mt-5">
+        <h1 class="display-4 text-center">Hello, Doctor</h1>
+        <p class="lead text-center">Welcome to secureFlow E-prescription System.</p>
+        <hr class="my-4">
+        <div class="text-center">
+            <a class="btn btn-danger btn-lg mr-3" href="/doctorsignup" role="button">Apply</a>
+            <a class="btn btn-success btn-lg" href="/doctorlogin" role="button">Login</a>
+        </div>
+    </div>
 </div>
-
 {% endblock content %}
