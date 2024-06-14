@@ -890,7 +890,7 @@ def create_patientdetail_view(request,pk):
 @user_passes_test(is_doctor)
 def doctor_add_prescription_view(request):
     prescriptionForm=forms.PrescriptionForm()
-    mydict={'prescriptionForm':prescriptionForm,}
+    mydict={'prescriptionForm':prescriptionForm}
     if request.method=='POST':
         appointmentForm=forms.PrescriptionForm(request.POST)
         if appointmentForm.is_valid():
