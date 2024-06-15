@@ -899,9 +899,9 @@ def doctor_add_prescription_view(request):
             appointment.pharmacyId=request.POST.get('pharmacyId')
             appointment.patientId=request.POST.get('patientId')
             appointment.appointmentId=request.POST.get('appointmentId')
-            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.doctorName=models.User.objects.get(id=appointment.doctorId).first_name
             appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
-            appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            appointment.patientName=models.User.objects.get(id=appointment.patientId).first_name
             appointment.medicineName=request.POST.get('medicineName')
             appointment.dosageInstruction=request.POST.get('dosageInstruction')
             appointment.sideEffects=request.POST.get('sideEffects')
