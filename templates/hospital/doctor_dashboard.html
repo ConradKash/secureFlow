@@ -1,39 +1,49 @@
 {% extends 'hospital/doctor_base.html' %}
 {% load static %}
+
 {% block content %}
-{%include 'hospital/doctor_dashboard_cards.html'%}
-<br><br><br><br>
-<div class="container">
-  <div class="row">
-    <div class="panel panel-primary" style="margin-left:2%;">
-      <div class="panel-heading" style="text-align:center;">
-        <h6 class="panel-title">Recent Appointments For You</h6>
-      </div>
-      <table class="table table-hover table-striped" id="dev-table">
-        <thead class="thead-dark">
-          <tr>
-            <th>Patient Name</th>
-            <th>Picture</th>
-            <th>Description</th>
-            <th>Contact</th>
-            <th>Address</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        {% for a,p in appointments %}
-        <tr>
-          <td>{{a.patientName}}</td>
-          <td> <img src="{% static p.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
-          <td>{{a.description}}</td>
-          <td>{{p.mobile}}</td>
-          <td>{{p.address}}</td>
-          <td>{{a.appointmentDate}}</td>
-        </tr>
-        {% endfor %}
-      </table>
+<div class="container mt-4">
+    {% include 'hospital/doctor_dashboard_cards.html' %}
+    
+    <div class="row mt-4">
+        <div class="panel panel-primary mx-auto">
+            <div class="panel-heading">
+                <h6 class="panel-title text-center">Recent Appointments For You</h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Patient Name</th>
+                            <th scope="col">Profile Picture</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment, patient in appointments %}
+                        <tr>
+                            <td>{{ appointment.patientName }}</td>
+                            <td>
+                                <img src="{% static patient.profile_pic.url %}" alt="Profile Pic"
+                                    class="img-thumbnail" style="max-width: 50px; max-height: 50px;">
+                            </td>
+                            <td>{{ appointment.description }}</td>
+                            <td>{{ patient.mobile }}</td>
+                            <td>{{ patient.address }}</td>
+                            <td>{{ appointment.appointmentDate }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">No appointments found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-
-
 {% endblock content %}
