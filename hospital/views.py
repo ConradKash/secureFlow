@@ -1161,7 +1161,7 @@ def admin_add_pharmacy_inventory_view(request):
             # appointment.status=False
             pharmacyInventoryForm.save()
         return HttpResponseRedirect('admin-pharmacy-dashboard')
-    return render(request,'hospital/doctor_add_prescription.html',context=mydict)
+    return render(request,'hospital/admin_pharmacy_add_inventory.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)

@@ -125,7 +125,7 @@ class Pharmacy(models.Model):
         return self.name
     
 class PharmacyInventory(models.Model):
-    pharmacyId=models.ForeignKey('Pharmacy',on_delete=models.CASCADE)
+    pharmacyId=models.PositiveIntegerField(null=True)
     medicineName=models.CharField(max_length=40)
     description=models.TextField(max_length=500)
     price=models.PositiveIntegerField(null=False)
@@ -206,7 +206,7 @@ class Prescription(models.Model):
     patientName=models.CharField(max_length=40,null=True)
     pharmacyName=models.CharField(max_length=40)
     medicineName=models.CharField(max_length=40)
-    dosageInstruction=models.TextField(max_length=500)
+    dosageInstruction=models.TextField(max_length=500, null=True)
     sideEffects=models.TextField(max_length=500, null=True)
     status=models.BooleanField(default=False)
     datestamp=models.DateTimeField(auto_now=True)
