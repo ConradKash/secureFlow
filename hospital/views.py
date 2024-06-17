@@ -187,17 +187,18 @@ def afterlogin_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_dashboard_view(request):
+    admin = models.Admin.objects.get(user_id=request.user.id)
     #for both table in admin dashboard
-    doctors=models.Doctor.objects.all().order_by('-id')
+    doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId).order_by('-id')
     patients=models.Patient.objects.all().order_by('-id')
     #for three cards
-    doctorcount=models.Doctor.objects.all().filter(status=True).count()
+    doctorcount=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=True).count()
     pendingdoctorcount=models.Doctor.objects.all().count()
 
     patientcount=models.Patient.objects.all().count()
     pendingpatientcount=models.Patient.objects.all().count()
 
-    appointmentcount=models.Appointment.objects.all().filter(status=True).count()
+    appointmentcount=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId,status=True).count()
     pendingappointmentcount=models.Appointment.objects.all().filter(status=False).count()
     mydict={
     'doctors':doctors,
@@ -223,7 +224,8 @@ def admin_doctor_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_view_doctor_view(request):
-    doctors=models.Doctor.objects.all().filter(status=True)
+    admin = models.Admin.objects.get(user_id=request.user.id)
+    doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=True)
     return render(request,'hospital/admin_view_doctor.html',{'doctors':doctors})
 
 
@@ -888,7 +890,7 @@ def create_patientdetail_view(request,pk):
 @user_passes_test(is_doctor)
 def doctor_add_prescription_view(request):
     prescriptionForm=forms.PrescriptionForm()
-    mydict={'prescriptionForm':prescriptionForm,}
+    mydict={'prescriptionForm':prescriptionForm}
     if request.method=='POST':
         appointmentForm=forms.PrescriptionForm(request.POST)
         if appointmentForm.is_valid():
@@ -897,9 +899,9 @@ def doctor_add_prescription_view(request):
             appointment.pharmacyId=request.POST.get('pharmacyId')
             appointment.patientId=request.POST.get('patientId')
             appointment.appointmentId=request.POST.get('appointmentId')
-            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.doctorName=models.User.objects.get(id=appointment.doctorId).first_name
             appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
-            appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            appointment.patientName=models.User.objects.get(id=appointment.patientId).first_name
             appointment.medicineName=request.POST.get('medicineName')
             appointment.dosageInstruction=request.POST.get('dosageInstruction')
             appointment.sideEffects=request.POST.get('sideEffects')
@@ -1156,7 +1158,7 @@ def admin_add_pharmacy_inventory_view(request):
             # appointment.status=False
             pharmacyInventoryForm.save()
         return HttpResponseRedirect('admin-pharmacy-dashboard')
-    return render(request,'hospital/doctor_add_prescription.html',context=mydict)
+    return render(request,'hospital/admin_pharmacy_add_inventory.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
