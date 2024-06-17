@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required,user_passes_test
+from django.contrib import messages
 from datetime import datetime,timedelta,date
 from django.conf import settings
 
@@ -192,10 +193,10 @@ def admin_dashboard_view(request):
     admin = models.Admin.objects.get(user_id=request.user.id)
     #for both table in admin dashboard
     doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId).order_by('-id')
-    patients=models.Patient.objects.all().order_by('-id')
+    appointment=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId).order_by('-id')
     #for three cards
     doctorcount=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=True).count()
-    pendingdoctorcount=models.Doctor.objects.all().count()
+    pendingdoctorcount=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId).count()
 
     patientcount=models.Patient.objects.all().count()
     pendingpatientcount=models.Patient.objects.all().count()
@@ -204,7 +205,7 @@ def admin_dashboard_view(request):
     pendingappointmentcount=models.Appointment.objects.all().filter(status=False).count()
     mydict={
     'doctors':doctors,
-    'patients':patients,
+    'appointment':appointment,
     'doctorcount':doctorcount,
     'pendingdoctorcount':pendingdoctorcount,
     'patientcount':patientcount,

@@ -38,25 +38,25 @@
 
     <div class="panel panel-primary col-md-5" style="margin-left:5%;">
       <div class="panel-heading" style="text-align:center;">
-        <h6 class="panel-title">Recent Patient</h6>
+        <h6 class="panel-title">Recent Appointments</h6>
       </div>
       <table class="table table-hover table-striped" id="dev-table">
         <thead class="thead-dark">
           <tr>
-            <th>Name</th>
-            <th>Symptoms</th>
-            <th>Contact</th>
-            <th>Address</th>
+            <th>Doctor Name</th>
+            <th>Patient Name</th>
+            <th>Description</th>
+            <th>Appointment</th>
             <th>Status</th>
 
           </tr>
         </thead>
-        {% for p in patients %}
+        {% for a in appointment %}
         <tr>
-          <td> {{p.get_name}}</td>
-          <td>{{p.symptoms}}</td>
-          <td>{{p.mobile}}</td>
-          <td>{{p.address}}</td>
+          <td> {{a.doctorName}}</td>
+          <td>{{a.patientName}}</td>
+          <td>{{a.description}}</td>
+          <td>{{a.appointmentDate}}</td>
           {%if p.status%}
           <td> <span class="label label-primary">Admitted</span></td>
           {% else %}
