@@ -1,15 +1,18 @@
 {% extends 'hospital/homebase.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="jumbotron mt-5">
-        <h1 class="display-4 text-center">Hello, Admin</h1>
-        <p class="lead text-center">Welcome to secureFlow E-prescription System.</p>
-        <hr class="my-4">
-        <div class="text-center">
-            <a class="btn btn-danger btn-lg mr-3" href="/adminsignup" role="button">Sign Up</a>
-            <a class="btn btn-success btn-lg" href="/adminlogin" role="button">Login</a>
-        </div>
-    </div>
+
+<br>
+<br>
+
+<div class="jumbotron" style="margin-bottom:0px;">
+  <h1 class="display-4" style="text-align:center;">Hello, Admin</h1>
+  <p class="lead">Welcome to secureFlow E-prescription system.</p>
+  <hr class="my-4">
+ 
+  <p class="lead">
+    <!-- <a class="btn btn-danger btn-lg" href="/adminsignup" role="button">Sign Up</a> -->
+    <a class="btn btn-success btn-lg" href="/adminlogin" role="button">Login</a>
+  </p>
 </div>
 {% endblock content %}

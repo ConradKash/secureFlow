@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from hospital import views
+from hospital.feedback import views as feedback_views
 from django.contrib.auth.views import LoginView,LogoutView
 
 

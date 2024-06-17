@@ -155,9 +155,14 @@ class PharmacyInventoryForm(forms.ModelForm):
                   'status']
 
 #for contact us page
-class ContactusForm(forms.Form):
-    Name = forms.CharField(max_length=30)
-    Email = forms.EmailField()
-    Message = forms.CharField(max_length=500,widget=forms.Textarea(attrs={'rows': 3, 'cols': 30}))
 
+   
+# class ContactusForm(forms.Form):
+#     Name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Your Name', 'class': 'form-control'}))
+#     Email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Your Email', 'class': 'form-control'}))
+#     Message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Your Message', 'rows': 4, 'class': 'form-control'}))
+class ContactusForm(forms.Form):
+    name = forms.CharField(label='Name', max_length=100)
+    email = forms.EmailField(label='Email')
+    message = forms.CharField(label='Message', widget=forms.Textarea)
 
