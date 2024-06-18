@@ -1,23 +1,48 @@
 {% extends 'hospital/doctor_base.html' %}
 {% block content %}
-{%load static%}
+{% load static %}
 
 <head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-  <style media="screen">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
     a:link {
       text-decoration: none;
     }
 
     h6 {
       text-align: center;
+      font-weight: bold;
     }
 
-    .row {
-      margin: 100px;
+    .container {
+      margin-top: 50px;
+    }
+
+    .panel {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .panel-heading {
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .table thead th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .table tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .table img {
+      border-radius: 50%;
+      object-fit: cover;
     }
   </style>
 </head>
@@ -27,26 +52,43 @@
     <div class="panel-heading">
       <h6 class="panel-title">Delete Your Appointments</h6>
     </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-          <th>Patient Name</th>
-          <th>Picture</th>
-          <th>Description</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      {% for a,p in appointments %}
-      <tr>
-        <td>{{a.patientName}}</td>
-        <td> <img src="{% static p.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
-        <td>{{a.description}}</td>
-        
-      </tr>
-      {% endfor %}
-    </table>
+    <div class="table-responsive">
+      <table class="table table-hover" id="dev-table">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>Picture</th>
+            <th>Description</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a,p in appointments %}
+          <tr>
+            <td>{{ a.patientName }}</td>
+            <td><img src="{{ p.profile_pic.url }}" alt="Profile Pic" height="40" width="40"></td>
+            <td>{{ a.description }}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="deleteAppointment('{{ a.id }}')">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  function deleteAppointment(appointmentId) {
+    if (confirm('Are you sure you want to delete this appointment?')) {
+      // Perform delete action here, e.g., send a request to the server to delete the appointment.
+      alert('Deleted appointment with ID: ' + appointmentId);
+    }
+  }
+</script>
 
 {% endblock content %}

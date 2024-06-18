@@ -2,12 +2,11 @@
 {% load static %}
 
 {% block content %}
-
 <head>
   <style>
     .jumbotron {
       margin: 0;
-      padding: 100px 0;
+      padding: 100px 20px;
       background-image: url('{% static "images/back.jpg" %}');
       background-size: cover;
       background-repeat: no-repeat;
@@ -24,7 +23,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
     }
 
     .jumbotron .content {
@@ -42,10 +41,18 @@
       font-size: 1.25em;
       padding: 10px 20px;
       margin-top: 20px;
+      background-color: #ff4747;
+      border: none;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    .btn-lg:hover {
+      background-color: #ff1c1c;
     }
 
     .glow {
-      font-size: 50px;
+      font-size: 2em;
       color: #fff;
       text-align: center;
       animation: glow 1s ease-in-out infinite alternate;
@@ -55,7 +62,6 @@
       from {
         text-shadow: 0 0 10px #eee, 0 0 20px #000, 0 0 30px #000, 0 0 40px #000, 0 0 50px #9554b3, 0 0 60px #9554b3, 0 0 70px #9554b3;
       }
-
       to {
         text-shadow: 0 0 20px #eee, 0 0 30px #fa2d2d, 0 0 40px #fa2d2d, 0 0 50px #fa2d2d, 0 0 60px #fa2d2d, 0 0 70px #fa2d2d, 0 0 80px #fa2d2d;
       }
@@ -65,27 +71,79 @@
       font-size: 1.25em;
       font-weight: 300;
     }
+
+    .appointment-section {
+      text-align: center;
+      padding: 50px 20px;
+      background-color: #f8f9fa;
+    }
+
+    .appointment-section h2 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .appointment-section p {
+      font-size: 1.2em;
+      color: #555;
+    }
+
+    .btn-appointment {
+      background-color: #28a745;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      color: white;
+      transition: background-color 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .btn-appointment:hover {
+      background-color: #218838;
+    }
+
+    @media (max-width: 768px) {
+      .jumbotron {
+        padding: 50px 20px;
+      }
+      
+      .jumbotron h5 {
+        font-size: 1.5em;
+      }
+      
+      .jumbotron h3 {
+        font-size: 1.25em;
+      }
+      
+      .appointment-section h2 {
+        font-size: 2em;
+      }
+      
+      .appointment-section p {
+        font-size: 1em;
+      }
+    }
   </style>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
-
-<br><br>
 
 <div class="jumbotron">
   <div class="content">
-    <br>
-    <h5 class="display-3 glow">SecureFlow e-prescription System</h5>
-    <br><br><br><br><br>
-    <h3>Emergency?</h3>
+    <h3 class="display-3 glow">SECUREFLOW E-PRESCRIPTION SYSTEM</h3>
+    <h4>AT YOUR SERVICE</h4>
     <p class="lead">
-      <a class="btn btn-danger btn-lg" href="/patientsignup" role="button">Take Appointment Now!</a>
+      <a class="btn btn-danger btn-lg" href="/login" role="button"> Book An Appointment</a>
     </p>
-    <br><br>
   </div>
 </div>
 
-<br><br><br><br>
+<div class="appointment-section">
+  <h3>Need a Consultation?</h3>
+  <p>Our expert doctors are here to provide the best healthcare services</p>
+  <h4>New to the system</h4>
+  <a href="/patientsignup" class="btn btn-appointment">Register As A Patient</a>
+</div>
 
 {% endblock content %}

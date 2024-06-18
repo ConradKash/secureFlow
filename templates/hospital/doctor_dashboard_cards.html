@@ -1,182 +1,114 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title></title>
-
-  <style media="screen">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard displaying the number of appointments, patients under you, and discharged patients.">
+  <title>Doctor Dashboard</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
     .market-update-block {
-      padding: 2em 2em;
-      background: #999;
+      padding: 1em;
+      border-radius: 8px;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      font-size: 0.9em;
     }
-
+    .market-update-block h3, .market-update-block h4, .market-update-block p {
+      color: #fff;
+      margin: 0;
+    }
     .market-update-block h3 {
-      color: #fff;
-      font-size: 2.5em;
-      font-family: 'Carrois Gothic', sans-serif;
+      font-size: 1.8em;
     }
-
     .market-update-block h4 {
-      font-size: 1.2em;
-      color: #fff;
-      margin: 0.3em 0em;
-      font-family: 'Carrois Gothic', sans-serif;
+      font-size: 0.9em;
+      margin-top: 0.5em;
     }
-
-    .market-update-block p {
-      color: #fff;
-      font-size: 0.8em;
-      line-height: 1.8em;
-    }
-
     .market-update-block.clr-block-1 {
       background: #f44336;
-      margin-right: 0.8em;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
     }
-
     .market-update-block.clr-block-2 {
-      background: #FC8213;
-      margin-right: 0.8em;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
+      background: #fc8213;
     }
-
     .market-update-block.clr-block-3 {
       background: #3f51b5;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
     }
-
-    .market-update-block.clr-block-1:hover {
-      background: #3C3C3C;
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
+    .market-update-block:hover {
+      transform: scale(1.05);
+      background-color: #333;
     }
-
-    .market-update-block.clr-block-2:hover {
-      background: #3C3C3C;
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
-    }
-
-    .market-update-block.clr-block-3:hover {
-      background: #3C3C3C;
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
-    }
-
-    .market-update-right i.fa.fa-user-o {
-      font-size: 3em;
-      color: #68AE00;
-      width: 80px;
-      height: 80px;
+    .market-update-right i {
+      font-size: 2em;
+      width: 60px;
+      height: 60px;
       background: #fff;
       text-align: center;
-      border-radius: 49px;
-      -webkit-border-radius: 49px;
-      -moz-border-radius: 49px;
-      -o-border-radius: 49px;
-      line-height: 1.7em;
+      border-radius: 50%;
+      line-height: 60px;
+      color: #333;
     }
-
-    .market-update-right i.fa.fa-check-circle-o {
-      font-size: 3em;
-      color: #FC8213;
-      width: 80px;
-      height: 80px;
-      background: #fff;
-      text-align: center;
-      border-radius: 49px;
-      -webkit-border-radius: 49px;
-      -moz-border-radius: 49px;
-      -o-border-radius: 49px;
-      line-height: 1.7em;
-    }
-
-    .market-update-right i.fa.fa-calendar {
-      font-size: 3em;
-      color: #337AB7;
-      width: 80px;
-      height: 80px;
-      background: #fff;
-      text-align: center;
-      border-radius: 49px;
-      -webkit-border-radius: 49px;
-      -moz-border-radius: 49px;
-      -o-border-radius: 49px;
-      line-height: 1.7em;
-    }
-
     .market-update-left {
-      padding: 0px;
+      padding: 0;
+    }
+    .market-updates {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 1em;
+    }
+    .market-update-gd {
+      flex: 1 1 calc(33.333% - 1em);
+      max-width: calc(33.333% - 1em);
+    }
+    @media (max-width: 768px) {
+      .market-update-gd {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
     }
   </style>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-
 <body>
-  <div class="market-updates">
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-1">
-        <div class="col-md-8 market-update-left">
-          <h3>{{appointmentcount}}</h3>
-          <h4>Appointments</h4>
+  <div class="container mt-5">
+    <div class="market-updates">
+      <div class="market-update-gd">
+        <div class="market-update-block clr-block-1">
+          <div class="market-update-left">
+            <h3>{{ appointmentcount }}</h3>
+            <h4>Appointments</h4>
+          </div>
+          <div class="market-update-right">
+            <i class="fa fa-calendar"></i>
+          </div>
         </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-calendar"> </i>
+      </div>
+      <div class="market-update-gd">
+        <div class="market-update-block clr-block-2">
+          <div class="market-update-left">
+            <h3>{{ patientcount }}</h3>
+            <h4>Patients Under You</h4>
+          </div>
+          <div class="market-update-right">
+            <i class="fa fa-user"></i>
+          </div>
         </div>
-        <div class="clearfix"> </div>
+      </div>
+      <div class="market-update-gd">
+        <div class="market-update-block clr-block-3">
+          <div class="market-update-left">
+            <h3>{{ patientdischarged }}</h3>
+            <h4>Discharged Patients</h4>
+          </div>
+          <div class="market-update-right">
+            <i class="fa fa-check-circle"></i>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-2">
-        <div class="col-md-8 market-update-left">
-          <h3>{{patientcount}}</h3>
-          <h4>Patient Under You</h4>
-
-        </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-user-o"></i>
-        </div>
-        <div class="clearfix"> </div>
-      </div>
-    </div>
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-3">
-        <div class="col-md-8 market-update-left">
-          <h3>{{patientdischarged}}</h3>
-          <h4>Discharged Patient</h4>
-        </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-        </div>
-        <div class="clearfix"> </div>
-      </div>
-    </div>
-    <div class="clearfix"> </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
-
 </html>
