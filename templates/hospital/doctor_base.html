@@ -1,3 +1,4 @@
+<!-- doctor-base.html -->
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
@@ -12,9 +13,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-
-
-  <style media="screen">
+  <style>
     a:link {
       text-decoration: none;
     }
@@ -27,26 +26,25 @@
       color: white;
     }
 
-
-
-
     /*---------------------------------------
        Social section
     -----------------------------------------*/
     footer {
-      padding: 0px 0px 0px 0px;
-      background-color: black;
-      margin: 0px;
+      padding: 20px 0;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      left: 0;
     }
 
-
-    #ftr {
-
-      padding: 20px;
+    .footer-copyright {
+      margin-top: 20px;
     }
 
     .fa {
-
       font-size: 23px;
       width: 60px;
       text-align: center;
@@ -56,14 +54,13 @@
     }
 
     .fa:hover {
-      opacity: 0.5;
+      opacity: 0.7;
       text-decoration: none;
     }
 
     .fa-facebook {
       background: #3B5998;
       color: white;
-      margin-top: 30px;
     }
 
     .fa-whatsapp {
@@ -81,194 +78,169 @@
       color: white;
     }
 
-    p {
-      text-align: center;
-
-    }
-
-
-
-
-
     body {
-
       padding-left: 240px;
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
     }
+
     main {
-      position: relative;
-      height: 100vh;
+      padding-top: 60px;
+      padding-bottom: 60px; /* Adjust padding to account for the fixed footer */
+      overflow-y: auto;
+      height: calc(100vh - 120px); /* Adjust height to account for navbar and footer */
     }
 
     .menu {
-      background: #5bc995;
+      background: #4CAF50;
       height: 100vh;
       width: 240px;
       position: fixed;
-      top: 0px;
+      top: 0;
       left: 0;
       z-index: 5;
       outline: none;
+      padding-top: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     }
+
     .menu .avatar {
       background: rgba(0, 0, 0, 0.1);
       padding: 2em 0.5em;
       text-align: center;
     }
+
     .menu .avatar img {
       width: 100px;
       border-radius: 50%;
-      overflow: hidden;
       border: 4px solid #ffea92;
       box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
     }
+
     .menu .avatar h2 {
-      font-weight: normal;
-      margin-bottom: 0;
+      font-weight: bold;
+      margin-top: 10px;
     }
+
     .menu ul {
       list-style: none;
-      padding: 0.5em 0;
+      padding: 0;
       margin: 0;
     }
+
     .menu ul li {
-      padding: 0.5em 1em 0.5em 3em;
-      font-size: 0.95em;
-      font-weight: regular;
+      padding: 15px 20px;
+      font-size: 1em;
       background-repeat: no-repeat;
-      background-position: left 15px center;
-      background-size: auto 20px;
-      transition: all 0.15s linear;
+      background-position: left 20px center;
+      background-size: 20px;
+      transition: all 0.3s ease;
       cursor: pointer;
+      color: white;
     }
+
+    .menu ul li:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
     .menu ul li.icon-dashboard {
       background-image: url("http://www.entypo.com/images//gauge.svg");
     }
-    .menu ul li.icon-customers {
-      background-image: url("http://www.entypo.com/images//briefcase.svg");
-    }
+
     .menu ul li.icon-users {
       background-image: url("http://www.entypo.com/images//users.svg");
     }
+
     .menu ul li.icon-calendar {
       background-image: url("http://www.entypo.com/images//calendar.svg");
     }
 
-    .menu ul li:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+    .menu ul li a {
+      color: white;
+      text-decoration: none;
+      display: block;
     }
-    .menu ul li:focus {
-      outline: none;
-    }
-    @media screen and (max-width: 900px) and (min-width: 400px) {
+
+    @media screen and (max-width: 900px) {
       body {
         padding-left: 90px;
       }
+
       .menu {
         width: 90px;
       }
-      .menu .avatar {
-        padding: 0.5em;
-        position: relative;
-      }
+
       .menu .avatar img {
         width: 60px;
       }
+
       .menu .avatar h2 {
-        opacity: 0;
-        position: absolute;
-        top: 50%;
-        left: 100px;
-        margin: 0;
-        min-width: 200px;
-        border-radius: 4px;
-        background: rgba(0, 0, 0, 0.4);
-        transform: translate3d(-20px, -50%, 0);
-        transition: all 0.15s ease-in-out;
+        display: none;
       }
-      .menu .avatar:hover h2 {
-        opacity: 1;
-        transform: translate3d(0px, -50%, 0);
-      }
+
       .menu ul li {
-        height: 60px;
         background-position: center center;
-        background-size: 30px auto;
-        position: relative;
+        text-align: center;
       }
+
       .menu ul li span {
-        opacity: 0;
-        position: absolute;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 0.2em 0.5em;
-        border-radius: 4px;
-        top: 50%;
-        left: 80px;
-        transform: translate3d(-15px, -50%, 0);
-        transition: all 0.15s ease-in-out;
-      }
-      .menu ul li span:before {
-        content: '';
-        width: 0;
-        height: 0;
-        position: absolute;
-        top: 50%;
-        left: -5px;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-right: 5px solid rgba(0, 0, 0, 0.5);
-        transform: translateY(-50%);
-      }
-      .menu ul li:hover span {
-        opacity: 1;
-        transform: translate3d(0px, -50%, 0);
+        display: none;
       }
     }
+
     @media screen and (max-width: 400px) {
       body {
         padding-left: 0;
       }
+
       .menu {
-        width: 230px;
-        box-shadow: 0 0 0 100em rgba(0, 0, 0, 0);
-        transform: translate3d(-230px, 0, 0);
-        transition: all 0.3s ease-in-out;
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 10px;
       }
+
       .menu .smartphone-menu-trigger {
-        width: 40px;
-        height: 40px;
-        position: absolute;
-        left: 100%;
-        background: #5bc995;
+        display: none;
       }
-      .menu .smartphone-menu-trigger:before,
-      .menu .smartphone-menu-trigger:after {
-        content: '';
-        width: 50%;
-        height: 2px;
-        background: #fff;
-        border-radius: 10px;
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate3d(-50%, -50%, 0);
+
+      .menu ul {
+        display: flex;
+        flex-direction: column;
       }
-      .menu .smartphone-menu-trigger:after {
-        top: 55%;
-        transform: translate3d(-50%, -50%, 0);
-      }
+
       .menu ul li {
-        padding: 1em 1em 1em 3em;
+        padding: 10px;
         font-size: 1.2em;
       }
-      .menu:focus {
-        transform: translate3d(0, 0, 0);
-        box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.6);
-      }
-      .menu:focus .smartphone-menu-trigger {
-        pointer-events: none;
+
+      .menu ul li a {
+        padding: 10px 0;
       }
     }
 
+    .navbar {
+      background: #337AB7;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      color: white !important;
+    }
+
+    .navbar-nav a {
+      color: white !important;
+      font-weight: bold;
+      margin-right: 20px;
+    }
   </style>
 </head>
 
@@ -277,28 +249,27 @@
   <nav class="menu" tabindex="0">
     <div class="smartphone-menu-trigger"></div>
     <header class="avatar">
+      <br><br>
       <img src="{% static doctor.profile_pic.url %}" alt="Profile Pic" />
       <br><br>
-      <h6>Doctor</h6>
-      <h2>{{request.user.first_name}}</h2>
+      <h4>{{request.user.first_name}}</h4>
     </header>
     <ul>
-      <li tabindex="0" class="icon-dashboard"> <a style="color:white; text-decoration:none;" href="/doctor-dashboard"><span>Dashboard</span></a> </li>
-      <li tabindex="0" class="icon-users"> <a style="color:white; text-decoration:none;" href="/doctor-patient"><span>Patient</span></a></li>
-      <li tabindex="0" class="icon-calendar"> <a style="color:white; text-decoration:none;" href="/doctor-appointment"><span>Appointments</span></a></li>
+      <li tabindex="0" class="icon-dashboard"> <a href="/doctor-dashboard"><span>Dashboard</span></a> </li>
+      <li tabindex="0" class="icon-users"> <a href="/doctor-patient"><span>Patient</span></a></li>
+      <li tabindex="0" class="icon-calendar"> <a href="/doctor-appointment"><span>Appointments</span></a></li>
     </ul>
   </nav>
   <main>
     <!-- nav start -->
     <div class="bs-example">
-      <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#337AB7;">
-        <a href="/doctor-dashboard" class="navbar-brand">HOSPITAL MANAGEMENT</a>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <a href="/doctor-dashboard" class="navbar-brand">SECUREFLOW E-PRESCRIPTION SYSTEM</a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-          <div class="navbar-nav" style=" margin-left: 90%;">
-
+          <div class="navbar-nav ml-auto">
             <a href="/logout" class="nav-item nav-link">Logout</a>
           </div>
         </div>
@@ -310,24 +281,18 @@
     {% block content %}
     {% endblock content %}
     <!-- content end-->
-    <br><br><br><br><br><br><br>
-    <footer>
-     
-      <br>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 col-sm-12">
-            <div style="color:#ffffff;" class="wow fadeInUp footer-copyright">
-              <p>
-                Copyright &copy; BSSE24-18 </p>
-            </div>
+  </main>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <div class="footer-copyright">
+            <p>Copyright &copy; BSSE24-18</p>
           </div>
         </div>
       </div>
-    </footer>
-  </main>
-  <!-- partial -->
+    </div>
+  </footer>
 </body>
-
 
 </html>

@@ -1,24 +1,14 @@
 {% extends 'hospital/doctor_base.html' %}
 {% load static %}
 {% block content %}
-<br><br>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <link href="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-
-  <style type="text/css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+  <style>
     a:link {
       text-decoration: none;
-    }
-    .menu{
-      top: 50px;
-    }
-    h6 {
-      color: white;
     }
 
     .order-card {
@@ -35,11 +25,9 @@
 
     .card {
       border-radius: 5px;
-      -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
       box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
       border: none;
       margin-bottom: 30px;
-      -webkit-transition: all 0.3s ease-in-out;
       transition: all 0.3s ease-in-out;
     }
 
@@ -58,46 +46,65 @@
     .f-right {
       float: right;
     }
+
+    .panel-heading {
+      background: #4099ff;
+      color: #fff;
+      padding: 10px;
+    }
+
+    .panel-title {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+    }
+
+    .table img {
+      border-radius: 50%;
+    }
+
+    .btn-xs {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
   </style>
 </head>
 
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4 col-xl-6">
-        <div class="card bg-c-blue order-card">
-          <div class="card-block">
-            <a href="/doctor-view-appointment">
-              <h6 class="m-b-20">View Your Appointment</h6>
-            </a>
-            <br>
-            <h2 class="text-right"><i class="fas fa-calendar f-left"></i></h2>
-
-          </div>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card bg-c-blue order-card">
+        <div class="card-block">
+          <a href="/doctor-view-appointment" class="text-white">
+            <h6 class="m-b-20">View Your Appointment</h6>
+          </a>
+          <h2 class="text-right"><i class="fas fa-calendar f-left"></i></h2>
         </div>
       </div>
-
-      <div class="col-md-4 col-xl-6">
-        <div class="card bg-c-green order-card">
-          <div class="card-block">
-            <a href="/doctor-delete-appointment">
-              <h6 class="m-b-20">Delete Appointment</h6>
-            </a>
-            <br>
-            <h2 class="text-right"><i class="fas fa-eject f-left"></i></h2>
-          </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bg-c-green order-card">
+        <div class="card-block">
+          <a href="/doctor-delete-appointment" class="text-white">
+            <h6 class="m-b-20">Delete Appointment</h6>
+          </a>
+          <h2 class="text-right"><i class="fas fa-eject f-left"></i></h2>
         </div>
       </div>
-
-
     </div>
   </div>
-  <div class="container">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h6 class="panel-title">Your Appointments</h6>
-      </div>
-      <table class="table table-hover" id="dev-table">
+</div>
+
+<div class="container mt-4">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Your Appointments</h6>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-striped">
         <thead>
           <tr>
             <th>Patient Name</th>
@@ -106,25 +113,26 @@
             <th>Contact</th>
             <th>Address</th>
             <th>Appointment Date</th>
+            <th>Status</th>
             <th>Action</th>
-            <th>Delete</th>
           </tr>
         </thead>
-        {% for a,p in appointments %}
-        <tr>
-          <td>{{a.patientName}}</td>
-          <td> <img src="{% static p.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
-          <td>{{a.description}}</td>
-          <td>{{p.mobile}}</td>
-          <td>{{p.address}}</td>
-          <td>{{a.appointmentDate}}</td>
-          <td>{{a.status}}</td>
-          <td><a class="btn btn-danger btn-xs" href="{% url 'delete-appointment' a.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
-        </tr>
-        {% endfor %}
+        <tbody>
+          {% for a, p in appointments %}
+          <tr>
+            <td>{{ a.patientName }}</td>
+            <td><img src="{% static p.profile_pic.url %}" alt="Profile Pic" height="40" width="40" /></td>
+            <td>{{ a.description }}</td>
+            <td>{{ p.mobile }}</td>
+            <td>{{ p.address }}</td>
+            <td>{{ a.appointmentDate }}</td>
+            <td>{{ a.status }}</td>
+            <td><a class="btn btn-danger btn-xs" href="{% url 'delete-appointment' a.id %}"><i class="fas fa-trash"></i></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
   </div>
-  
-<br><br><br><br><br><br><br>
+</div>
 {% endblock content %}
