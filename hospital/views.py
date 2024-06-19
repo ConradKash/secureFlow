@@ -1,4 +1,6 @@
+import json
 from django.shortcuts import render,redirect,reverse
+import requests
 from . import forms,models
 from django.db.models import Sum
 from django.contrib.auth.models import Group
@@ -6,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib import messages
-from datetime import datetime,timedelta,date
+from datetime import datetime,timedelta,date, timezone
 from django.conf import settings
 
 
@@ -1169,8 +1171,80 @@ def admin_add_pharmacy_inventory_view(request):
 def approve_prescription_view(request,pk):
     prescription=models.Prescription.objects.get(id=pk)
     prescription.status=True
-    prescription.save()
+
+    # Timestamp string
+    timestamp_str = str(prescription.datestamp)
+    # Parse the timestamp string into a datetime object
+    timestamp = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+
+    # Convert the datetime object to Epoc Unix timestamp (seconds since Unix epoch)
+    epoch_timestamp = int(timestamp.replace(tzinfo=timezone.utc).timestamp())
+
+    print(epoch_timestamp)
+
+
+    # Convert the prescription object to a dictionary
+    prescription_data = {
+        "id": prescription.id,
+        "appointmentID": prescription.appointmentId,
+        "pharmacyID": prescription.pharmacyId,
+        "doctorID": prescription.doctorId,
+        "patientID": prescription.patientId,
+        "doctorName": prescription.doctorName,
+        "patientName": prescription.patientName,
+        "pharmacyName": prescription.pharmacyName,
+        "medicineName": prescription.medicineName,
+        "dosageInstruction": prescription.dosageInstruction,
+        "sideEffects": prescription.sideEffects,
+        "status": prescription.status,
+        "datestamp": epoch_timestamp
+    }
+    
+    # Convert the dictionary to a JSON string
+    prescription_json = json.dumps(prescription_data, indent=4)
+    
+    # Print the JSON string
+    print("Prescription JSON:")
+    print(prescription_json)
+
+    # Make a POST request to send the prescription JSON to the API
+    try:
+        response = requests.post(
+            'https://secureflow-blockchain.vercel.app/addPrescription',
+            data=prescription_json,
+            headers={'Content-Type': 'application/json'}
+        )
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        print(f"Prescription sent successfully. Response: {response.text}")
+    except requests.RequestException as e:
+        print(f"Error sending prescription: {e}")
+
+    # Save the prescription status in the database
+    prescription.save() 
     return redirect(reverse('admin-pharmacy-dashboard'))
+
+
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def get_all_prescriptions(request):
+    try:
+        response = requests.get('https://secureflow-blockchain.vercel.app/getAllPrescriptions')
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        prescriptions = response.json()  # Convert response to JSON
+
+        # Process each prescription to exclude specified fields
+        processed_prescriptions = []
+        for prescription in prescriptions:
+            processed_prescription = {k: v for k, v in prescription.items()
+                if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
+            processed_prescriptions.append(processed_prescription)
+
+        # Pass the processed prescriptions to the template
+        return render(request, 'hospital/prescriptions.html', {'prescriptions': processed_prescriptions})
+
+    except requests.RequestException as e:
+        print(f"Error fetching prescriptions: {e}")
+        return render(request, 'hospital/prescriptions.html', {'error': str(e)})
 #---------------------------------------------------------------------------------
 #------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------
