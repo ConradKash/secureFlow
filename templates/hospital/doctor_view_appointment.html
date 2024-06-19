@@ -75,10 +75,9 @@
             <th>Picture</th>
             <th>Description</th>
             <th>Contact</th>
-            <th>Address</th>
             <th>Appointment Date</th>
             <th>Status</th>
-            <th>Details</th>
+            <th>Add Symptoms</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -89,12 +88,11 @@
             <td><img src="{{ p.profile_pic.url }}" alt="Profile Pic" height="40" width="40"></td>
             <td>{{ a.description }}</td>
             <td>{{ p.mobile }}</td>
-            <td>{{ p.address }}</td>
             <td>{{ a.appointmentDate }}</td>
             <td>{{ a.status }}</td>
             <td>
               <a class="btn btn-info btn-xs" href="{% url 'doctor-patient-details' %}">
-                <span class="glyphicon glyphicon-plus-sign"></span> Details
+                <span class="glyphicon glyphicon-plus-sign"></span> Add Patient Symptoms
               </a>
             </td>
             <td>

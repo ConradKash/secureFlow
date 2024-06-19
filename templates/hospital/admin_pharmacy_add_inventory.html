@@ -1,9 +1,9 @@
-{% extends 'hospital/adminPharmacy_base.html' %} 
-{% load widget_tweaks %} 
+{% extends 'hospital/adminPharmacy_base.html' %}
+{% load widget_tweaks %}
 {% block content %}
-  
+
 <head>
-  <style media="screen">
+  <style>
     a:link {
       text-decoration: none;
     }
@@ -11,16 +11,21 @@
     .note {
       text-align: center;
       height: 80px;
-      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+      background: linear-gradient(to right, #0072ff, #8811c5);
       color: #fff;
       font-weight: bold;
       line-height: 80px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      margin-bottom: 20px;
     }
 
     .form-content {
       padding: 5%;
       border: 1px solid #ced4da;
-      margin-bottom: 2%;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .form-control {
@@ -35,10 +40,25 @@
       cursor: pointer;
       background: #0062cc;
       color: #fff;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .btnSubmit:hover {
+      background-color: #0056b3;
     }
 
     .menu {
       top: 50px;
+    }
+
+    @media (max-width: 767px) {
+      .form-content {
+        padding: 10%;
+      }
+
+      .btnSubmit {
+        width: 50%;
+      }
     }
   </style>
 
@@ -50,40 +70,41 @@
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
-<br /><br />
-<!------ add appointment page by admin(sumit)  ---------->
-<form method="post">
-  {% csrf_token %}
-  <div class="container register-form">
-    <div class="form">
-      <div class="note">
-        <p>Adding Medicine  Details</p>
-      </div>
-      <div class="form-content">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              {% render_field pharmacyInventoryForm.pharmacyId class="form-control" placeholder="Choose Pharmacy" %}
-            </div>
-            <div class="form-group">
-              {% render_field pharmacyInventoryForm.medicineName class="form-control" placeholder="Medicine Name" %}
-            </div>
-            <div class="form-group">
-              {% render_field pharmacyInventoryForm.description class="form-control" placeholder="Medicine Description" %}
-            </div>
-            <div class="form-group">
-              {% render_field pharmacyInventoryForm.price class="form-control" placeholder="Price" %}
-            </div>
-            <div class="form-group">
-              {% render_field pharmacyInventoryForm.stock class="form-control" placeholder="Stock" %}
+<div class="container mt-5">
+  <form method="post">
+    {% csrf_token %}
+    <div class="register-form">
+      <div class="form">
+        <div class="note">
+          <p>Enter Medical Supplies</p>
+        </div>
+        <div class="form-content">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                {% render_field pharmacyInventoryForm.pharmacyId class="form-control" placeholder="Choose Pharmacy" %}
+              </div>
+              <div class="form-group">
+                {% render_field pharmacyInventoryForm.medicineName class="form-control" placeholder="Medicine Name" %}
+              </div>
+              <div class="form-group">
+                {% render_field pharmacyInventoryForm.description class="form-control" placeholder="Medicine Description" %}
+              </div>
+              <div class="form-group">
+                {% render_field pharmacyInventoryForm.price class="form-control" placeholder="Price" %}
+              </div>
+              <div class="form-group">
+                {% render_field pharmacyInventoryForm.stock class="form-control" placeholder="Stock" %}
+              </div>
             </div>
           </div>
+          <div class="text-center">
+            <button type="submit" class="btnSubmit">Save Medical Supplies</button>
+          </div>
         </div>
-        <button type="submit" class="btnSubmit">Book</button>
       </div>
     </div>
-  </div>
-</form>
+  </form>
+</div>
 
 {% endblock content %}
-P
