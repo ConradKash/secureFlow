@@ -1231,6 +1231,8 @@ def approve_prescription_view(request,pk):
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
 def get_all_prescriptions(request):
+    
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
     try:
         response = requests.get('https://secureflow-blockchain.vercel.app/getAllPrescriptions')
         response.raise_for_status()  # Raise an exception for HTTP errors
@@ -1239,9 +1241,10 @@ def get_all_prescriptions(request):
         # Process each prescription to exclude specified fields
         processed_prescriptions = []
         for prescription in prescriptions:
-            processed_prescription = {k: v for k, v in prescription.items()
-                if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
-            processed_prescriptions.append(processed_prescription)
+            if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
+                processed_prescription = {k: v for k, v in prescription.items()
+                    if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
+                processed_prescriptions.append(processed_prescription)
 
         # Pass the processed prescriptions to the template
         return render(request, 'hospital/prescriptions.html', {'prescriptions': processed_prescriptions})

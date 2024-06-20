@@ -1,292 +1,136 @@
-<!-- doctor-base.html -->
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>secureFlow</title>
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-  <style>
-    a:link {
-      text-decoration: none;
-    }
-
-    a {
-      color: white;
-    }
-
-    a:hover {
-      color: white;
-    }
-
-    /*---------------------------------------
-       Social section
-    -----------------------------------------*/
-    footer {
-      padding: 20px 0;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      position: fixed;
-      width: 100%;
-      bottom: 0;
-      left: 0;
-    }
-
-    .footer-copyright {
-      margin-top: 20px;
-    }
-
-    .fa {
-      font-size: 23px;
-      width: 60px;
-      text-align: center;
-      text-decoration: none;
-      margin: 5px 2px;
-      border-radius: 50%;
-    }
-
-    .fa:hover {
-      opacity: 0.7;
-      text-decoration: none;
-    }
-
-    .fa-facebook {
-      background: #3B5998;
-      color: white;
-    }
-
-    .fa-whatsapp {
-      background: #25d366;
-      color: white;
-    }
-
-    .fa-twitter {
-      background: #55ACEE;
-      color: white;
-    }
-
-    .fa-instagram {
-      background: #125688;
-      color: white;
-    }
-
-    body {
-      padding-left: 240px;
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-    }
-
-    main {
-      padding-top: 60px;
-      padding-bottom: 60px; /* Adjust padding to account for the fixed footer */
-      overflow-y: auto;
-      height: calc(100vh - 120px); /* Adjust height to account for navbar and footer */
-    }
-
-    .menu {
-      background: #4CAF50;
-      height: 100vh;
-      width: 240px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 5;
-      outline: none;
-      padding-top: 20px;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .menu .avatar {
-      background: rgba(0, 0, 0, 0.1);
-      padding: 2em 0.5em;
-      text-align: center;
-    }
-
-    .menu .avatar img {
-      width: 100px;
-      border-radius: 50%;
-      border: 4px solid #ffea92;
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
-    }
-
-    .menu .avatar h2 {
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .menu ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .menu ul li {
-      padding: 15px 20px;
-      font-size: 1em;
-      background-repeat: no-repeat;
-      background-position: left 20px center;
-      background-size: 20px;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      color: white;
-    }
-
-    .menu ul li:hover {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
-    .menu ul li.icon-dashboard {
-      background-image: url("http://www.entypo.com/images//gauge.svg");
-    }
-
-    .menu ul li.icon-users {
-      background-image: url("http://www.entypo.com/images//users.svg");
-    }
-
-    .menu ul li.icon-calendar {
-      background-image: url("http://www.entypo.com/images//calendar.svg");
-    }
-
-    .menu ul li a {
-      color: white;
-      text-decoration: none;
-      display: block;
-    }
-
-    @media screen and (max-width: 900px) {
-      body {
-        padding-left: 90px;
-      }
-
-      .menu {
-        width: 90px;
-      }
-
-      .menu .avatar img {
-        width: 60px;
-      }
-
-      .menu .avatar h2 {
-        display: none;
-      }
-
-      .menu ul li {
-        background-position: center center;
-        text-align: center;
-      }
-
-      .menu ul li span {
-        display: none;
-      }
-    }
-
-    @media screen and (max-width: 400px) {
-      body {
-        padding-left: 0;
-      }
-
-      .menu {
-        width: 100%;
-        height: auto;
-        position: relative;
-        padding: 10px;
-      }
-
-      .menu .smartphone-menu-trigger {
-        display: none;
-      }
-
-      .menu ul {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .menu ul li {
-        padding: 10px;
-        font-size: 1.2em;
-      }
-
-      .menu ul li a {
-        padding: 10px 0;
-      }
-    }
-
-    .navbar {
-      background: #337AB7;
-      padding: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      position: fixed;
-      width: 100%;
-      top: 0;
-      left: 0;
-      z-index: 10;
-    }
-
-    .navbar-brand {
-      font-weight: bold;
-      color: white !important;
-    }
-
-    .navbar-nav a {
-      color: white !important;
-      font-weight: bold;
-      margin-right: 20px;
-    }
-  </style>
+  <!-- Required meta tags --> 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>SecureFlow</title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="{% static "vendors/mdi/css/materialdesignicons.min.css" %} ">
+  <link rel="stylesheet" href="{% static "vendors/feather/feather.css" %} ">
+  <link rel="stylesheet" href="{% static "vendors/base/vendor.bundle.base.css" %} ">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <link rel="stylesheet" href="{% static "vendors/flag-icon-css/css/flag-icon.min.css" %} "/>
+  <link rel="stylesheet" href="{% static "vendors/font-awesome/css/font-awesome.min.css" %} ">
+  <link rel="stylesheet" href="{% static "vendors/jquery-bar-rating/fontawesome-stars-o.css" %} ">
+  <link rel="stylesheet" href="{% static "vendors/jquery-bar-rating/fontawesome-stars.css" %} ">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static "css/style.css" %}  ">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="{% static "images/logo-mini.svg" %} " />
 </head>
-
 <body>
-  <!-- partial:index.partial.html -->
-  <nav class="menu" tabindex="0">
-    <div class="smartphone-menu-trigger"></div>
-    <header class="avatar">
-      <br><br>
-      <img src="{% static doctor.profile_pic.url %}" alt="Profile Pic" />
-      <br><br>
-      <h4>{{request.user.first_name}}</h4>
-    </header>
-    <ul>
-      <li tabindex="0" class="icon-dashboard"> <a href="/doctor-dashboard"><span>Dashboard</span></a> </li>
-      <li tabindex="0" class="icon-users"> <a href="/doctor-patient"><span>Patient</span></a></li>
-      <li tabindex="0" class="icon-calendar"> <a href="/doctor-appointment"><span>Appointments</span></a></li>
-    </ul>
-  </nav>
-  <main>
-    <!-- nav start -->
-    <div class="bs-example">
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top">
-        <a href="/doctor-dashboard" class="navbar-brand">SECUREFLOW E-PRESCRIPTION SYSTEM</a>
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-          <span class="navbar-toggler-icon"></span>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo" href="index.html"><img src="{% static "images/logo-mini.svg" %} " alt="logo"/></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="icon-menu"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-          <div class="navbar-nav ml-auto">
-            <a href="/logout" class="nav-item nav-link">Logout</a>
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="search">
+                  SecureFlow
+                </span>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item dropdown d-lg-flex d-none">
+                <button type="button" class="btn btn-info" ><a href="/logout" class="btn-info font-weight-bold" style="font-color=black">Logout</a></button>
+            </li>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <div class="user-profile">
+          <div class="user-image">
+            {% if doctor.profile_pic.url %}
+              <img src="{% static doctor.profile_pic.url %}" alt="Profile Pic" />
+            {% else %}
+              <img src="{% static "images/adminpropic.png" %}" alt="Profile Pic" />
+            {% endif %}
+          </div>
+          <div class="user-name">
+            <h2>{{request.user.first_name}}</h2>
+          </div>
+          <div class="user-designation">
+              Doctor
           </div>
         </div>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/doctor-dashboard">
+              <i class="icon-box menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/doctor-view-appointment">
+              <i class="icon-file menu-icon"></i>
+              <span class="menu-title">Appointment</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin-pharmacy-prescriptions">
+              <i class="icon-columns menu-icon"></i>
+              <span class="menu-title">Prescription History</span>
+            </a>
+          </li>
+        </ul>
       </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+          {% block content %}
+          {% endblock content %}
+        
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
     </div>
-    <!-- nav end -->
-    <br><br>
-    <!-- content start-->
-    {% block content %}
-    {% endblock content %}
-    <!-- content end-->
-  </main>
-  <footer>
-    <div class="container">
-      <p class="text-center">Copyright &copy; BSSE24-18</p>
-    </div>
-  </footer>
+
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="{% static "vendors/base/vendor.bundle.base.js" %}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="{% static "js/off-canvas.js" %}"></script>
+  <script src="{% static "js/hoverable-collapse.js" %} "></script>
+  <script src="{% static "js/template.js" %} "></script>
+  <!-- endinject -->
+  <!-- plugin js for this page -->
+  <script src="{% static "vendors/chart.js/Chart.min.js" %} "></script>
+  <script src="{% static "vendors/jquery-bar-rating/jquery.barrating.min.js" %} "></script>
+  <!-- End plugin js for this page -->
+  <!-- Custom js for this page-->
+  <script src="{% static "js/dashboard.js" %} "></script>
+  <!-- End custom js for this page-->
 </body>
 
 </html>
+
