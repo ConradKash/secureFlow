@@ -1164,16 +1164,7 @@ def admin_add_pharmacy_inventory_view(request):
         if pharmacyInventoryForm.is_valid():
             pharmacyInventoryForm=pharmacyInventoryForm.save(commit=False)
             pharmacyInventoryForm.status=True
-            # appointment.doctorId=request.POST.get('doctorId')
             pharmacyInventoryForm.pharmacyId=admin_pharmacy.pharmacyId
-            # appointment.patientId=request.POST.get('patientId')
-            # appointment.appointmentId=request.POST.get('appointmentId')
-            # appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
-            # appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
-            # appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
-            # appointment.medicineName=request.POST.get('medicineName')
-            # appointment.dosageInstruction=request.POST.get('dosageInstruction')
-            # appointment.sideEffects=request.POST.get('sideEffects')
             # appointment.status=False
             pharmacyInventoryForm.save()
         return HttpResponseRedirect('admin-pharmacy-inventory_view')
