@@ -1,327 +1,136 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>HMS - Django</title>
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-  <link rel="stylesheet" href="{% static '/style.css' %}">
-
-
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    a {
-      color: white;
-    }
-
-    a:hover {
-      color: white;
-    }
-
-
-
-
-    /*---------------------------------------
-       Social section
-    -----------------------------------------*/
-    footer {
-      padding: 0px 0px 0px 0px;
-      background-color: black;
-      margin: 0px;
-    }
-
-
-    #ftr {
-
-      padding: 20px;
-    }
-
-    .fa {
-
-      font-size: 23px;
-      width: 60px;
-      text-align: center;
-      text-decoration: none;
-      margin: 5px 2px;
-      border-radius: 50%;
-    }
-
-    .fa:hover {
-      opacity: 0.5;
-      text-decoration: none;
-    }
-
-    .fa-facebook {
-      background: #3B5998;
-      color: white;
-      margin-top: 30px;
-    }
-
-    .fa-whatsapp {
-      background: #25d366;
-      color: white;
-    }
-
-    .fa-twitter {
-      background: #55ACEE;
-      color: white;
-    }
-
-    .fa-instagram {
-      background: #125688;
-      color: white;
-    }
-
-    p {
-      text-align: center;
-
-    }
-
-
-
-
-
-    body {
-
-      padding-left: 240px;
-    }
-    main {
-      position: relative;
-      height: 100vh;
-    }
-
-    .menu {
-      background: #03a9f4;
-      height: 100vh;
-      width: 240px;
-      position: fixed;
-      top: 0px;
-      left: 0;
-      z-index: 5;
-      outline: none;
-    }
-    .menu .avatar {
-      background: rgba(0, 0, 0, 0.1);
-      padding: 2em 0.5em;
-      text-align: center;
-    }
-    .menu .avatar img {
-      width: 100px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 4px solid #ffea92;
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
-    }
-    .menu .avatar h2 {
-      font-weight: normal;
-      margin-bottom: 0;
-    }
-    .menu ul {
-      list-style: none;
-      padding: 0.5em 0;
-      margin: 0;
-    }
-    .menu ul li {
-      padding: 0.5em 1em 0.5em 3em;
-      font-size: 0.95em;
-      font-weight: regular;
-      background-repeat: no-repeat;
-      background-position: left 15px center;
-      background-size: auto 20px;
-      transition: all 0.15s linear;
-      cursor: pointer;
-    }
-    .menu ul li.icon-dashboard {
-      background-image: url("http://www.entypo.com/images//gauge.svg");
-    }
-    .menu ul li.icon-customers {
-      background-image: url("http://www.entypo.com/images//briefcase.svg");
-    }
-    .menu ul li.icon-users {
-      background-image: url("http://www.entypo.com/images//users.svg");
-    }
-    .menu ul li.icon-calendar {
-      background-image: url("http://www.entypo.com/images//calendar.svg");
-    }
-
-    .menu ul li:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
-    .menu ul li:focus {
-      outline: none;
-    }
-    @media screen and (max-width: 900px) and (min-width: 400px) {
-      body {
-        padding-left: 90px;
-      }
-      .menu {
-        width: 90px;
-      }
-      .menu .avatar {
-        padding: 0.5em;
-        position: relative;
-      }
-      .menu .avatar img {
-        width: 60px;
-      }
-      .menu .avatar h2 {
-        opacity: 0;
-        position: absolute;
-        top: 50%;
-        left: 100px;
-        margin: 0;
-        min-width: 200px;
-        border-radius: 4px;
-        background: rgba(0, 0, 0, 0.4);
-        transform: translate3d(-20px, -50%, 0);
-        transition: all 0.15s ease-in-out;
-      }
-      .menu .avatar:hover h2 {
-        opacity: 1;
-        transform: translate3d(0px, -50%, 0);
-      }
-      .menu ul li {
-        height: 60px;
-        background-position: center center;
-        background-size: 30px auto;
-        position: relative;
-      }
-      .menu ul li span {
-        opacity: 0;
-        position: absolute;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 0.2em 0.5em;
-        border-radius: 4px;
-        top: 50%;
-        left: 80px;
-        transform: translate3d(-15px, -50%, 0);
-        transition: all 0.15s ease-in-out;
-      }
-      .menu ul li span:before {
-        content: '';
-        width: 0;
-        height: 0;
-        position: absolute;
-        top: 50%;
-        left: -5px;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-right: 5px solid rgba(0, 0, 0, 0.5);
-        transform: translateY(-50%);
-      }
-      .menu ul li:hover span {
-        opacity: 1;
-        transform: translate3d(0px, -50%, 0);
-      }
-    }
-    @media screen and (max-width: 400px) {
-      body {
-        padding-left: 0;
-      }
-      .menu {
-        width: 230px;
-        box-shadow: 0 0 0 100em rgba(0, 0, 0, 0);
-        transform: translate3d(-230px, 0, 0);
-        transition: all 0.3s ease-in-out;
-      }
-      .menu .smartphone-menu-trigger {
-        width: 40px;
-        height: 40px;
-        position: absolute;
-        left: 100%;
-        background: #5bc995;
-      }
-      .menu .smartphone-menu-trigger:before,
-      .menu .smartphone-menu-trigger:after {
-        content: '';
-        width: 50%;
-        height: 2px;
-        background: #fff;
-        border-radius: 10px;
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate3d(-50%, -50%, 0);
-      }
-      .menu .smartphone-menu-trigger:after {
-        top: 55%;
-        transform: translate3d(-50%, -50%, 0);
-      }
-      .menu ul li {
-        padding: 1em 1em 1em 3em;
-        font-size: 1.2em;
-      }
-      .menu:focus {
-        transform: translate3d(0, 0, 0);
-        box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.6);
-      }
-      .menu:focus .smartphone-menu-trigger {
-        pointer-events: none;
-      }
-    }
-
-  </style>
-
+  <!-- Required meta tags --> 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>SecureFlow</title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="{% static "vendors/mdi/css/materialdesignicons.min.css" %} ">
+  <link rel="stylesheet" href="{% static "vendors/feather/feather.css" %} ">
+  <link rel="stylesheet" href="{% static "vendors/base/vendor.bundle.base.css" %} ">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <link rel="stylesheet" href="{% static "vendors/flag-icon-css/css/flag-icon.min.css" %} "/>
+  <link rel="stylesheet" href="{% static "vendors/font-awesome/css/font-awesome.min.css" %} ">
+  <link rel="stylesheet" href="{% static "vendors/jquery-bar-rating/fontawesome-stars-o.css" %} ">
+  <link rel="stylesheet" href="{% static "vendors/jquery-bar-rating/fontawesome-stars.css" %} ">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static "css/style.css" %}  ">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="{% static "images/logo-mini.svg" %} " />
 </head>
-
 <body>
-
-  <!-- partial:index.partial.html -->
-  <nav class="menu" tabindex="0">
-    <div class="smartphone-menu-trigger"></div>
-    <header class="avatar">
-      <br><br>
-      <img src="{% static "images/adminpropic.png" %}" />
-      <br><br>
-      <h4>{{request.user.first_name}}</h4>
-    </header>
-    <ul>
-      <li tabindex="0" class="icon-dashboard"> <a style="color:white; text-decoration:none;" href="/admin-pharmacy-dashboard"><span>Dashboard</span></a> </li>
-    </ul>
-  </nav>
-
-  <main>
-
-
-    <!-- nav start -->
-    <div class="bs-example">
-      <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#337AB7;">
-        <a href="/admin-dashboard" class="navbar-brand">SECUREFLOW E-PRESCRIPTION SYSTEM</a>
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-          <span class="navbar-toggler-icon"></span>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo" href="index.html"><img src="{% static "images/logo-mini.svg" %} " alt="logo"/></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="icon-menu"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-          <div class="navbar-nav" style=" margin-left: 90%;">
-
-            <a href="/logout" class="nav-item nav-link">Logout</a>
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="search">
+                  SecureFlow
+                </span>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item dropdown d-lg-flex d-none">
+                <button type="button" class="btn btn-info" ><a href="/logout" class="btn-info font-weight-bold" style="font-color=black">Logout</a></button>
+            </li>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <div class="user-profile">
+          <div class="user-image">
+            {% if admin_pharmacy.profile_pic.url %}
+              <img src="{% static admin_pharmacy.profile_pic.url %}" alt="Profile Pic" />
+            {% else %}
+              <img src="{% static "images/adminpropic.png" %}" alt="Profile Pic" />
+            {% endif %}
+          </div>
+          <div class="user-name">
+            <h2>{{request.user.first_name}}</h2>
+          </div>
+          <div class="user-designation">
+              Pharmacy Admin
           </div>
         </div>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin-pharmacy-dashboard">
+              <i class="icon-box menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin-pharmacy-inventory_view">
+              <i class="icon-file menu-icon"></i>
+              <span class="menu-title">Pharmacy Inventory</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin-pharmacy-inventory_view">
+              <i class="icon-columns menu-icon"></i>
+              <span class="menu-title">Prescription History</span>
+            </a>
+          </li>
+        </ul>
       </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+          {% block content %}
+          {% endblock content %}
+        
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
     </div>
-    <!-- nav end -->
 
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
 
-
-    <br><br>
-
-    <!-- content start-->
-    {% block content %}
-
-    {% endblock content %}
-    <!-- content end-->
-  </main>
-
-
+  <!-- base:js -->
+  <script src="{% static "vendors/base/vendor.bundle.base.js" %}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="{% static "js/off-canvas.js" %}"></script>
+  <script src="{% static "js/hoverable-collapse.js" %} "></script>
+  <script src="{% static "js/template.js" %} "></script>
+  <!-- endinject -->
+  <!-- plugin js for this page -->
+  <script src="{% static "vendors/chart.js/Chart.min.js" %} "></script>
+  <script src="{% static "vendors/jquery-bar-rating/jquery.barrating.min.js" %} "></script>
+  <!-- End plugin js for this page -->
+  <!-- Custom js for this page-->
+  <script src="{% static "js/dashboard.js" %} "></script>
+  <!-- End custom js for this page-->
 </body>
 
 </html>
+

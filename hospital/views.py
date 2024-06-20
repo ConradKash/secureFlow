@@ -1110,15 +1110,17 @@ def contactus_view(request):
 def admin_pharmacy_dashboard_view(request):
     #for both table in admin dashboard
     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    pharmacy = models.Pharmacy.objects.get(id=admin_pharmacy.pharmacyId)
     pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
-    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
+    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=False ).order_by('-id')
     #for three cards
     pharmacyInvetorycount=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).count()
 
-    prescriptionscount=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).count()
+    prescriptionscount=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=False ).count()
 
     pendingadmin_pharmacycount=models.AdminPharmacy.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=False).count()
     mydict={
+    'pharmacy': pharmacy,
     'pharmacyInvetory':pharmacyInvetory,
     'prescriptions':prescriptions,
     'pharmacyInvetorycount':pharmacyInvetorycount,
@@ -1139,21 +1141,22 @@ def admin_pharmacy_dashboard_view(request):
 #     }
 #     return render(request,'admin_pharmacy_prescription_view.html',context=mydict)
 
-# @login_required(login_url='admin_pharmacylogin')
-# @user_passes_test(is_admin_pharmacy)
-# def admin_pharmacy_inventory_view(request):
-#     #for both table in admin dashboard
-#     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
-#     pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_pharmacy_inventory_view(request):
+    #for both table in admin dashboard
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
 
-#     mydict={
-#     'pharmacyInvetory':pharmacyInvetory
-#     }
-#     return render(request,'hospital/admin_pharmacy_inventory_view.html',context=mydict)
+    mydict={
+    'pharmacyInvetory':pharmacyInvetory
+    }
+    return render(request,'hospital/admin_pharmacy_inventory.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
 def admin_add_pharmacy_inventory_view(request):
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
     pharmacyInventoryForm=forms.PharmacyInventoryForm()
     mydict={'pharmacyInventoryForm':pharmacyInventoryForm}
     if request.method=='POST':
@@ -1162,7 +1165,7 @@ def admin_add_pharmacy_inventory_view(request):
             pharmacyInventoryForm=pharmacyInventoryForm.save(commit=False)
             pharmacyInventoryForm.status=True
             # appointment.doctorId=request.POST.get('doctorId')
-            pharmacyInventoryForm.pharmacyId=request.POST.get('pharmacyId')
+            pharmacyInventoryForm.pharmacyId=admin_pharmacy.pharmacyId
             # appointment.patientId=request.POST.get('patientId')
             # appointment.appointmentId=request.POST.get('appointmentId')
             # appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
@@ -1173,7 +1176,7 @@ def admin_add_pharmacy_inventory_view(request):
             # appointment.sideEffects=request.POST.get('sideEffects')
             # appointment.status=False
             pharmacyInventoryForm.save()
-        return HttpResponseRedirect('admin-pharmacy-dashboard')
+        return HttpResponseRedirect('admin-pharmacy-inventory_view')
     return render(request,'hospital/admin_pharmacy_add_inventory.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
