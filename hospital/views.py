@@ -932,10 +932,20 @@ def doctor_add_prescription_view(request):
 @user_passes_test(is_patient)
 def patient_dashboard_view(request):
     patient=models.Patient.objects.get(user_id=request.user.id)
+    appointments=models.Appointment.objects.all().filter(patientId=request.user.id).order_by('-id')
+    prescriptions=models.Prescription.objects.all().filter(patientId=request.user.id).order_by('-id')
     # doctor=models.Doctor.objects.get(user_id=patient.assignedDoctorId)
+    appointmentscount=models.Appointment.objects.all().filter(patientId=request.user.id).count()
+
+    prescriptionscount=models.Prescription.objects.all().filter(patientId=request.user.id).count()
     mydict={
     'symptoms':patient.address,
-    'admitDate':patient.mobile,
+    'mobile':patient.mobile,
+    'patient':patient,
+    'appointments':appointments,
+    'prescriptions':prescriptions,
+    'appointmentscount':appointmentscount,
+    'prescriptionscount':prescriptionscount,
     }
     return render(request,'hospital/patient_dashboard.html',context=mydict)
 

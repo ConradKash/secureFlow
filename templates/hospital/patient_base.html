@@ -47,7 +47,7 @@
         </ul>
         <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item dropdown d-lg-flex d-none">
-                <button type="button" class="btn btn-info font-weight-bold">Log out</button>
+                <button type="button" class="btn btn-info" ><a href="/logout" class="btn-info font-weight-bold" style="font-color=black">Logout</a></button>
             </li>
             </div>
           </li>
@@ -84,15 +84,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/patient-appointment">
+            <a class="nav-link" href="/patient-view-appointment">
               <i class="icon-file menu-icon"></i>
               <span class="menu-title">Appointments</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/patient-Prescriptions">
-              <i class="icon-command menu-icon"></i>
-              <span class="menu-title">Prescriptions</span>
             </a>
           </li>
         </ul>
@@ -100,12 +94,7 @@
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
-          <div class="row">
-            <div class="col-sm-12 mb-4 mb-xl-0">
-              <h4 class="font-weight-bold text-dark">Hi, welcome back!</h4>
-              <p class="font-weight-normal mb-2 text-muted">APRIL 1, 2019</p>
-            </div>
-          </div>
+
           {% block content %}
           {% endblock content %}
         
