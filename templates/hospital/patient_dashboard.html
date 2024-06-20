@@ -1,8 +1,95 @@
 {% extends 'hospital/patient_base.html' %}
 {% load static %}
 {% block content %}
-{%include 'hospital/patient_dashboard_cards.html'%}
-<br><br><br><br>
+          <div class="row">
+            <div class="col-sm-12 mb-4 mb-xl-0">
+              <h4 class="font-weight-bold text-dark">Hi, welcome back!</h4>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-xl-4 flex-column grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title mb-3">Patient Details</h4>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="text-dark">
+                        <div class="d-flex pb-3 border-bottom ">
+                          <div class="mr-3"><i class="icon-heart"></i></div>
+                          <div class="font-weight-bold mr-sm-4">
+                            <div>Patient Name</div>
+                            <div class="font-weight-normal mt-1">{{ request.user.first_name }}</div>
+                          </div>
+                          <div><h6 class="font-weight-bold text-info ml-sm-2"></h6></div>
+                        </div>
+                        <div class="d-flex pb-3 pt-3 border-bottom">
+                          <div class="mr-3"><i class="icon-head"></i></div>
+                          <div class="font-weight-bold mr-sm-4">
+                            <div>Patient Number</div>
+                            <div class="font-weight-normal mt-1">{{ patient.mobile }}</div>
+                          </div>
+                          <div><h6 class="font-weight-bold text-info ml-sm-2"></h6></div>
+                        </div>
+                        <div class="d-flex pb-3 pt-3 border-bottom ">
+                        <div class="mr-3"><i class="mdi mdi-calendar-check-outline icon-md"></i></div>
+                          <div class="font-weight-bold mr-sm-4">
+                            <div>Appointments                              </div>
+                            <div class="font-weight-normal mt-1">{{ appointmentscount }}</div>
+                          </div>
+                          <div><h6 class="font-weight-bold text-info ml-sm-2"></h6></div>
+                        </div>
+                        <div class="d-flex pt-3 ">
+                        <div class="mr-3"><i class="mdi mdi-pill"></i></div>
+                        <div class="font-weight-bold mr-sm-4">
+                            <div>Prescriptions Count</div>
+                            <div class="font-weight-normal mt-1">{{ prescriptionscount }}</div>
+                        </div>
+                        <div><h6 class="font-weight-bold text-info ml-sm-2"></h6></div>
+                        </div> 
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-8 d-flex grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <h6 class="card-title font-weight-bold text-info ">Patient Prescriptions</h6>
 
+                      <div class="row">
+                        <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Medicine Name</th>
+                                  <th>Doctor's Name</th>
+                                  <th>Pharmacy Name</th>
+                                  <th>Status</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for p in prescriptions %}
+                                <tr>
+                                    <td>{{ p.medicineName }}</td>
+                                    <td>{{ p.doctorName }}</td>
+                                    <td>{{ p.pharmacyName }}</td>
+                                    <td>
+                                      {% if p.status %}
+                                      <label class="badge badge-success">Completed</label>
+                                      {% else %}
+                                      <label class="badge badge-danger">Pending</label>
+                                    </td>
+                                    {% endif %}
+                                </tr>                               
+                                {% endfor %}                                
+                              </tbody>
+                            </table>
+                          </div>
+                      </div>                        
+                    </div>
+                  </div>
+            </div>
+          </div>
 
 {% endblock content %}
