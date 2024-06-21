@@ -748,6 +748,8 @@ def reject_appointment_view(request,pk):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
+    doctor=models.Doctor.objects.get(user_id=request.user.id)
+    hospital=models.Hospital.objects.get(id=doctor.hospitalId)
     #for three cards
     patientcount=models.Pharmacy.objects.all().count()
     appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
@@ -761,6 +763,8 @@ def doctor_dashboard_view(request):
     patients=models.Patient.objects.all().filter(user_id__in=patientid).order_by('-id')
     appointments=zip(appointments,patients)
     mydict={
+    'hospital':hospital,
+    'doctor':doctor,
     'patientcount':patientcount,
     'appointmentcount':appointmentcount,
     'patientdischarged':patientdischarged,
