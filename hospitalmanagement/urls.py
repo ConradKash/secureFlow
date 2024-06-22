@@ -114,10 +114,10 @@ urlpatterns +=[
 urlpatterns +=[
     path('admin-pharmacy-dashboard', views.admin_pharmacy_dashboard_view,name='admin-pharmacy-dashboard'),
     # path('admin-pharmacy-prescription', views.admin_pharmacy_presciption,name='admin-pharmacy-prescription'),
-    # path('admin-pharmacy-inventory_view', views.admin_pharmacy_inventory_view,name='admin-pharmacy-inventory_view'),
+    path('admin-pharmacy-inventory_view', views.admin_pharmacy_inventory_view,name='admin-pharmacy-inventory_view'),
     path('admin-pharmacy-invetory-add', views.admin_add_pharmacy_inventory_view,name='admin-pharmacy-invetory-add'),
     path('admin-prescription-prescribe/<int:pk>', views.approve_prescription_view, name='admin-prescription-prescribe'),
-    path('admin-pharmacy-prescriptions/', views.get_all_prescriptions, name='admin-pharmacy-prescriptions')
+    path('admin-pharmacy-prescriptions', views.get_all_prescriptions, name='admin-pharmacy-prescriptions')
 ]
 
 

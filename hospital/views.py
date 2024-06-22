@@ -1110,15 +1110,17 @@ def contactus_view(request):
 def admin_pharmacy_dashboard_view(request):
     #for both table in admin dashboard
     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    pharmacy = models.Pharmacy.objects.get(id=admin_pharmacy.pharmacyId)
     pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
-    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).order_by('-id')
+    prescriptions=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=False ).order_by('-id')
     #for three cards
     pharmacyInvetorycount=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).count()
 
-    prescriptionscount=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId).count()
+    prescriptionscount=models.Prescription.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=False ).count()
 
     pendingadmin_pharmacycount=models.AdminPharmacy.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=False).count()
     mydict={
+    'pharmacy': pharmacy,
     'pharmacyInvetory':pharmacyInvetory,
     'prescriptions':prescriptions,
     'pharmacyInvetorycount':pharmacyInvetorycount,
@@ -1139,21 +1141,22 @@ def admin_pharmacy_dashboard_view(request):
 #     }
 #     return render(request,'admin_pharmacy_prescription_view.html',context=mydict)
 
-# @login_required(login_url='admin_pharmacylogin')
-# @user_passes_test(is_admin_pharmacy)
-# def admin_pharmacy_inventory_view(request):
-#     #for both table in admin dashboard
-#     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
-#     pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
+@login_required(login_url='admin_pharmacylogin')
+@user_passes_test(is_admin_pharmacy)
+def admin_pharmacy_inventory_view(request):
+    #for both table in admin dashboard
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
+    pharmacyInvetory=models.PharmacyInventory.objects.all().filter(pharmacyId=admin_pharmacy.pharmacyId, status=True).order_by('-id')
 
-#     mydict={
-#     'pharmacyInvetory':pharmacyInvetory
-#     }
-#     return render(request,'hospital/admin_pharmacy_inventory_view.html',context=mydict)
+    mydict={
+    'pharmacyInvetory':pharmacyInvetory
+    }
+    return render(request,'hospital/admin_pharmacy_inventory.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
 def admin_add_pharmacy_inventory_view(request):
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
     pharmacyInventoryForm=forms.PharmacyInventoryForm()
     mydict={'pharmacyInventoryForm':pharmacyInventoryForm}
     if request.method=='POST':
@@ -1161,19 +1164,10 @@ def admin_add_pharmacy_inventory_view(request):
         if pharmacyInventoryForm.is_valid():
             pharmacyInventoryForm=pharmacyInventoryForm.save(commit=False)
             pharmacyInventoryForm.status=True
-            # appointment.doctorId=request.POST.get('doctorId')
-            pharmacyInventoryForm.pharmacyId=request.POST.get('pharmacyId')
-            # appointment.patientId=request.POST.get('patientId')
-            # appointment.appointmentId=request.POST.get('appointmentId')
-            # appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
-            # appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
-            # appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
-            # appointment.medicineName=request.POST.get('medicineName')
-            # appointment.dosageInstruction=request.POST.get('dosageInstruction')
-            # appointment.sideEffects=request.POST.get('sideEffects')
+            pharmacyInventoryForm.pharmacyId=admin_pharmacy.pharmacyId
             # appointment.status=False
             pharmacyInventoryForm.save()
-        return HttpResponseRedirect('admin-pharmacy-dashboard')
+        return HttpResponseRedirect('admin-pharmacy-inventory_view')
     return render(request,'hospital/admin_pharmacy_add_inventory.html',context=mydict)
 
 @login_required(login_url='admin_pharmacylogin')
@@ -1237,6 +1231,8 @@ def approve_prescription_view(request,pk):
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
 def get_all_prescriptions(request):
+    
+    admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
     try:
         response = requests.get('https://secureflow-blockchain.vercel.app/getAllPrescriptions')
         response.raise_for_status()  # Raise an exception for HTTP errors
@@ -1245,9 +1241,10 @@ def get_all_prescriptions(request):
         # Process each prescription to exclude specified fields
         processed_prescriptions = []
         for prescription in prescriptions:
-            processed_prescription = {k: v for k, v in prescription.items()
-                if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
-            processed_prescriptions.append(processed_prescription)
+            if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
+                processed_prescription = {k: v for k, v in prescription.items()
+                    if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
+                processed_prescriptions.append(processed_prescription)
 
         # Pass the processed prescriptions to the template
         return render(request, 'hospital/prescriptions.html', {'prescriptions': processed_prescriptions})

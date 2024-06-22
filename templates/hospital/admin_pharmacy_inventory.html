@@ -1,0 +1,50 @@
+<!-- admin_pharmacy_dashboard.html -->
+{% extends 'hospital/adminPharmacy_base.html' %}
+{% load static %}
+{% block content %}
+          <div class="row ">
+            <div class="col-xl d-flex grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <h6 class="card-title font-weight-bold text-info ">Patient Prescriptions</h6>
+
+                      <div class="row">
+                        <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Medicine name</th>
+                                  <th>Description</th>
+                                  <th>Price</th>
+                                  <th>Stock</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for pi in pharmacyInvetory %}
+                                <tr>
+                                    <td>{{ pi.medicineName }}</td>
+                                    <td>{{ pi.description }}</td>
+                                    <td>{{ pi.price }}</td>
+                                    <td>{{ pi.stock }}</td>
+                                </tr>                              
+                                {% endfor %}                                
+                              </tbody>
+                            </table>
+                            <div class=" ">                            
+                              <div class="col-md-3 stretch-card justify-content-center">
+                                <button type="button" class="btn btn-info btn-lg btn-block">
+                                  <a class="btn-info" href="{% url 'admin-pharmacy-invetory-add' %}">Add Medication</a>
+                                  <i class="mdi mdi-menu float-right"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          
+
+                      </div>                        
+                    </div>
+                  </div>
+            </div>
+          </div>
+
+{% endblock content %}
