@@ -845,16 +845,18 @@ def delete_appointment_view(request,pk):
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
-def doctor_add_patientDetail_view(request):
+def doctor_add_patientDetail_view(request, pk):
+    # TODO: @stuart
+    appointment=models.Appointment.objects.get(id=pk)
     patientDetailsAdminForm=forms.PatientDetailsAdminForm()
     mydict={'patientDetailsAdminForm':patientDetailsAdminForm}
     if request.method=='POST':
         patientDetailsAdminForm = forms.PatientDetailsAdminForm(request.POST)
         if patientDetailsAdminForm.is_valid():
             patientDetailsAdmin=patientDetailsAdminForm.save(commit=False)
-            patientDetailsAdmin.patientId=request.POST.get('patientId')
-            patientDetailsAdmin.appointmentId=request.POST.get('appointmentId')
-            patientDetailsAdmin.doctorId=request.POST.get('doctorId')
+            patientDetailsAdmin.patientId=appointment.patientId
+            patientDetailsAdmin.appointmentId=pk
+            patientDetailsAdmin.doctorId=appointment.doctorId
             patientDetailsAdmin.height=request.POST.get('height')
             patientDetailsAdmin.weight=request.POST.get('weight')
             patientDetailsAdmin.temperature=request.POST.get('temperature')
@@ -867,9 +869,8 @@ def doctor_add_patientDetail_view(request):
             patientDetailsAdmin.treatment=request.POST.get('treatment')
             patientDetailsAdmin.save()
             if patientDetailsAdmin.treatment=='Prescription':
-                return redirect('doctor-add-prescription')
-            
-        return HttpResponseRedirect('doctor-view-patient-detail')
+                return redirect('doctor-add-prescription')            
+        return redirect('doctor-view-patient-detail')
     return render(request,'hospital/doctor_add_patientdetails.html',context=mydict)
 
 @login_required(login_url='doctorlogin')
