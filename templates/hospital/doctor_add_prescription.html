@@ -2,51 +2,48 @@
 {% load widget_tweaks %}
 {% block content %}
 
-<head>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    a:link {
-      text-decoration: none;
-    }
 
-    .note {
-      text-align: center;
-      height: 80px;
-      background: linear-gradient(to right, #0072ff, #8811c5);
-      color: #fff;
-      font-weight: bold;
-      line-height: 80px;
-    }
 
-    .form-content {
-      padding: 5%;
-      border: 1px solid #ced4da;
-      border-radius: 10px;
-      margin-bottom: 2%;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+<div class="container"  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <style>
+  a:link {
+    text-decoration: none;
+  }
 
-    .form-control {
-      border-radius: 1.5rem;
-      margin-bottom: 20px;
-    }
+  .note {
+    text-align: center;
+    height: 80px;
+    background: linear-gradient(to right, #0072ff, #8811c5);
+    color: #fff;
+    font-weight: bold;
+    line-height: 80px;
+  }
 
-    .btnSubmit {
-      border: none;
-      border-radius: 1.5rem;
-      padding: 1% 3%;
-      cursor: pointer;
-      background: #0062cc;
-      color: #fff;
-    }
+  .form-content {
+    padding: 5%;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    margin-bottom: 2%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
 
-    .btnSubmit:hover {
-      background-color: #0056b3;
-    }
-  </style>
-</head>
+  .form-control {
+    border-radius: 1.5rem;
+    margin-bottom: 20px;
+  }
 
-<div class="container">
+  .btnSubmit {
+    border: none;
+    border-radius: 1.5rem;
+    padding: 1% 3%;
+    cursor: pointer;
+    background: #0062cc;
+    color: #fff;
+  }
+
+  .btnSubmit:hover {
+    background-color: #0056b3;
+  }
+</style>>
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h6 class="panel-title">Enter Prescription Details</h6>
@@ -58,9 +55,6 @@
           <div class="col-md-6">
             <div class="form-group">
               {% render_field prescriptionForm.medicineName class="form-control" placeholder="Medicine Name" %}
-            </div>
-            <div class="form-group">
-              {% render_field prescriptionForm.appointmentId class="form-control" placeholder="Appointment" %}
             </div>
             <div class="form-group">
               {% render_field prescriptionForm.dosageInstruction class="form-control" placeholder="Dosage Instructions" %}

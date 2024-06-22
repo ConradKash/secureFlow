@@ -1,0 +1,50 @@
+<!-- admin_pharmacy_dashboard.html -->
+{% extends 'hospital/doctor_base.html' %}
+{% load static %}
+{% block content %}
+          <div class="row ">
+            <div class="col-xl d-flex grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <h6 class="card-title font-weight-bold text-info ">Patient Prescriptions</h6>
+
+                      <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                            <thead style="background-color: darkblue; color: white;">
+                                <tr>
+                                    <th>Medicine Name</th>
+                                    <th>Dosage Instruction</th>
+                                    <th>Side Effects</th>
+                                    <th>Patient Name</th>
+                                    <th>Pharmacy Name</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    {% if prescriptions %}
+                                    {% for prescription in prescriptions %}
+                                        <tr>
+                                            <td>{{ prescription.medicineName }}</td>
+                                            <td>{{ prescription.dosageInstruction }}</td>
+                                            <td>{{ prescription.sideEffects }}</td>
+                                            <td>{{ prescription.patientName }}</td>
+                                            <td>{{ prescription.pharmacyName }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6">No prescriptions found.</td>
+                                        </tr>
+                                    {% endif %}                               
+                              </tbody>
+                            </table>
+                          </div>
+                          
+
+                      </div>                        
+                    </div>
+                  </div>
+            </div>
+          </div>
+
+{% endblock content %}

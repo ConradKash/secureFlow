@@ -17,7 +17,6 @@
                                     <th>Dosage Instruction</th>
                                     <th>Side Effects</th>
                                     <th>Patient Name</th>
-                                    <th>Pharmacy Name</th>
                                     <th>Doctor Name</th>
                                 </tr>
                               </thead>
@@ -29,7 +28,6 @@
                                             <td>{{ prescription.dosageInstruction }}</td>
                                             <td>{{ prescription.sideEffects }}</td>
                                             <td>{{ prescription.patientName }}</td>
-                                            <td>{{ prescription.pharmacyName }}</td>
                                             <td>{{ prescription.doctorName }}</td>
                                         </tr>
                                     {% endfor %}
@@ -40,14 +38,6 @@
                                     {% endif %}                               
                               </tbody>
                             </table>
-                            <div class=" ">                            
-                              <div class="col-md-3 stretch-card justify-content-center">
-                                <button type="button" class="btn btn-info btn-lg btn-block">
-                                  <a class="btn-info" href="{% url 'admin-pharmacy-invetory-add' %}">Add Medication</a>
-                                  <i class="mdi mdi-menu float-right"></i>
-                                </button>
-                              </div>
-                            </div>
                           </div>
                           
 

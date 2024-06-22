@@ -748,6 +748,8 @@ def reject_appointment_view(request,pk):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
+    doctor=models.Doctor.objects.get(user_id=request.user.id)
+    hospital=models.Hospital.objects.get(id=doctor.hospitalId)
     #for three cards
     patientcount=models.Pharmacy.objects.all().count()
     appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
@@ -761,6 +763,8 @@ def doctor_dashboard_view(request):
     patients=models.Patient.objects.all().filter(user_id__in=patientid).order_by('-id')
     appointments=zip(appointments,patients)
     mydict={
+    'hospital':hospital,
+    'doctor':doctor,
     'patientcount':patientcount,
     'appointmentcount':appointmentcount,
     'patientdischarged':patientdischarged,
@@ -841,16 +845,19 @@ def delete_appointment_view(request,pk):
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
-def doctor_add_patientDetail_view(request):
+def doctor_add_patientDetail_view(request, pk):
+    # TODO: @stuart
+    doctor=models.Doctor.objects.get(user_id=request.user.id)
+    appointment=models.Appointment.objects.get(id=pk)
     patientDetailsAdminForm=forms.PatientDetailsAdminForm()
-    mydict={'patientDetailsAdminForm':patientDetailsAdminForm}
+    mydict={'patientDetailsAdminForm':patientDetailsAdminForm, 'doctor':doctor}
     if request.method=='POST':
         patientDetailsAdminForm = forms.PatientDetailsAdminForm(request.POST)
         if patientDetailsAdminForm.is_valid():
             patientDetailsAdmin=patientDetailsAdminForm.save(commit=False)
-            patientDetailsAdmin.patientId=request.POST.get('patientId')
-            patientDetailsAdmin.appointmentId=request.POST.get('appointmentId')
-            patientDetailsAdmin.doctorId=request.POST.get('doctorId')
+            patientDetailsAdmin.patientId=appointment.patientId
+            patientDetailsAdmin.appointmentId=pk
+            patientDetailsAdmin.doctorId=appointment.doctorId
             patientDetailsAdmin.height=request.POST.get('height')
             patientDetailsAdmin.weight=request.POST.get('weight')
             patientDetailsAdmin.temperature=request.POST.get('temperature')
@@ -863,17 +870,17 @@ def doctor_add_patientDetail_view(request):
             patientDetailsAdmin.treatment=request.POST.get('treatment')
             patientDetailsAdmin.save()
             if patientDetailsAdmin.treatment=='Prescription':
-                return redirect('doctor-add-prescription')
-            
-        return HttpResponseRedirect('doctor-view-patient-detail')
+                return redirect('doctor-add-prescription', pk=pk)            
+        return redirect('doctor-view-patient-detail')
     return render(request,'hospital/doctor_add_patientdetails.html',context=mydict)
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_patientDetail_view(request):
-    patientDetails=models.PatientDetailsAdmin.objects.all()
-    # .filter(doctorId=request.user.id)#for profile picture of doctor in sidebar
-    return render(request,'hospital/doctor_view_patient_details.html',{'patientDetails':patientDetails})
+    doctor=models.Doctor.objects.get(user_id=request.user.id) 
+    patientDetails=models.PatientDetailsAdmin.objects.all().filter(doctorId=request.user.id)
+    #for profile picture of doctor in sidebar
+    return render(request,'hospital/doctor_view_patient_details.html',{'patientDetails':patientDetails, 'doctor':doctor})
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
@@ -893,17 +900,19 @@ def create_patientdetail_view(request,pk):
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
-def doctor_add_prescription_view(request):
+def doctor_add_prescription_view(request, pk):
+    doctor=models.Doctor.objects.get(user_id=request.user.id) 
+    appointment1=models.Appointment.objects.get(id=pk) 
     prescriptionForm=forms.PrescriptionForm()
-    mydict={'prescriptionForm':prescriptionForm}
+    mydict={'prescriptionForm':prescriptionForm, 'doctor':doctor}
     if request.method=='POST':
         appointmentForm=forms.PrescriptionForm(request.POST)
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
-            appointment.doctorId=request.POST.get('doctorId')
+            appointment.doctorId=request.user.id
             appointment.pharmacyId=request.POST.get('pharmacyId')
-            appointment.patientId=request.POST.get('patientId')
-            appointment.appointmentId=request.POST.get('appointmentId')
+            appointment.patientId=appointment1.patientId
+            appointment.appointmentId=pk
             appointment.doctorName=models.User.objects.get(id=appointment.doctorId).first_name
             appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
             appointment.patientName=models.User.objects.get(id=appointment.patientId).first_name
@@ -912,7 +921,7 @@ def doctor_add_prescription_view(request):
             appointment.sideEffects=request.POST.get('sideEffects')
             appointment.status=False
             appointment.save()
-        return HttpResponseRedirect('doctor-view-patient-detail')
+        return redirect('doctor-view-patient-detail')
     return render(request,'hospital/doctor_add_prescription.html',context=mydict)
 
 
@@ -1231,6 +1240,7 @@ def approve_prescription_view(request,pk):
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
 def get_all_prescriptions(request):
+    # doctor = models.Doctor.objects.get(user_id=request.user.id)   
     
     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
     try:
@@ -1240,7 +1250,8 @@ def get_all_prescriptions(request):
 
         # Process each prescription to exclude specified fields
         processed_prescriptions = []
-        for prescription in prescriptions:
+        for prescription in prescriptions: 
+            # if prescription['doctorID'] == doctor.id:
             if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
                 processed_prescription = {k: v for k, v in prescription.items()
                     if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
@@ -1256,3 +1267,26 @@ def get_all_prescriptions(request):
 #------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------
 
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def get_all_prescriptions_doctor(request):
+    try:
+        response = requests.get('https://secureflow-blockchain.vercel.app/getAllPrescriptions')
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        prescriptions = response.json()  # Convert response to JSON
+
+        # Process each prescription to exclude specified fields
+        processed_prescriptions = []
+        for prescription in prescriptions: 
+            if prescription['doctorID'] == request.user.id:
+            # if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
+                processed_prescription = {k: v for k, v in prescription.items()
+                    if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
+                processed_prescriptions.append(processed_prescription)
+
+        # Pass the processed prescriptions to the template
+        return render(request, 'hospital/prescriptions_doctor.html', {'prescriptions': processed_prescriptions})
+
+    except requests.RequestException as e:
+        print(f"Error fetching prescriptions: {e}")
+        return render(request, 'hospital/prescriptions_doctor.html', {'error': str(e)})
