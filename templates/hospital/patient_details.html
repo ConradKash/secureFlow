@@ -1,0 +1,64 @@
+<!-- patient_details.html -->
+{% extends 'hospital/doctor_base.html' %}
+{% load static %}
+{% block content %}
+          <div class="row ">
+            <div class="col-xl d-flex grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <h6 class="card-title font-weight-bold text-info ">Doctor Admissions</h6>
+
+                      <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                            <thead style="background-color: darkblue; color: white;">
+                                <tr>
+                                    <th>Doctor Name</th>
+                                    <th>Patient Name</th>
+                                    <th>Height</th>
+                                    <th>Weight</th>
+                                    <th>Temperature</th>
+                                    <th>Medical History</th>
+                                    <th>Current Medication</th>
+                                    <th>Current Symptoms</th>
+                                    <th>Allergies</th>
+                                    <th>Medical Concerns</th>
+                                    <th>Diagnosis</th>
+                                    <th>Treatment</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    {% if patient_details %}
+                                    {% for patient_details in patient_details %}
+                                        <tr>
+                                            <td>{{ patient_details.doctorName }}</td>
+                                            <td>{{ patient_details.patientName }}</td>
+                                            <td>{{ patient_details.height }}</td>
+                                            <td>{{ patient_details.weight }}</td>
+                                            <td>{{ patient_details.temperature }}</td>
+                                            <td>{{ patient_details.medical_history }}</td>
+                                            <td>{{ patient_details.currentMedication }}</td>
+                                            <td>{{ patient_details.currentSymptoms }}</td>
+                                            <td>{{ patient_details.allergies }}</td>
+                                            <td>{{ patient_details.medicalConcerns }}</td>
+                                            <td>{{ patient_details.diagnosis }}</td>
+                                            <td>{{ patient_details.treatment }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6">No patient details found.</td>
+                                        </tr>
+                                    {% endif %}                               
+                              </tbody>
+                            </table>
+                          </div>
+                          
+
+                      </div>                        
+                    </div>
+                  </div>
+            </div>
+          </div>
+
+{% endblock content %}

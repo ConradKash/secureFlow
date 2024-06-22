@@ -868,6 +868,46 @@ def doctor_add_patientDetail_view(request, pk):
             patientDetailsAdmin.medicalConcerns=request.POST.get('medicalConcerns')
             patientDetailsAdmin.diagnosis=request.POST.get('diagnosis')
             patientDetailsAdmin.treatment=request.POST.get('treatment')
+
+            # Collect data from POST request
+            patient_details = {
+                'id': pk,
+                'patientId': appointment.patientId,
+                'doctorId': appointment.doctorId,
+                'doctorName': appointment.doctorName,
+                'patientName': appointment.patientName,
+                'height': request.POST.get('height'),
+                'weight': request.POST.get('weight'),
+                'temperature': request.POST.get('temperature'),
+                'medical_history': request.POST.get('medical_history'),
+                'currentMedication': request.POST.get('currentMedication'),
+                'currentSymptoms': request.POST.get('currentSymptoms'),
+                'allergies': request.POST.get('allergies'),
+                'medicalConcerns': request.POST.get('medicalConcerns'),
+                'diagnosis': request.POST.get('diagnosis'),
+                'treatment': request.POST.get('treatment')
+            }
+
+            # Convert the dictionary to a JSON string
+            patient_details_json = json.dumps(patient_details)
+
+            # Print the JSON string
+            print("Patient Details JSON:")
+            print(patient_details_json)
+
+            # Make a POST request to send the Patient Details JSON to the API
+            try:
+                response = requests.post(
+                    'https://secureflow-blockchain.vercel.app/addPatientDetail',
+                    data=patient_details_json,
+                headers={'Content-Type': 'application/json'}
+                )
+                response.raise_for_status()  # Raise an exception for HTTP errors
+                print(f"Patient Details  sent successfully. Response: {response.text}")
+            except requests.RequestException as e:
+                print(f"Error sending patient details: {e}")
+            
+            # Save the patient details in the database
             patientDetailsAdmin.save()
             if patientDetailsAdmin.treatment=='Prescription':
                 return redirect('doctor-add-prescription', pk=pk)            
@@ -1290,3 +1330,28 @@ def get_all_prescriptions_doctor(request):
     except requests.RequestException as e:
         print(f"Error fetching prescriptions: {e}")
         return render(request, 'hospital/prescriptions_doctor.html', {'error': str(e)})
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)    
+def get_all_patientDetails(request):
+    
+    #admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)_____________
+    try:
+        response = requests.get('https://secureflow-blockchain.vercel.app/getAllPatientDetails')
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        patient_details = response.json()  # Convert response to JSON
+
+        # Process each prescription to exclude specified fields
+        processed_patient_details = []
+        for patient_detail in patient_details:
+            #if patient_detail['doctorId'] == _____:
+                processed_patient_detail = {k: v for k, v in patient_detail.items()
+                    if k not in ['doctorId', 'patientId','id']}
+                processed_patient_details.append(processed_patient_detail)
+
+        # Pass the processed patient details to the template
+        return render(request, 'hospital/patient_details.html', {'patient_details': processed_patient_details})
+
+    except requests.RequestException as e:
+        print(f"Error fetching patient details: {e}")
+        return render(request, 'hospital/patient_details.html', {'error': str(e)})    
