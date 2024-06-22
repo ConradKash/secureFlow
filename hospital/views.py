@@ -869,7 +869,7 @@ def doctor_add_patientDetail_view(request, pk):
             patientDetailsAdmin.treatment=request.POST.get('treatment')
             patientDetailsAdmin.save()
             if patientDetailsAdmin.treatment=='Prescription':
-                return redirect('doctor-add-prescription')            
+                return redirect('doctor-add-prescription', pk=pk)            
         return redirect('doctor-view-patient-detail')
     return render(request,'hospital/doctor_add_patientdetails.html',context=mydict)
 
@@ -898,17 +898,18 @@ def create_patientdetail_view(request,pk):
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
-def doctor_add_prescription_view(request):
+def doctor_add_prescription_view(request, pk):
+    appointment1=models.Appointment.objects.get(id=pk) 
     prescriptionForm=forms.PrescriptionForm()
     mydict={'prescriptionForm':prescriptionForm}
     if request.method=='POST':
         appointmentForm=forms.PrescriptionForm(request.POST)
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
-            appointment.doctorId=request.POST.get('doctorId')
+            appointment.doctorId=request.user.id
             appointment.pharmacyId=request.POST.get('pharmacyId')
-            appointment.patientId=request.POST.get('patientId')
-            appointment.appointmentId=request.POST.get('appointmentId')
+            appointment.patientId=appointment1.patientId
+            appointment.appointmentId=pk
             appointment.doctorName=models.User.objects.get(id=appointment.doctorId).first_name
             appointment.pharmacyName=models.Pharmacy.objects.get(id=request.POST.get('pharmacyId')).name
             appointment.patientName=models.User.objects.get(id=appointment.patientId).first_name
@@ -917,7 +918,7 @@ def doctor_add_prescription_view(request):
             appointment.sideEffects=request.POST.get('sideEffects')
             appointment.status=False
             appointment.save()
-        return HttpResponseRedirect('doctor-view-patient-detail')
+        return redirect('doctor-view-patient-detail')
     return render(request,'hospital/doctor_add_prescription.html',context=mydict)
 
 
@@ -1236,6 +1237,7 @@ def approve_prescription_view(request,pk):
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
 def get_all_prescriptions(request):
+    # doctor = models.Doctor.objects.get(user_id=request.user.id)   
     
     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
     try:
@@ -1245,7 +1247,8 @@ def get_all_prescriptions(request):
 
         # Process each prescription to exclude specified fields
         processed_prescriptions = []
-        for prescription in prescriptions:
+        for prescription in prescriptions: 
+            # if prescription['doctorID'] == doctor.id:
             if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
                 processed_prescription = {k: v for k, v in prescription.items()
                     if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
@@ -1261,3 +1264,26 @@ def get_all_prescriptions(request):
 #------------------------ PHARMACY ADMIN RELATED VIEWS END ------------------------------
 #---------------------------------------------------------------------------------
 
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def get_all_prescriptions_doctor(request):
+    try:
+        response = requests.get('https://secureflow-blockchain.vercel.app/getAllPrescriptions')
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        prescriptions = response.json()  # Convert response to JSON
+
+        # Process each prescription to exclude specified fields
+        processed_prescriptions = []
+        for prescription in prescriptions: 
+            if prescription['doctorID'] == request.user.id:
+            # if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
+                processed_prescription = {k: v for k, v in prescription.items()
+                    if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
+                processed_prescriptions.append(processed_prescription)
+
+        # Pass the processed prescriptions to the template
+        return render(request, 'hospital/prescriptions_doctor.html', {'prescriptions': processed_prescriptions})
+
+    except requests.RequestException as e:
+        print(f"Error fetching prescriptions: {e}")
+        return render(request, 'hospital/prescriptions_doctor.html', {'error': str(e)})
