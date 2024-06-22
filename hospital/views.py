@@ -847,9 +847,10 @@ def delete_appointment_view(request,pk):
 @user_passes_test(is_doctor)
 def doctor_add_patientDetail_view(request, pk):
     # TODO: @stuart
+    doctor=models.Doctor.objects.get(user_id=request.user.id)
     appointment=models.Appointment.objects.get(id=pk)
     patientDetailsAdminForm=forms.PatientDetailsAdminForm()
-    mydict={'patientDetailsAdminForm':patientDetailsAdminForm}
+    mydict={'patientDetailsAdminForm':patientDetailsAdminForm, 'doctor':doctor}
     if request.method=='POST':
         patientDetailsAdminForm = forms.PatientDetailsAdminForm(request.POST)
         if patientDetailsAdminForm.is_valid():
@@ -876,9 +877,10 @@ def doctor_add_patientDetail_view(request, pk):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_patientDetail_view(request):
-    patientDetails=models.PatientDetailsAdmin.objects.all()
-    # .filter(doctorId=request.user.id)#for profile picture of doctor in sidebar
-    return render(request,'hospital/doctor_view_patient_details.html',{'patientDetails':patientDetails})
+    doctor=models.Doctor.objects.get(user_id=request.user.id) 
+    patientDetails=models.PatientDetailsAdmin.objects.all().filter(doctorId=request.user.id)
+    #for profile picture of doctor in sidebar
+    return render(request,'hospital/doctor_view_patient_details.html',{'patientDetails':patientDetails, 'doctor':doctor})
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
@@ -899,9 +901,10 @@ def create_patientdetail_view(request,pk):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_add_prescription_view(request, pk):
+    doctor=models.Doctor.objects.get(user_id=request.user.id) 
     appointment1=models.Appointment.objects.get(id=pk) 
     prescriptionForm=forms.PrescriptionForm()
-    mydict={'prescriptionForm':prescriptionForm}
+    mydict={'prescriptionForm':prescriptionForm, 'doctor':doctor}
     if request.method=='POST':
         appointmentForm=forms.PrescriptionForm(request.POST)
         if appointmentForm.is_valid():
