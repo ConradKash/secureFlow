@@ -1279,8 +1279,7 @@ def approve_prescription_view(request,pk):
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
-def get_all_prescriptions(request):
-    # doctor = models.Doctor.objects.get(user_id=request.user.id)   
+def get_all_prescriptions(request):   
     
     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
     try:
@@ -1291,7 +1290,6 @@ def get_all_prescriptions(request):
         # Process each prescription to exclude specified fields
         processed_prescriptions = []
         for prescription in prescriptions: 
-            # if prescription['doctorID'] == doctor.id:
             if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
                 processed_prescription = {k: v for k, v in prescription.items()
                     if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
@@ -1319,7 +1317,6 @@ def get_all_prescriptions_doctor(request):
         processed_prescriptions = []
         for prescription in prescriptions: 
             if prescription['doctorID'] == request.user.id:
-            # if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
                 processed_prescription = {k: v for k, v in prescription.items()
                     if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
                 processed_prescriptions.append(processed_prescription)
@@ -1335,7 +1332,6 @@ def get_all_prescriptions_doctor(request):
 @user_passes_test(is_doctor)    
 def get_all_patientDetails(request):
     
-    #admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)_____________
     try:
         response = requests.get('https://secureflow-blockchain.vercel.app/getAllPatientDetails')
         response.raise_for_status()  # Raise an exception for HTTP errors
@@ -1344,7 +1340,7 @@ def get_all_patientDetails(request):
         # Process each prescription to exclude specified fields
         processed_patient_details = []
         for patient_detail in patient_details:
-            #if patient_detail['doctorId'] == _____:
+            if patient_detail['doctorId'] == request.user.id:
                 processed_patient_detail = {k: v for k, v in patient_detail.items()
                     if k not in ['doctorId', 'patientId','id']}
                 processed_patient_details.append(processed_patient_detail)
