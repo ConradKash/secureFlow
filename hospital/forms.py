@@ -137,6 +137,10 @@ class PrescriptionForm(forms.ModelForm):
 
     class Meta:
         model = models.Prescription
+        #TODO: Conrad
+        #new fields
+        #dosageForm 
+        #dosageStrength 
         fields = ['medicineName',
                   'dosageInstruction',
                   'sideEffects',             

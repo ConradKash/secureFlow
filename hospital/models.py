@@ -206,6 +206,10 @@ class Prescription(models.Model):
     patientName=models.CharField(max_length=40,null=True)
     pharmacyName=models.CharField(max_length=40)
     medicineName=models.CharField(max_length=40)
+    #TODO: Conrad
+    #add those new fields here 
+    #dosageForm = models.CharField(max_length=40) eg tablet or liquid, this is just an example of what is put
+    #dosageStrength = models.CharField(max_length=40)
     dosageInstruction=models.TextField(max_length=500, null=True)
     sideEffects=models.TextField(max_length=500, null=True)
     status=models.BooleanField(default=False)
