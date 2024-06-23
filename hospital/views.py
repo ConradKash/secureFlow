@@ -193,9 +193,10 @@ def afterlogin_view(request):
 @user_passes_test(is_admin)
 def admin_dashboard_view(request):
     admin = models.Admin.objects.get(user_id=request.user.id)
+    hospital = models.Hospital.objects.get(id=admin.hospitalId)
     #for both table in admin dashboard
-    doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId).order_by('-id')
-    appointment=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId).order_by('-id')
+    doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=False).order_by('-id')
+    appointment=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId, doctorId=None).order_by('-id')
     #for three cards
     doctorcount=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=True).count()
     pendingdoctorcount=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId).count()
@@ -203,10 +204,11 @@ def admin_dashboard_view(request):
     patientcount=models.Patient.objects.all().count()
     pendingpatientcount=models.Patient.objects.all().count()
 
-    appointmentcount=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId,status=True).count()
-    pendingappointmentcount=models.Appointment.objects.all().filter(status=False).count()
+    appointmentcount=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId).count()
+    pendingappointmentcount=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId, status=False).count()
     mydict={
     'doctors':doctors,
+    'hospital':hospital,
     'appointment':appointment,
     'doctorcount':doctorcount,
     'pendingdoctorcount':pendingdoctorcount,
