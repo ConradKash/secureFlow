@@ -83,8 +83,8 @@ class PatientForm(forms.ModelForm):
 
 
 class AppointmentForm(forms.ModelForm):
-    hospitalId = forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True), empty_label="Choose a hospital", to_field_name="id")
     patientId = forms.ModelChoiceField(queryset=models.Patient.objects.all(), empty_label="Patient Name and Symptoms", to_field_name="user_id")
+    doctorId = forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True), empty_label="Doctor Name and Department", to_field_name="user_id")
 
     class Meta:
         model = models.Appointment
@@ -92,7 +92,7 @@ class AppointmentForm(forms.ModelForm):
         widgets = {
             "appointmentDate": AdminDateWidget(),
         }
-        exclude = ['doctorId', 'doctorName', 'patientName']
+        exclude = ['hospitalId', 'patientName', 'doctorName', 'hospitalName']
         
 class AppointmentPatientForm(forms.ModelForm):
     hospitalId = forms.ModelChoiceField(queryset=models.Hospital.objects.all().filter(is_approved=True), empty_label="Choose a hospital", to_field_name="id")

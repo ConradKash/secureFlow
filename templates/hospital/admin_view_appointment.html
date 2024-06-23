@@ -1,53 +1,44 @@
+<!-- admin_pharmacy_dashboard.html -->
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
 {% block content %}
+          <div class="row ">
+            <div class="col-xl d-flex grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <h6 class="card-title font-weight-bold text-info ">Patient Appointments</h6>
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+                      <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                             <thead style="background-color: darkblue; color: white;">
+                                <tr>
+                                  <th>Hospital Name</th>
+                                  <th>Doctor Name</th>
+                                  <th>Patient Name</th>
+                                  <th>Description</th>
+                                  <th>Date</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for a in appointments %}
+                                      <tr>
+                                        <td> {{a.hospitalName}}</td>
+                                        <td> {{a.doctorName}}</td>
+                                        <td>{{a.patientName}}</td>
+                                        <td>{{a.description}}</td>
+                                        <td>{{a.appointmentDate}}</td>
+                                      </tr>
+                                    {% endfor %}                             
+                              </tbody>
+                            </table>
+                          </div>
+                          
 
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Appointments</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-          <th>Hospital Name</th>
-          <th>Doctor Name</th>
-          <th>Patient Name</th>
-          <th>Description</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      {% for a in appointments %}
-      <tr>
-        <td> {{a.hospitalName}}</td>
-        <td> {{a.doctorName}}</td>
-        <td>{{a.patientName}}</td>
-        <td>{{a.description}}</td>
-        <td>{{a.appointmentDate}}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
-</div>
-
+                      </div>                        
+                    </div>
+                  </div>
+            </div>
+          </div>
 
 {% endblock content %}
