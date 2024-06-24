@@ -1238,6 +1238,11 @@ def approve_prescription_view(request,pk):
 
     print(epoch_timestamp)
 
+    #TODO: add new feilds to json string
+    #new fields
+    #dosageForm , 'dosageForm': prescription.dosageForm,
+    #dosageStrength , 'dosageStrength': prescription.dosageStrength,
+
 
     # Convert the prescription object to a dictionary
     prescription_data = {
@@ -1282,8 +1287,7 @@ def approve_prescription_view(request,pk):
 
 @login_required(login_url='admin_pharmacylogin')
 @user_passes_test(is_admin_pharmacy)
-def get_all_prescriptions(request):
-    # doctor = models.Doctor.objects.get(user_id=request.user.id)   
+def get_all_prescriptions(request):   
     
     admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)
     try:
@@ -1294,7 +1298,6 @@ def get_all_prescriptions(request):
         # Process each prescription to exclude specified fields
         processed_prescriptions = []
         for prescription in prescriptions: 
-            # if prescription['doctorID'] == doctor.id:
             if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
                 processed_prescription = {k: v for k, v in prescription.items()
                     if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
@@ -1322,7 +1325,6 @@ def get_all_prescriptions_doctor(request):
         processed_prescriptions = []
         for prescription in prescriptions: 
             if prescription['doctorID'] == request.user.id:
-            # if prescription['pharmacyID'] == admin_pharmacy.pharmacyId:
                 processed_prescription = {k: v for k, v in prescription.items()
                     if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
                 processed_prescriptions.append(processed_prescription)
@@ -1338,7 +1340,6 @@ def get_all_prescriptions_doctor(request):
 @user_passes_test(is_doctor)    
 def get_all_patientDetails(request):
     
-    #admin_pharmacy = models.AdminPharmacy.objects.get(user_id=request.user.id)_____________
     try:
         response = requests.get('https://secureflow-blockchain.vercel.app/getAllPatientDetails')
         response.raise_for_status()  # Raise an exception for HTTP errors
@@ -1347,7 +1348,8 @@ def get_all_patientDetails(request):
         # Process each prescription to exclude specified fields
         processed_patient_details = []
         for patient_detail in patient_details:
-            #if patient_detail['doctorId'] == _____:
+            # Check if the patient detail belongs to the doctor
+            if patient_detail['doctorId'] == request.user.id:
                 processed_patient_detail = {k: v for k, v in patient_detail.items()
                     if k not in ['doctorId', 'patientId','id']}
                 processed_patient_details.append(processed_patient_detail)
@@ -1357,4 +1359,61 @@ def get_all_patientDetails(request):
 
     except requests.RequestException as e:
         print(f"Error fetching patient details: {e}")
-        return render(request, 'hospital/patient_details.html', {'error': str(e)})    
+        return render(request, 'hospital/patient_details.html', {'error': str(e)})
+    
+#TODO: Conrad
+ #this view only returns patient details for a specific patient that has logged in
+@login_required(login_url='patientlogin') #change this to the logged in patient if what i put is not correct
+@user_passes_test(is_patient)    #same here 
+def get_all_patientDetails_for_patient(request):
+    
+    try:
+        response = requests.get('https://secureflow-blockchain.vercel.app/getAllPatientDetails')
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        patient_details = response.json()  # Convert response to JSON
+
+        # Process each prescription to exclude specified fields
+        processed_patient_details = []
+        for patient_detail in patient_details:
+            # Check if the patient detail belongs to the patient
+            #if patient_detail['patientId'] == request.user.id:
+                processed_patient_detail = {k: v for k, v in patient_detail.items()
+                    if k not in ['doctorId', 'patientId','id']}
+                processed_patient_details.append(processed_patient_detail)
+
+        # Pass the processed patient details to the template
+        return render(request, 'hospital/patient_details.html', {'patient_details': processed_patient_details})  #must have the patient page that shows this record
+
+    except requests.RequestException as e:
+        print(f"Error fetching patient details: {e}")
+        return render(request, 'hospital/patient_details.html', {'error': str(e)})   #must have the patient page that shows this record
+    
+ #add view to urls.py   
+    
+#TODO: Conrad
+#this is for getting that patients prescriptions
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
+def get_all_prescriptions_for_patient(request):   
+    
+    try:
+        response = requests.get('https://secureflow-blockchain.vercel.app/getAllPrescriptions')
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        prescriptions = response.json()  # Convert response to JSON
+
+        # Process each prescription to exclude specified fields
+        processed_prescriptions = []
+        for prescription in prescriptions: 
+            #if patient_detail['patientId'] == request.user.id:
+                processed_prescription = {k: v for k, v in prescription.items()
+                    if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
+                processed_prescriptions.append(processed_prescription)
+
+        # Pass the processed prescriptions to the template
+        return render(request, 'hospital/prescriptions.html', {'prescriptions': processed_prescriptions})   #must have the patient page that shows this record
+
+    except requests.RequestException as e:
+        print(f"Error fetching prescriptions: {e}")
+        return render(request, 'hospital/prescriptions.html', {'error': str(e)})  #must have the patient page that shows this record
+    
+    #add views to urls.py
