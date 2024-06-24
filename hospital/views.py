@@ -1376,7 +1376,7 @@ def get_all_patientDetails_for_patient(request):
         processed_patient_details = []
         for patient_detail in patient_details:
             # Check if the patient detail belongs to the patient
-            #if patient_detail['patientId'] == request.user.id:
+            if patient_detail['patientId'] == request.user.id:
                 processed_patient_detail = {k: v for k, v in patient_detail.items()
                     if k not in ['doctorId', 'patientId','id']}
                 processed_patient_details.append(processed_patient_detail)
@@ -1404,7 +1404,7 @@ def get_all_prescriptions_for_patient(request):
         # Process each prescription to exclude specified fields
         processed_prescriptions = []
         for prescription in prescriptions: 
-            #if patient_detail['patientId'] == request.user.id:
+            if prescription['patientId'] == request.user.id:
                 processed_prescription = {k: v for k, v in prescription.items()
                     if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
                 processed_prescriptions.append(processed_prescription)
