@@ -110,6 +110,8 @@ urlpatterns +=[
     path('patient-appointment', views.patient_appointment_view,name='patient-appointment'),
     path('patient-book-appointment', views.doctor_add_appointment_view,name='patient-book-appointment'),
     path('patient-view-appointment', views.patient_view_appointment_view,name='patient-view-appointment'),
+    path('patient-get-details', views.get_all_patientDetails_for_patient,name='patient-get-details'),
+    path('patient-get-prescription', views.get_all_prescriptions_for_patient,name='patient-get-prescription'),
 
 ]
 

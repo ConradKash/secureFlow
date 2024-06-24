@@ -1330,11 +1330,11 @@ def get_all_prescriptions_doctor(request):
                 processed_prescriptions.append(processed_prescription)
 
         # Pass the processed prescriptions to the template
-        return render(request, 'hospital/prescriptions_doctor.html', {'prescriptions': processed_prescriptions})
+        return render(request, 'hospital/prescriptions_patient.html', {'prescriptions': processed_prescriptions})
 
     except requests.RequestException as e:
         print(f"Error fetching prescriptions: {e}")
-        return render(request, 'hospital/prescriptions_doctor.html', {'error': str(e)})
+        return render(request, 'hospital/prescriptions_patient.html', {'error': str(e)})
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)    
@@ -1355,11 +1355,11 @@ def get_all_patientDetails(request):
                 processed_patient_details.append(processed_patient_detail)
 
         # Pass the processed patient details to the template
-        return render(request, 'hospital/patient_details.html', {'patient_details': processed_patient_details})
+        return render(request, 'hospital/prescriptions_details.html', {'patient_details': processed_patient_details})
 
     except requests.RequestException as e:
         print(f"Error fetching patient details: {e}")
-        return render(request, 'hospital/patient_details.html', {'error': str(e)})
+        return render(request, 'hospital/prescriptions_details.html', {'error': str(e)})
     
 #TODO: Conrad
  #this view only returns patient details for a specific patient that has logged in
