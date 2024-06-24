@@ -1,59 +1,48 @@
+<!-- admin_pharmacy_dashboard.html -->
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
 {% block content %}
-{%load static%}
+          <div class="row ">
+            <div class="col-xl d-flex grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                      <h6 class="card-title font-weight-bold text-info ">Hospital Doctors</h6>
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
+                      <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                            <thead style="background-color: darkblue; color: white;">
+                              <tr>
+                                <th>Name</th>
+                                <th>Profile Picture</th>
+                                <th>Contact</th>
+                                <th>Address</th>
+                                <th>Department</th>
+                                <th>Approve</th>
+                                <th>Reject</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                                {% for d in doctors %}
+                                <tr>
+                                  <td> {{d.get_name}}</td>
+                                  <td> <img src="{% static d.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
+                                  <td>{{d.mobile}}</td>
+                                  <td>{{d.address}}</td>
+                                  <td>{{d.department}}</td>
+                                  <td><a class="btn btn-success btn-xs" href="{% url 'approve-doctor' d.id  %}"><span class="glyphicon glyphicon-ok">Approve</span></a></td>
+                                  <td><a class="btn btn-danger btn-xs" href="{% url 'reject-doctor' d.id  %}"><span class="glyphicon glyphicon-trash">Delete</span></a></td>
+                                </tr>
+                                {% endfor %}               
+                              </tbody>
+                            </table>
+                          </div>
+                          
 
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Doctors &nbsp Applied For Registration</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Profile Picture</th>
-          <th>Contact</th>
-          <th>Address</th>
-          <th>Department</th>
-          <th>Approve</th>
-          <th>Reject</th>
-        </tr>
-      </thead>
-      {% for d in doctors %}
-      <tr>
-        <td> {{d.get_name}}</td>
-        <td> <img src="{% static d.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
-        <td>{{d.mobile}}</td>
-        <td>{{d.address}}</td>
-        <td>{{d.department}}</td>
-        <td><a class="btn btn-success btn-xs" href="{% url 'approve-doctor' d.id  %}"><span class="glyphicon glyphicon-ok"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'reject-doctor' d.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
-
-
-</div>
-
+                      </div>                        
+                    </div>
+                  </div>
+            </div>
+          </div>
 
 {% endblock content %}
