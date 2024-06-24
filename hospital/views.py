@@ -1382,11 +1382,11 @@ def get_all_patientDetails_for_patient(request):
                 processed_patient_details.append(processed_patient_detail)
 
         # Pass the processed patient details to the template
-        return render(request, 'hospital/patient_details.html', {'patient_details': processed_patient_details})  #must have the patient page that shows this record
+        return render(request, 'hospital/prescriptions_details.html', {'patient_details': processed_patient_details})  #must have the patient page that shows this record
 
     except requests.RequestException as e:
         print(f"Error fetching patient details: {e}")
-        return render(request, 'hospital/patient_details.html', {'error': str(e)})   #must have the patient page that shows this record
+        return render(request, 'hospital/prescriptions_details.html', {'error': str(e)})   #must have the patient page that shows this record
     
  #add view to urls.py   
     
@@ -1410,10 +1410,10 @@ def get_all_prescriptions_for_patient(request):
                 processed_prescriptions.append(processed_prescription)
 
         # Pass the processed prescriptions to the template
-        return render(request, 'hospital/prescriptions.html', {'prescriptions': processed_prescriptions})   #must have the patient page that shows this record
+        return render(request, 'hospital/prescriptions_patient.html', {'prescriptions': processed_prescriptions})   #must have the patient page that shows this record
 
     except requests.RequestException as e:
         print(f"Error fetching prescriptions: {e}")
-        return render(request, 'hospital/prescriptions.html', {'error': str(e)})  #must have the patient page that shows this record
+        return render(request, 'hospital/prescriptions_patient.html', {'error': str(e)})  #must have the patient page that shows this record
     
     #add views to urls.py
