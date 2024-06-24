@@ -193,10 +193,9 @@ def afterlogin_view(request):
 @user_passes_test(is_admin)
 def admin_dashboard_view(request):
     admin = models.Admin.objects.get(user_id=request.user.id)
-    hospital = models.Hospital.objects.get(id=admin.hospitalId)
     #for both table in admin dashboard
-    doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=False).order_by('-id')
-    appointment=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId, doctorId=None).order_by('-id')
+    doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId).order_by('-id')
+    appointment=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId).order_by('-id')
     #for three cards
     doctorcount=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=True).count()
     pendingdoctorcount=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId).count()
@@ -204,11 +203,10 @@ def admin_dashboard_view(request):
     patientcount=models.Patient.objects.all().count()
     pendingpatientcount=models.Patient.objects.all().count()
 
-    appointmentcount=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId).count()
-    pendingappointmentcount=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId, status=False).count()
+    appointmentcount=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId,status=True).count()
+    pendingappointmentcount=models.Appointment.objects.all().filter(status=False).count()
     mydict={
     'doctors':doctors,
-    'hospital':hospital,
     'appointment':appointment,
     'doctorcount':doctorcount,
     'pendingdoctorcount':pendingdoctorcount,
@@ -233,7 +231,7 @@ def admin_doctor_view(request):
 def admin_view_doctor_view(request):
     admin = models.Admin.objects.get(user_id=request.user.id)
     doctors=models.Doctor.objects.all().filter(hospitalId=admin.hospitalId, status=True)
-    return render(request,'hospital/admin_view_doctor.html',{'doctors':doctors, 'admin':admin})
+    return render(request,'hospital/admin_view_doctor.html',{'doctors':doctors})
 
 
 
@@ -664,8 +662,7 @@ def admin_appointment_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_view_appointment_view(request):
-    admin = models.Admin.objects.get(user_id=request.user.id)
-    appointments=models.Appointment.objects.all().filter(hospitalId=admin.hospitalId, doctorId=None)
+    appointments=models.Appointment.objects.all().filter(status=True)
     return render(request,'hospital/admin_view_appointment.html',{'appointments':appointments})
 
 
@@ -673,7 +670,6 @@ def admin_view_appointment_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_add_appointment_view(request):
-    admin=models.Admin.objects.get(user_id=request.user.id)
     appointmentForm=forms.AppointmentForm()
     mydict={'appointmentForm':appointmentForm,}
     if request.method=='POST':
@@ -681,12 +677,12 @@ def admin_add_appointment_view(request):
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
             appointment.doctorId=request.POST.get('doctorId')
-            appointment.hospitalId=admin.hospitalId
+            appointment.hospitalId=request.POST.get('hospitalId')
             appointment.patientId=request.POST.get('patientId')
             appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
-            appointment.hospitalName=models.Hospital.objects.get(id=admin.hospitalId).name
+            appointment.hospitalName=models.Hospital.objects.get(id=request.POST.get('hospitalId')).name
             appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
-            appointment.status=False
+            appointment.status=True
             appointment.save()
         return HttpResponseRedirect('admin-view-appointment')
     return render(request,'hospital/admin_add_appointment.html',context=mydict)
@@ -697,7 +693,7 @@ def admin_add_appointment_view(request):
 @user_passes_test(is_admin)
 def admin_approve_appointment_view(request):
     #those whose approval are needed
-    appointments=models.Appointment.objects.all().filter(doctorId=None)
+    appointments=models.Appointment.objects.all()
     return render(request,'hospital/admin_approve_appointment.html',{'appointments':appointments})
 
 
@@ -1013,18 +1009,19 @@ def patient_appointment_view(request):
 @login_required(login_url='patientlogin')
 @user_passes_test(is_patient)
 def doctor_add_appointment_view(request):
-    patient=models.Patient.objects.get(user_id=request.user.id) #for profile picture of patient in sidebar
-    appointmentForm=forms.AppointmentPatientForm()
-    mydict={'appointmentForm':appointmentForm,'patient':patient}
+    appointmentForm=forms.AppointmentForm()
+    mydict={'appointmentForm':appointmentForm,}
     if request.method=='POST':
-        appointmentForm=forms.AppointmentPatientForm(request.POST)
+        appointmentForm=forms.AppointmentForm(request.POST)
         if appointmentForm.is_valid():
             appointment=appointmentForm.save(commit=False)
+            appointment.doctorId=request.POST.get('doctorId')
             appointment.hospitalId=request.POST.get('hospitalId')
-            appointment.patientId=request.user.id
+            appointment.patientId=request.POST.get('patientId')
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
             appointment.hospitalName=models.Hospital.objects.get(id=request.POST.get('hospitalId')).name
-            appointment.patientName=models.User.objects.get(id=request.user.id).first_name
-            appointment.status=False
+            appointment.patientName=models.User.objects.get(id=request.POST.get('patientId')).first_name
+            appointment.status=True
             appointment.save()
         return HttpResponseRedirect('patient-view-appointment')
     return render(request,'hospital/patient_book_appointment.html',context=mydict)
@@ -1330,15 +1327,15 @@ def get_all_prescriptions_doctor(request):
                 processed_prescriptions.append(processed_prescription)
 
         # Pass the processed prescriptions to the template
-        return render(request, 'hospital/prescriptions_patient.html', {'prescriptions': processed_prescriptions})
+        return render(request, 'hospital/prescriptions_doctor.html', {'prescriptions': processed_prescriptions})
 
     except requests.RequestException as e:
         print(f"Error fetching prescriptions: {e}")
-        return render(request, 'hospital/prescriptions_patient.html', {'error': str(e)})
+        return render(request, 'hospital/prescriptions_doctor.html', {'error': str(e)})
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)    
-def get_all_patientDetails(request):
+def get_all_patientDetails_for_doctor(request):
     
     try:
         response = requests.get('https://secureflow-blockchain.vercel.app/getAllPatientDetails')
@@ -1355,16 +1352,16 @@ def get_all_patientDetails(request):
                 processed_patient_details.append(processed_patient_detail)
 
         # Pass the processed patient details to the template
-        return render(request, 'hospital/prescriptions_details.html', {'patient_details': processed_patient_details})
+        return render(request, 'hospital/patient_details_doctor.html', {'patient_details': processed_patient_details})
 
     except requests.RequestException as e:
         print(f"Error fetching patient details: {e}")
-        return render(request, 'hospital/prescriptions_details.html', {'error': str(e)})
+        return render(request, 'hospital/patient_details_doctor.html', {'error': str(e)})
     
-#TODO: Conrad
+
  #this view only returns patient details for a specific patient that has logged in
-@login_required(login_url='patientlogin') #change this to the logged in patient if what i put is not correct
-@user_passes_test(is_patient)    #same here 
+@login_required(login_url='patientlogin') 
+@user_passes_test(is_patient)     
 def get_all_patientDetails_for_patient(request):
     
     try:
@@ -1376,21 +1373,19 @@ def get_all_patientDetails_for_patient(request):
         processed_patient_details = []
         for patient_detail in patient_details:
             # Check if the patient detail belongs to the patient
-            if patient_detail['patientId'] == request.user.id:
+            #if patient_detail['patientId'] == request.user.id:
                 processed_patient_detail = {k: v for k, v in patient_detail.items()
                     if k not in ['doctorId', 'patientId','id']}
                 processed_patient_details.append(processed_patient_detail)
 
         # Pass the processed patient details to the template
-        return render(request, 'hospital/prescriptions_details.html', {'patient_details': processed_patient_details})  #must have the patient page that shows this record
+        return render(request, 'hospital/all_patient_details.html', {'patient_details': processed_patient_details})  
 
     except requests.RequestException as e:
         print(f"Error fetching patient details: {e}")
-        return render(request, 'hospital/prescriptions_details.html', {'error': str(e)})   #must have the patient page that shows this record
+        return render(request, 'hospital/all_patient_details.html', {'error': str(e)})   
     
- #add view to urls.py   
-    
-#TODO: Conrad
+
 #this is for getting that patients prescriptions
 @login_required(login_url='patientlogin')
 @user_passes_test(is_patient)
@@ -1404,16 +1399,15 @@ def get_all_prescriptions_for_patient(request):
         # Process each prescription to exclude specified fields
         processed_prescriptions = []
         for prescription in prescriptions: 
-            if prescription['patientId'] == request.user.id:
+            #if prescription['patientID'] == request.user.id:
                 processed_prescription = {k: v for k, v in prescription.items()
                     if k not in ['datestamp', 'status', 'id', 'appointmentID', 'pharmacyID', 'doctorID', 'patientID']}
                 processed_prescriptions.append(processed_prescription)
 
         # Pass the processed prescriptions to the template
-        return render(request, 'hospital/prescriptions_patient.html', {'prescriptions': processed_prescriptions})   #must have the patient page that shows this record
+        return render(request, 'hospital/patient_prescriptions.html', {'prescriptions': processed_prescriptions})  
 
     except requests.RequestException as e:
         print(f"Error fetching prescriptions: {e}")
-        return render(request, 'hospital/prescriptions_patient.html', {'error': str(e)})  #must have the patient page that shows this record
+        return render(request, 'hospital/patient_prescriptions.html', {'error': str(e)})  
     
-    #add views to urls.py

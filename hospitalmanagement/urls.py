@@ -97,7 +97,7 @@ urlpatterns +=[
     path('doctor-patient-details/<int:pk>', views.doctor_add_patientDetail_view,name='doctor-patient-details'),
     path('doctor-add-prescription/<int:pk>', views.doctor_add_prescription_view,name='doctor-add-prescription'),
     path('doctor-prescriptions', views.get_all_prescriptions_doctor, name='doctor-prescriptions'),
-    path('patient-details-doctor', views.get_all_patientDetails, name='patient-details-doctor')
+    path('patient-details-doctor', views.get_all_patientDetails_for_doctor, name='patient-details-doctor')
 ]
 
 
